@@ -1,3 +1,4 @@
+import CurrencyInput from '@/components/global/currency-input'
 import { login, register } from '@/lib/user'
 
 export default function Login() {
@@ -20,6 +21,7 @@ export default function Login() {
         <input type="text" name="lastName" required />
         <input type="email" name="email" required />
         <input type="password" name="password" required />
+        <CurrencyInput />
         <button>Sign up</button>
       </form>
     </div>

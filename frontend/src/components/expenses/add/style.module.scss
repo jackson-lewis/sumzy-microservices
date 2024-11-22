@@ -1,0 +1,37 @@
+.dialog {
+    border-radius: 12px;
+
+    &::backdrop {
+        background-color: rgba(0, 0, 0, .25);
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+.heading {
+    margin: 0 0 20px;
+    
+    text-align: center;
+    font-size: 1.25rem;
+}
+
+.field {
+    label {
+        display: block;
+    }
+}
+
+.submit {
+    padding: 12px 24px;
+
+    border-radius: 8px;
+    border: none;
+    font-size: 1.125rem;
+    font-weight: 600;
+    background-color: #0b9ab3;
+    color: #ffffff;
+}

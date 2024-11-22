@@ -1,6 +1,27 @@
 .expense {
     padding: 20px;
+    position: relative;
 
     border-radius: 8px;
     background-color: #eeeeee;
+}
+
+.delete {
+    width: 36px;
+    height: 36px;
+    padding: 6px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+
+    background: none;
+    border: none;
+    border-radius: 8px;
+
+    transition: 200ms;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, .1);
+    }
 }
