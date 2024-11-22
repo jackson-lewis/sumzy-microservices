@@ -1,10 +1,9 @@
 import AddCategory from '@/components/categories/add'
 import CategoriesList from '@/components/categories/list'
-import { Category } from '@/types'
-import { useState } from 'react'
+import useCategories from '@/lib/use-categories'
 
 export default function ExpenseCatgories() {
-  const [categories, setCategories] = useState<Category[]>([])
+  const { categories, setCategories } = useCategories()
 
   return (
     <main>

@@ -1,9 +1,10 @@
+import CategoriesProvider from '@/lib/categories-context'
 import { isUserLoggedIn } from '@/lib/user'
 import { Link, Outlet } from 'react-router-dom'
 
 export default function Layout() {
     return (
-        <>
+        <CategoriesProvider>
             <header>
                 <Link to="/">Finance Tracker</Link>
                 <nav>
@@ -27,6 +28,6 @@ export default function Layout() {
                 </nav>
             </header>
             <Outlet />
-        </>
+        </CategoriesProvider>
     )
 }

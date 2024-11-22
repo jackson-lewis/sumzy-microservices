@@ -1,28 +1,15 @@
-import { getCategories } from '@/lib/category'
 import { addExpense } from '@/lib/expense'
-import { Category, Expense } from '@/types'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Expense } from '@/types'
+import { Dispatch, SetStateAction } from 'react'
+import DateSelector from './date-selector'
+import useCategories from '@/lib/use-categories'
 
 export default function AddExpense({
   setExpenses
 }: {
   setExpenses: Dispatch<SetStateAction<Expense[]>>
 }) {
-  const [categories, setCategories] = useState<Category[]>([])
-
-  useEffect(() => {
-    async function getData() {
-      const categories = await getCategories()
-      if (Array.isArray(categories)) {
-        setCategories(categories)
-      }
-
-      if (categories instanceof Error) {
-        alert(categories.message)
-      }
-    }
-    getData()
-  }, [setCategories])
+  const { categories } = useCategories()
 
   return (
     <form onSubmit={async (event) => {
@@ -55,6 +42,7 @@ export default function AddExpense({
           </option>
         ))}
       </select>
+      <DateSelector />
       <button>Add</button>
     </form>
   )

@@ -1,6 +1,5 @@
-import { getCategories } from '@/lib/category'
 import { Category } from '@/types'
-import { Dispatch, SetStateAction, useEffect } from 'react'
+import { Dispatch, SetStateAction } from 'react'
 import CategoryItem from '../item'
 
 export default function CategoriesList({
@@ -10,20 +9,6 @@ export default function CategoriesList({
   categories: Category[]
   setCategories: Dispatch<SetStateAction<Category[]>>
 }) {
-  useEffect(() => {
-    async function getData() {
-      const categories = await getCategories()
-      if (Array.isArray(categories)) {
-        setCategories(categories)
-      }
-
-      if (categories instanceof Error) {
-        alert(categories.message)
-      }
-    }
-    getData()
-  }, [setCategories])
-
   if (categories.length === 0) {
     return (
       <p>Your categories will show up here.</p>

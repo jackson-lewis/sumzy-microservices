@@ -3,6 +3,7 @@ import { Expense } from '@/types'
 import { deleteExpense, updateExpense } from '@/lib/expense'
 import styles from './index.module.scss'
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react'
+import useCategories from '@/lib/use-categories'
 
 
 export default function ExpenseItem({
@@ -14,6 +15,7 @@ export default function ExpenseItem({
 }) {
   const formattedAmount = formatAmount(expense.amount)
   const formattedDate = formatDate(expense.date)
+  const { categories } = useCategories()
 
   async function handleDeleteClick(
     event: React.MouseEvent<HTMLButtonElement>
@@ -61,18 +63,6 @@ export default function ExpenseItem({
     })
   }
 
-  const categories: [
-    string,
-    Capitalize<string>
-  ][] = [
-    ['fuel', 'Fuel'],
-    ['food', 'Food'],
-    ['car', 'Car'],
-    ['diy', 'DIY'],
-    ['house', 'House'],
-    ['eating_out', 'Easting Out']
-  ]
-
   const [amount, setAmount] = useState(expense.amount)
   const [category, setCategory] = useState(expense.category)
 
@@ -101,12 +91,12 @@ export default function ExpenseItem({
             setCategory((event.target as HTMLSelectElement).value)
           }}
         >
-          {categories.map(([value, label]) => (
+          {categories.map((category) => (
             <option
-              key={value}
-              value={value}
+              key={category._id}
+              value={category._id}
             >
-              {label}
+              {category.name}
             </option>
           ))}
         </select>
