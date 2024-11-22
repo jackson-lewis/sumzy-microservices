@@ -28,8 +28,6 @@ export default function auth(
 
   try {
     const decoded = verify(token, JWT_SECRET) as JwtPayload
-    console.log({ decoded })
-
     req.headers['x-user-id'] = decoded.userId
     next()
   } catch (error) {
