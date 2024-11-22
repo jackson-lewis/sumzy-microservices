@@ -1,18 +1,22 @@
 import { ChangeEvent, useEffect, useState } from 'react'
 import styles from './style.module.scss'
 
-export default function DateSelector() {
-  const [date, setDate] = useState<string>('')
+export default function DateSelector({
+  value
+} : {
+  value?: Date
+}) {
+  const [date, setDate] = useState<string>()
 
   useEffect(() => {
-    const date = new Date()
+    const today = value ? new Date(value) : new Date()
 
     setDate([
-      date.getFullYear(),
-      date.getMonth() + 1,
-      date.getDate()
+      today.getFullYear(),
+      today.getMonth() + 1,
+      today.getDate()
     ].join('-'))
-  }, [])
+  }, [value])
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     setDate(event.target.value)
