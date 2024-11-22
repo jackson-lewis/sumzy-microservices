@@ -69,7 +69,7 @@ export async function apiRequest(
   }
 
   try {
-    const res = await fetch(`http://192.168.1.190:8000/${endpoint}`, options)
+    const res = await fetch(`http://localhost:8000/${endpoint}`, options)
 
     if (res.status >= 500) {
       return new Error('Something went wrong')
