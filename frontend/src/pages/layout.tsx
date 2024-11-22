@@ -1,4 +1,4 @@
-import CategoriesProvider from '@/lib/categories-context'
+import CategoriesProvider from '@/lib/expense-context'
 import { isUserLoggedIn } from '@/lib/user'
 import { Link, Outlet } from 'react-router-dom'
 

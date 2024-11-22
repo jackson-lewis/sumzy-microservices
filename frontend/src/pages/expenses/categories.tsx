@@ -1,9 +1,9 @@
 import AddCategory from '@/components/categories/add'
 import CategoriesList from '@/components/categories/list'
-import useCategories from '@/lib/use-categories'
+import useExpenses from '@/lib/use-expenses'
 
 export default function ExpenseCatgories() {
-  const { categories, setCategories } = useCategories()
+  const { categories, setCategories } = useExpenses()
 
   return (
     <main>
