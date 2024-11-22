@@ -1,0 +1,51 @@
+import express, { Request } from 'express'
+import httpProxy from 'express-http-proxy'
+import cors from 'cors'
+import auth from './auth'
+
+const port = 8000
+const app = express()
+app.use(express.json())
+app.use(cors({
+  origin: 'http://localhost:3000'
+}))
+app.use('/v1/expenses*', auth)
+
+type Service = {
+  endpoint: string,
+  host: string
+}
+
+const services: Service[] = [
+  {
+    endpoint: '/v1/users',
+    host: 'user:8001'
+  },
+  {
+    endpoint: '/v1/expenses',
+    host: 'expense:8002'
+  }
+]
+
+services.map(({ endpoint, host }) => {
+  app.use(
+    endpoint,
+    httpProxy(
+      `http://${host}`,
+      {
+        proxyErrorHandler: (err, res, next) => {
+          switch (err.code) {
+            case 'ECONNREFUSED':
+              return res.status(503).send('Service unavailable')
+            default:
+              return next(err)
+          }
+        }
+      }
+    )
+  )
+})
+
+app.listen(port, () => {
+  console.log(`api gateway listening on port ${port}`)
+})

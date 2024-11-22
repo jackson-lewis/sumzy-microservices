@@ -1,0 +1,78 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - finance-net
+
+  api-gateway:
+    build:
+      context: ./services/api-gateway
+      dockerfile: dockerfile.dev
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+    volumes:
+      - ./services/api-gateway:/app
+      - /app/node_modules
+    networks:
+      - finance-net
+    depends_on:
+      - expense
+
+  user:
+    build:
+      context: ./services/user
+      dockerfile: dockerfile.dev
+    ports:
+      - "8001:8001"
+    environment:
+      - PORT=8001
+    volumes:
+      - ./services/user:/app
+      - /app/node_modules
+    networks:
+      - finance-net
+    depends_on:
+      - mongo
+
+  expense:
+    build:
+      context: ./services/expense
+      dockerfile: dockerfile.dev
+    ports:
+      - "8002:8002"
+    environment:
+      - PORT=8002
+    volumes:
+      - ./services/expense:/app
+      - /app/node_modules
+    networks:
+      - finance-net
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - finance-net
+
+volumes:
+  mongo_data:
+
+networks:
+  finance-net:
+    driver: bridge
