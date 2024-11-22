@@ -68,19 +68,23 @@ export async function apiRequest(
     }
   }
 
-  const res = await fetch(`http://localhost:8000/${endpoint}`, options)
+  try {
+    const res = await fetch(`http://192.168.1.190:8000/${endpoint}`, options)
 
-  if (res.status >= 500) {
-    return new Error('Something went wrong')
-  }
-
-  const json = res.json()
-
-  if (res.status >= 400) {
-    return json.then((data) => {
-      return new Error(data.message)
-    })
-  }
+    if (res.status >= 500) {
+      return new Error('Something went wrong')
+    }
   
-  return json
+    const json = res.json()
+  
+    if (res.status >= 400) {
+      return json.then((data) => {
+        return new Error(data.message)
+      })
+    }
+    
+    return json
+  } catch (error: any) {
+    return new Error(JSON.stringify(error))
+  }
 }
