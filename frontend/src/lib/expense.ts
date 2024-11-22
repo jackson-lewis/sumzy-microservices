@@ -71,3 +71,15 @@ export function getExpenseCategory(
     return category._id === expense.category
   })
 }
+
+export function sortExpensesByDate(a: Expense, b: Expense) {
+  if (a.date > b.date) {
+    return -1
+  }
+
+  if (a.date < b.date) {
+    return 1
+  }
+
+  return 0
+}

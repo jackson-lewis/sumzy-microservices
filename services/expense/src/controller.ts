@@ -20,7 +20,7 @@ export async function create(req: Request, res: Response) {
 
 export async function list(req: Request, res: Response) {
   const userId = req.headers['x-user-id']
-  const expenses = await Expense.find({ userId })
+  const expenses = await Expense.find({ userId }).sort({ date: 'desc' })
 
   res.status(200).send(expenses)
 }
@@ -33,30 +33,8 @@ export async function deleteExpense(req: Request, res: Response) {
 }
 
 export async function update(req: Request, res: Response) {
-  const { _id, amount, category } = req.body
-  const updateRes = await Expense.updateOne({ _id }, { amount, category })
+  const { _id, amount, category, date } = req.body
+  const updateRes = await Expense.updateOne({ _id }, { amount, category, date })
 
   res.status(200).send({ success: !!updateRes.modifiedCount })
-}
-
-class ExpenseTest {
-  constructor(args: any) {
-    console.log('test')
-  }
-}
-
-export async function createTest(req: Request, res: Response) {
-  const userId = req.headers['x-user-id']
-  const { amount, category, date } = req.body
-
-  const expense = new ExpenseTest({
-    userId,
-    amount,
-    category,
-    date
-  })
-
-  // await expense.save()
-
-  res.status(201).send(expense)
 }
