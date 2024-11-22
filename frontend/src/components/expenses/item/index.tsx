@@ -1,6 +1,6 @@
 import { formatAmount, formatDate } from '@/lib/money'
 import { Expense } from '@/types'
-import { deleteExpense, updateExpense } from '@/lib/expense'
+import { deleteExpense, getExpenseCategory, updateExpense } from '@/lib/expense'
 import styles from './index.module.scss'
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react'
 import useCategories from '@/lib/use-categories'
@@ -16,6 +16,7 @@ export default function ExpenseItem({
   const formattedAmount = formatAmount(expense.amount)
   const formattedDate = formatDate(expense.date)
   const { categories } = useCategories()
+  const category = getExpenseCategory(expense, categories)
 
   async function handleDeleteClick(
     event: React.MouseEvent<HTMLButtonElement>
@@ -64,13 +65,13 @@ export default function ExpenseItem({
   }
 
   const [amount, setAmount] = useState(expense.amount)
-  const [category, setCategory] = useState(expense.category)
+  const [categoryInput, setCategoryInput] = useState(expense.category)
 
   return (
     <div className={styles.expense}>
       <p>{formattedDate}</p>
       <p>{formattedAmount}</p>
-      <p>{expense.category}</p>
+      <p>{category?.name}</p>
       <button onClick={handleDeleteClick}>delete</button>
       <form onSubmit={handleUpdate}>
         <input
@@ -85,10 +86,10 @@ export default function ExpenseItem({
         />
         <select
           name="category"
-          value={category}
+          value={categoryInput}
           required
           onChange={(event) => {
-            setCategory((event.target as HTMLSelectElement).value)
+            setCategoryInput((event.target as HTMLSelectElement).value)
           }}
         >
           {categories.map((category) => (

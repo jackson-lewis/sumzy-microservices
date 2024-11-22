@@ -1,4 +1,4 @@
-import { Expense } from '../types'
+import { Category, Expense } from '../types'
 import { apiRequest } from './api'
 
 
@@ -57,4 +57,17 @@ export async function deleteExpense(
     null,
     true
   )
+}
+
+
+/**
+ * Get the category for the expense
+ */
+export function getExpenseCategory(
+  expense: Expense,
+  categories: Category[]
+) {
+  return categories.find((category) => {
+    return category._id === expense.category
+  })
 }
