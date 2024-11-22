@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "start": "docker-compose up --build"
+  },
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/express-http-proxy": "^1.6.6",
