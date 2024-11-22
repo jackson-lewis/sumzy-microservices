@@ -6,7 +6,7 @@
     background-color: #eeeeee;
 }
 
-.delete {
+.action-button {
     width: 36px;
     height: 36px;
     padding: 6px;
@@ -20,6 +20,10 @@
     border-radius: 8px;
 
     transition: 200ms;
+
+    &.edit {
+        right: 54px;
+    }
 
     &:hover {
         background-color: rgba(0, 0, 0, .1);
