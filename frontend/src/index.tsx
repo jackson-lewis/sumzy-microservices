@@ -9,6 +9,7 @@ import Expenses from './pages/expenses'
 import { isUserLoggedIn } from './lib/user'
 import Account from './pages/account'
 import ExpenseCatgories from './pages/expenses/categories'
+import RecurringExpenses from './pages/expenses/recurring'
 // import { promises } from 'fs'
 
 const root = ReactDOM.createRoot(
@@ -40,6 +41,16 @@ const router = createBrowserRouter([
           }
           return null
         },
+      },
+      {
+        path: 'expenses/recurring',
+        element: <RecurringExpenses />,
+        loader: () => {
+          if (!isUserLoggedIn()) {
+            return redirect('/login?next=/expenses/recurring')
+          }
+          return null
+        }
       },
       {
         path: 'expenses/categories',

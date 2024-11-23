@@ -23,6 +23,11 @@
     label {
         display: block;
     }
+
+    &.type {
+        display: flex;
+        gap: 20px;
+    }
 }
 
 .submit {

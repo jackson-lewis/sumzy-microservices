@@ -2,6 +2,10 @@ import { Schema, model } from 'mongoose'
 
 const expenseSchema = new Schema(
   {
+    type: {
+      type: 'string',
+      required: true
+    },
     amount: {
       type: 'number',
       required: true
@@ -17,6 +21,9 @@ const expenseSchema = new Schema(
     date: {
       type: Date,
       default: Date.now
+    },
+    frequency: {
+      type: 'string'
     }
   }
 )

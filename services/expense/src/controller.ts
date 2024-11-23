@@ -4,13 +4,33 @@ import { Expense } from './model'
 
 export async function create(req: Request, res: Response) {
   const userId = req.headers['x-user-id']
-  const { amount, category, date } = req.body
+  const {
+    type,
+    amount,
+    category,
+    date,
+    frequency
+  } = req.body
+
+  if (['one_time', 'recurring'].indexOf(type) < 0) {
+    res.status(401).send({ 
+      message: 'Expense type invalid'
+    })
+  }
+
+  if (type === 'recurring' && !frequency) {
+    res.status(401).send({
+      message: 'Field frequency not set for recurring expense'
+    })
+  }
 
   const expense = new Expense({
     userId,
+    type,
     amount,
     category,
-    date
+    date,
+    frequency
   })
 
   await expense.save()
@@ -20,7 +40,20 @@ export async function create(req: Request, res: Response) {
 
 export async function list(req: Request, res: Response) {
   const userId = req.headers['x-user-id']
-  const expenses = await Expense.find({ userId }).sort({ date: 'desc' })
+  const {
+    type = 'one_time'
+  }: {
+    type?: string
+  } = req.query
+
+  if (['one_time', 'recurring'].indexOf(type) < 0) {
+    res.status(401).send({ 
+      message: 'Expense type invalid'
+    })
+    return
+  }
+
+  const expenses = await Expense.find({ userId, type }).sort({ date: 'desc' })
 
   res.status(200).send(expenses)
 }

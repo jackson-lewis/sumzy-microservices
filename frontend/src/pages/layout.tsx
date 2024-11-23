@@ -13,6 +13,9 @@ export default function Layout() {
                             <Link to="/expenses">Expenses</Link>
                         </li>
                         <li>
+                            <Link to="/expenses/recurring">Recurring</Link>
+                        </li>
+                        <li>
                             <Link to="/expenses/categories">Expense Categories</Link>
                         </li>
                         {isUserLoggedIn() ? (

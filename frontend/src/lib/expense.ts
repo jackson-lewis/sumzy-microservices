@@ -1,14 +1,14 @@
-import { Category, Expense } from '../types'
+import { Category, Expense, ExpenseType } from '../types'
 import { apiRequest } from './api'
 
 
 /**
  * Retrieve a list of expenses for the authenticated user.
  */
-export async function getExpenses()
+export async function getExpenses(type: ExpenseType = 'one_time')
 : Promise<Expense[] | Error> {
   return await apiRequest(
-    'v1/expenses',
+    `v1/expenses?type=${type}`,
     {},
     true
   )

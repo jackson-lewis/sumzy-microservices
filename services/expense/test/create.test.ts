@@ -13,6 +13,7 @@ describe('Create expense', () => {
   it('should add expense to MongoDB database and return 201', async () => {
     const mockValue = {
       userId: 'abc123',
+      type: 'one_time',
       amount: 1,
       category: 'food'
     }
