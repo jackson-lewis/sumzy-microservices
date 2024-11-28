@@ -11,6 +11,7 @@ export async function generateReport(
   year: number,
   month: number
 ) {
+  console.log(`Generating report for ${year}/${month}`)
   const events = await Event.find({
     'eventData.userId': userId
   })
