@@ -34,6 +34,10 @@ export async function login(event: React.FormEvent<HTMLFormElement>) {
     })
 }
 
+export function logout() {
+  document.cookie = 'token=; max-age=0'
+}
+
 export function getUserToken()  {
   let token = ''
   const cookies = document.cookie.split(';')
