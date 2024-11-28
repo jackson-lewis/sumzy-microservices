@@ -43,12 +43,12 @@ export async function generateReport(
     events.filter((event) => {
       return event.eventData.type === type
     }).map((event) => {
-      const expense = event.eventData
+      const { _id } = event.eventData
   
-      if (expenses[expense._id]) {
-        expenses[expense._id].push(event)
+      if (expenses[_id]) {
+        expenses[_id].push(event)
       } else {
-        expenses[expense._id] = [event]
+        expenses[_id] = [event]
       }
     })
 
