@@ -21,6 +21,9 @@ export default function Layout() {
                             </ul>
                         </li>
                         <li>
+                            <Link to="/income">Income</Link>
+                        </li>
+                        <li>
                             <Link to="/reports">Reports</Link>
                         </li>
                         {isUserLoggedIn() ? (

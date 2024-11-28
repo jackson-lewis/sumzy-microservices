@@ -11,6 +11,7 @@ import Account from './pages/account'
 import ExpenseCatgories from './pages/expenses/categories'
 import RecurringExpenses from './pages/expenses/recurring'
 import Reports from './pages/reports'
+import Income from './pages/income'
 // import { promises } from 'fs'
 
 const root = ReactDOM.createRoot(
@@ -62,6 +63,16 @@ const router = createBrowserRouter([
           }
           return null
         }
+      },
+      {
+        path: 'income',
+        element: <Income />,
+        loader: () => {
+          if (!isUserLoggedIn()) {
+            return redirect('/login?next=/income')
+          }
+          return null
+        },
       },
       {
         path: 'reports',
