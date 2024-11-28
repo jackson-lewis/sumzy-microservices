@@ -11,6 +11,7 @@ app.use(cors({
 }))
 app.use('/v1/expenses*', auth)
 app.use('/v1/reporting*', auth)
+app.use('/v1/income*', auth)
 
 type Service = {
   endpoint: string,
@@ -29,6 +30,10 @@ const services: Service[] = [
   {
     endpoint: '/v1/reporting',
     host: 'reporting:8003'
+  },
+  {
+    endpoint: '/v1/income',
+    host: 'income:8004'
   }
 ]
 
