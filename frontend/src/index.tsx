@@ -10,6 +10,7 @@ import { isUserLoggedIn } from './lib/user'
 import Account from './pages/account'
 import ExpenseCatgories from './pages/expenses/categories'
 import RecurringExpenses from './pages/expenses/recurring'
+import Reports from './pages/reports'
 // import { promises } from 'fs'
 
 const root = ReactDOM.createRoot(
@@ -58,6 +59,16 @@ const router = createBrowserRouter([
         loader: () => {
           if (!isUserLoggedIn()) {
             return redirect('/login?next=/expenses')
+          }
+          return null
+        }
+      },
+      {
+        path: 'reports',
+        element: <Reports />,
+        loader: () => {
+          if (!isUserLoggedIn()) {
+            return redirect('/login?next=/reports')
           }
           return null
         }

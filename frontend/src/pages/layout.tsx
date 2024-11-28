@@ -11,12 +11,17 @@ export default function Layout() {
                     <ul>
                         <li>
                             <Link to="/expenses">Expenses</Link>
+                            <ul>
+                                <li>
+                                    <Link to="/expenses/recurring">Recurring</Link>
+                                </li>
+                                <li>
+                                    <Link to="/expenses/categories">Categories</Link>
+                                </li>
+                            </ul>
                         </li>
                         <li>
-                            <Link to="/expenses/recurring">Recurring</Link>
-                        </li>
-                        <li>
-                            <Link to="/expenses/categories">Expense Categories</Link>
+                            <Link to="/reports">Reports</Link>
                         </li>
                         {isUserLoggedIn() ? (
                           <li>

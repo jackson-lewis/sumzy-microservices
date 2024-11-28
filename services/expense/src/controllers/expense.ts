@@ -1,5 +1,7 @@
 import { Request, Response } from 'express'
-import { Expense } from './model'
+import { Expense } from '../models/expense'
+import { generateReports } from './report'
+import { sendToQueue } from '../rabbitmq'
 
 
 export async function create(req: Request, res: Response) {
@@ -34,6 +36,16 @@ export async function create(req: Request, res: Response) {
   })
 
   await expense.save()
+
+  const genDate = new Date(date)
+
+  await generateReports(
+    userId as string,
+    genDate.getFullYear(),
+    genDate.getMonth() + 1
+  )
+
+  sendToQueue(JSON.stringify(expense))
 
   res.status(201).send(expense)
 }

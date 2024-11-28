@@ -6,6 +6,7 @@ import useCategories from '@/lib/use-expenses'
 import CurrencyInput from '@/components/global/currency-input'
 import styles from './style.module.scss'
 import useExpenses from '@/lib/use-expenses'
+import { getFormDataAsExpense } from '@/lib/form-submit'
 
 
 export default function ExpenseDialog({
@@ -43,21 +44,21 @@ export default function ExpenseDialog({
         onSubmit={async (event) => {
           event.preventDefault()
 
-          const data = new FormData(event.target as HTMLFormElement)
-          const formDataEntries: unknown = Object.fromEntries(data.entries())
-          const formDataExpense = formDataEntries as Expense
+          const form = event.target as HTMLFormElement
+          const data = getFormDataAsExpense(form)
+
           let apiData: Expense | Error | { success: boolean }
           let updated: Expense
 
           if (update) {
             updated = {
               ...expense,
-              ...formDataExpense
+              ...data
             }
         
             apiData = await updateExpense(updated)
           } else {
-            apiData = await addExpense(formDataExpense)
+            apiData = await addExpense(data)
           }
 
           if (apiData instanceof Error) {
@@ -85,7 +86,7 @@ export default function ExpenseDialog({
             return newExpenses.sort(sortExpensesByDate)
           })
 
-          closeAction(event.target as HTMLFormElement)
+          closeAction(form)
         }}
       >
         <div className={[styles.field, styles.type].join(' ')}>

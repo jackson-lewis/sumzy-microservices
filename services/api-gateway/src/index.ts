@@ -10,6 +10,7 @@ app.use(cors({
   origin: 'http://localhost:3000'
 }))
 app.use('/v1/expenses*', auth)
+app.use('/v1/reporting*', auth)
 
 type Service = {
   endpoint: string,
@@ -24,6 +25,10 @@ const services: Service[] = [
   {
     endpoint: '/v1/expenses',
     host: 'expense:8002'
+  },
+  {
+    endpoint: '/v1/reporting',
+    host: 'reporting:8003'
   }
 ]
 

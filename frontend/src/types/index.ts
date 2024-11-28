@@ -15,3 +15,13 @@ export type Category = {
   userId: string
   name: string
 }
+
+export type Report = {
+  _id: string
+  userId: string
+  categories: {
+    [k: string]: number
+  }
+  total: number
+  date: Date
+}

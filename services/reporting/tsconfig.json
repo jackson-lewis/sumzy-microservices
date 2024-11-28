@@ -5,7 +5,10 @@
         "skipLibCheck": true,
         "esModuleInterop": true
     },
-    "include": ["src/**/*.ts"],
+    "include": [
+        "src/**/*.ts",
+        "test/**/*.ts"
+    ],
     "watchOptions": {
         "watchFile": "useFsEvents",
         "watchDirectory": "useFsEvents",

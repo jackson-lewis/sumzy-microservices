@@ -22,7 +22,7 @@ export async function login(event: React.FormEvent<HTMLFormElement>) {
       message?: string
     }) => {
       if (data.token) {
-        document.cookie = `token=${data.token};max-age=3600;secure`
+        document.cookie = `token=${data.token};max-age=86400;secure`
         console.log('Log in successful.')
       }
       /**

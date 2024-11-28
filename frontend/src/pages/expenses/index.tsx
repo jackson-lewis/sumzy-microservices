@@ -25,7 +25,7 @@ export default function Expenses() {
 
   return (
     <main>
-      <h2>New expense</h2>
+      <h1>Expenses</h1>
       <button onClick={() => showEditModal()}>Add</button>
       <ExpensesList
         expenses={expenses}

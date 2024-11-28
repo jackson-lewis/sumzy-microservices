@@ -1,9 +1,10 @@
-import { formatAmount, formatDate } from '@/lib/money'
+import { formatDate } from '@/lib/money'
 import { Expense } from '@/types'
 import { deleteExpense, getExpenseCategory } from '@/lib/expense'
 import styles from './index.module.scss'
 import { Dispatch, SetStateAction } from 'react'
 import useExpenses from '@/lib/use-expenses'
+import Money from '@/components/global/money'
 
 
 export default function ExpenseItem({
@@ -13,7 +14,6 @@ export default function ExpenseItem({
     expense: Expense,
     setExpenses: Dispatch<SetStateAction<Expense[]>>
 }) {
-  const formattedAmount = formatAmount(expense.amount)
   const formattedDate = formatDate(expense.date)
   const { categories, showEditModal } = useExpenses()
   const category = getExpenseCategory(expense, categories)
@@ -40,9 +40,11 @@ export default function ExpenseItem({
 
   return (
     <div className={styles.expense}>
-      <p>{formattedDate}</p>
-      <p>{formattedAmount}</p>
-      <p>{category?.name}</p>
+      <time>{formattedDate}</time>
+      <div>
+        <Money amount={expense.amount} />
+        <p className={styles.category}>{category?.name}</p>
+      </div>
       <button
         onClick={handleUpdateClick}
         aria-label="Edit expense"

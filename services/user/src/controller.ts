@@ -2,6 +2,12 @@ import { Request, Response } from 'express'
 import { User } from './model'
 // import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import { Kafka } from 'kafkajs'
+
+const kafka = new Kafka({
+  clientId: 'finance-tracker',
+  brokers: ['kafka1:9092'],
+})
 
 export async function create(req: Request, res: Response) {
   const {
@@ -29,6 +35,18 @@ export async function create(req: Request, res: Response) {
   })
 
   await user.save()
+
+  const producer = kafka.producer()
+
+  await producer.connect()
+  await producer.send({
+    topic: 'user.registration',
+    messages: [
+      { value: JSON.stringify(user) },
+    ],
+  })
+
+  await producer.disconnect()
 
   res.status(201).send({ id: user.id })
 }

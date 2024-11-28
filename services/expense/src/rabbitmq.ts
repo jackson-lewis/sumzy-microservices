@@ -1,0 +1,57 @@
+import amqp from 'amqplib';
+import { generateReports } from './controllers/report'
+
+export const RABBITMQ_URL = 'amqp://rabbitmq';
+export const QUEUE_NAME = 'expense.created';
+export let channel: amqp.Channel;
+
+export const connectToRabbitMQ = async () => {
+  console.log('attempting to connect to rabbitmq')
+  try {
+    // Create a connection to RabbitMQ
+    const connection = await amqp.connect(RABBITMQ_URL);
+    channel = await connection.createChannel();
+
+    // Assert a queue (create it if it doesn't exist)
+    await channel.assertQueue(QUEUE_NAME, {
+      durable: true, // Ensure the queue survives server restarts
+    });
+
+    console.log('Connected to RabbitMQ');
+  } catch (error) {
+    console.error('Error connecting to RabbitMQ:', error);
+  }
+};
+
+// Function to send messages to the queue
+export const sendToQueue = (message: string) => {
+  if (channel) {
+    channel.sendToQueue(QUEUE_NAME, Buffer.from(message), {
+      persistent: true, // Ensure the message survives server restarts
+    });
+    console.log('Message sent:', message);
+  }
+};
+
+
+export const consumeFromQueue = () => {
+  if (channel) {
+    channel.consume(QUEUE_NAME, (msg) => {
+      if (msg) {
+        const expense = JSON.parse(msg.content.toString());
+        console.log('Expense received:', expense);
+
+        const date = new Date(expense.date)
+
+        generateReports(
+          expense.userId,
+          date.getFullYear(),
+          date.getMonth() + 1
+        )
+
+        // Acknowledge the message as processed
+        channel.ack(msg);
+      }
+    });
+  }
+};

@@ -29,19 +29,3 @@ const expenseSchema = new Schema(
 )
 
 export const Expense = model('Expense', expenseSchema)
-
-const categorySchema = new Schema(
-  {
-    name: {
-      type: 'string',
-      required: true,
-      unique: true
-    },
-    userId: {
-      type: 'string',
-      required: true
-    }
-  }
-)
-
-export const Category = model('Category', categorySchema)

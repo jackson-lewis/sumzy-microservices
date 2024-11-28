@@ -13,6 +13,19 @@ services:
     networks:
       - finance-net
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - finance-net
+    environment:
+      RABBITMQ_LISTENER_TCP: "0.0.0.0"
+    volumes:
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+
   api-gateway:
     build:
       context: ./services/api-gateway
@@ -28,6 +41,7 @@ services:
       - finance-net
     depends_on:
       - expense
+      - reporting
 
   user:
     build:
@@ -60,6 +74,24 @@ services:
       - finance-net
     depends_on:
       - mongo
+      - rabbitmq
+
+  reporting:
+    build:
+      context: ./services/reporting
+      dockerfile: dockerfile.dev
+    ports:
+      - "8003:8003"
+    environment:
+      - PORT=8003
+    volumes:
+      - ./services/reporting:/app
+      - /app/node_modules
+    networks:
+      - finance-net
+    depends_on:
+      - mongo
+      - rabbitmq
 
   mongo:
     image: mongo:latest

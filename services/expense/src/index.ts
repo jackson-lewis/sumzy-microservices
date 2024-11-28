@@ -1,10 +1,14 @@
 import express from 'express'
 import { connect } from 'mongoose'
-import { create, deleteExpense, list, update } from './controller'
-import { createCategory, deleteCategory, listCategories } from './category'
+import { create, deleteExpense, list, update } from './controllers/expense'
+import { createCategory, deleteCategory, listCategories } from './controllers/category'
+import { create as createReport, get as getReport } from './controllers/report'
+import { connectToRabbitMQ, consumeFromQueue } from './rabbitmq'
 
 const port = 8002
 const app = express()
+
+connectToRabbitMQ()
 
 app.use(express.json())
 app.get('/', list)
@@ -15,6 +19,9 @@ app.delete('/', deleteExpense)
 app.get('/categories', listCategories)
 app.post('/categories', createCategory)
 app.delete('/categories', deleteCategory)
+
+app.post('/reports', createReport)
+app.get('/reports', getReport)
 
 async function main() {
   try {

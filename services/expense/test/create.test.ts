@@ -1,5 +1,5 @@
 import express from 'express'
-import { create } from '../src/controller'
+import { create } from '../src/controllers/expense'
 import { Expense } from '../src/model'
 import request from 'supertest'
 

@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
-import { Category } from './model'
-import { Error } from 'mongoose'
+import { Category } from '../models/category'
 
 export async function createCategory(req: Request, res: Response) {
   const userId = req.headers['x-user-id']
