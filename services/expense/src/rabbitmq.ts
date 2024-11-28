@@ -1,8 +1,8 @@
 import amqp from 'amqplib';
 import { generateReports } from './controllers/report'
-
+import { Expense, EventType } from '../types'
 export const RABBITMQ_URL = 'amqp://rabbitmq';
-export const QUEUE_NAME = 'expense.created';
+export const QUEUE_NAME = 'expense';
 export let channel: amqp.Channel;
 
 export const connectToRabbitMQ = async () => {
@@ -32,6 +32,26 @@ export const sendToQueue = (message: string) => {
     console.log('Message sent:', message);
   }
 };
+
+
+export function sendExpenseEvent(expense: Expense, eventType: EventType) {
+  if (channel) {
+    const message = {
+      expense,
+      eventType
+    }
+
+    channel.sendToQueue(
+      QUEUE_NAME,
+      Buffer.from(JSON.stringify(message)),
+      {
+        persistent: true
+      }
+    )
+    
+    console.log('Message sent:', message)
+  }
+}
 
 
 export const consumeFromQueue = () => {

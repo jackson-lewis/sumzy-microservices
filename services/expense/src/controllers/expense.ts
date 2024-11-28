@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { Expense } from '../models/expense'
 import { generateReports } from './report'
-import { sendToQueue } from '../rabbitmq'
+import { sendExpenseEvent, sendToQueue } from '../rabbitmq'
 
 
 export async function create(req: Request, res: Response) {
@@ -36,16 +36,7 @@ export async function create(req: Request, res: Response) {
   })
 
   await expense.save()
-
-  const genDate = new Date(date)
-
-  await generateReports(
-    userId as string,
-    genDate.getFullYear(),
-    genDate.getMonth() + 1
-  )
-
-  sendToQueue(JSON.stringify(expense))
+  sendExpenseEvent(expense, 'created')
 
   res.status(201).send(expense)
 }
@@ -71,8 +62,10 @@ export async function list(req: Request, res: Response) {
 }
 
 export async function deleteExpense(req: Request, res: Response) {
-  const { id } = req.query
-  await Expense.deleteOne({ _id: id })
+  const { id: _id } = req.query
+  const expense = await Expense.findOne({ _id })
+  await Expense.deleteOne({ _id })
+  sendExpenseEvent(expense, 'deleted')
 
   res.status(200).send({ success: true })
 }
@@ -80,6 +73,9 @@ export async function deleteExpense(req: Request, res: Response) {
 export async function update(req: Request, res: Response) {
   const { _id, amount, category, date } = req.body
   const updateRes = await Expense.updateOne({ _id }, { amount, category, date })
+
+  const expense = await Expense.findOne({ _id })
+  sendExpenseEvent(expense, 'updated')
 
   res.status(200).send({ success: !!updateRes.modifiedCount })
 }

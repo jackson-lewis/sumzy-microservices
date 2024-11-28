@@ -1,11 +1,11 @@
 import { Schema, model } from 'mongoose'
 import { Expense } from '../types'
 
-interface Event {
+export interface Event {
   aggregateId: string
   aggregateType: 'expense'
   eventData: Expense
-  eventType: 'created' | 'updated'
+  eventType: 'created' | 'updated' | 'deleted'
   createdAt: Date
   version: number
 }

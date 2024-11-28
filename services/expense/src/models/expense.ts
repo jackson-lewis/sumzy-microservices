@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose'
+import { Expense as ExpenseType } from '../../types'
 
-const expenseSchema = new Schema(
+const expenseSchema = new Schema<ExpenseType>(
   {
     type: {
       type: 'string',

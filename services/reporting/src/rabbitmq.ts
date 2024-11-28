@@ -1,11 +1,11 @@
 import amqp from 'amqplib';
 import { Event } from './models/event'
-import { Expense } from './types'
+import { EventType, Expense } from './types'
 import { storeEvent } from './controllers/event'
 import { generateReport } from './controllers/report'
 
 export const RABBITMQ_URL = 'amqp://rabbitmq';
-export const QUEUE_NAME = 'expense.created';
+export const QUEUE_NAME = 'expense';
 export let channel: amqp.Channel;
 
 export const connectToRabbitMQ = async () => {
@@ -25,28 +25,28 @@ export const connectToRabbitMQ = async () => {
   }
 };
 
-// Function to send messages to the queue
-export const sendToQueue = (message: string) => {
-  if (channel) {
-    channel.sendToQueue(QUEUE_NAME, Buffer.from(message), {
-      persistent: true, // Ensure the message survives server restarts
-    });
-    console.log('Message sent:', message);
-  }
-};
-
 
 export const consumeFromQueue = () => {
   if (channel) {
     channel.consume(QUEUE_NAME, async (msg) => {
       if (msg) {
-        const expense: Expense = JSON.parse(msg.content.toString());
+        const {
+          expense,
+          eventType
+        }: {
+          expense: Expense,
+          eventType: EventType
+        } = JSON.parse(msg.content.toString())
 
-        await storeEvent(expense)
-        await generateReport(expense.userId)
+        await storeEvent(expense, eventType)
+        const expenseDate = new Date(expense.date)
+        await generateReport(
+          expense.userId,
+          expenseDate.getFullYear(), 
+          expenseDate.getMonth() + 1
+        )
 
-        // Acknowledge the message as processed
-        channel.ack(msg);
+        channel.ack(msg)
       }
     });
   }
