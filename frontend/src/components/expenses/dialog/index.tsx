@@ -150,11 +150,18 @@ export default function ExpenseDialog({
             </select>
           </div>
         ) : null}
-        <button className={styles.submit}>{update ? 'Update' : 'Add'}</button>
+        <button
+          className={styles.submit}
+        >
+          {update ? 'Update' : 'Add'}
+        </button>
         <button
           type="button"
           onClick={(event) => {
-            closeAction((event.target as HTMLButtonElement).form as HTMLFormElement)
+            closeAction(
+              (event.target as HTMLButtonElement)
+                .form as HTMLFormElement
+            )
           }}
         >
           Cancel
