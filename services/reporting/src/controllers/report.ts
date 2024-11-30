@@ -2,11 +2,12 @@ import { Request, Response } from 'express'
 import { Event } from '../models/event'
 import { Report } from '../models/report'
 import {
-  Expense,
-  ExpenseType, 
+  TransactionType, 
   Event as EventType, 
   AggregateType, 
-  ExpenseEvent
+  ExpenseEvent,
+  Transaction,
+  Expense
 } from '../types'
 
 /**
@@ -36,22 +37,36 @@ export async function generateReport(
   const endOfMonth = new Date(date)
   endOfMonth.setDate(30)
 
-  let total = 0
-  const categories = {}
+  const totals: {
+    income: number
+    expense: number
+    surplus: number
+    expenseCategories: {
+      [k: string]: number
+    }
+  } = {
+    income: 0,
+    expense: 0,
+    surplus: 0,
+    expenseCategories: {}
+  }
 
   /**
-   * Get expense events by expense type
+   * Get events by transaction type
    */
-  function getExpenseEventsByType(type: ExpenseType) {
+  function getEventsByType<T extends AggregateType>(
+    aggregateType: T,
+    type: TransactionType
+  ) {
     const expenses: {
-      [k: Expense['_id']]: ExpenseEvent[]
+      [k: Transaction['_id']]: EventType<T>[]
     } = {}
     const deletedExpenses: string[] = []
 
-    ;(events as ExpenseEvent[])
+    ;(events as EventType<T>[])
       .filter((event) => {
         return (
-          event.aggregateType === 'expense' &&
+          event.aggregateType === aggregateType &&
           event.eventData.type === type
         )
       })
@@ -76,66 +91,101 @@ export async function generateReport(
     return Object.values(expenses)
   }
 
-  const oneTimeExpenseEvents = getExpenseEventsByType('one_time')
-  const recurringExpenseEvents = getExpenseEventsByType('recurring')
+  function filterOneTimeEvents(
+    events: EventType<AggregateType>[][]
+  ) {
+    return events
+      .map((events) => {
+        return events.pop()
+      })
+      .filter((event) => {
+        const transactionDate = new Date(event.eventData.date)
 
-  function calculateTotals(events: ExpenseEvent[]) {
-    events
-      .forEach((event) => {
-        const { eventData: expense } = event
-      
-        total += expense.amount
-    
-        categories[expense.category] = expense.amount + 
-          (categories[expense.category] || 0)
+        /**
+         * Transactions from a previous month may be changes, so this
+         * check should always be against the transaction date rather
+         * than the event date itself.
+         */
+        return transactionDate > date && transactionDate < endOfMonth
       })
   }
 
-  /**
-   * Handle one-time expenses
-   */
-  calculateTotals(oneTimeExpenseEvents
-    .map((events) => {
-      return events.pop()
-    })
-    .filter((event) => {
-      const expenseDate = new Date(event.eventData.date)
-
-      /**
-       * Expenses from a previous month may be changes, so this
-       * check should always be against the expense date rather
-       * than the event date itself.
-       */
-      return expenseDate > date && expenseDate < endOfMonth
-    }))
-
-  /**
-   * Handle recurring expenses
-   */
-  calculateTotals(recurringExpenseEvents
-    .map((events) => {
-      if (!events.length) {
-        return
-      }
-
-      let latestEvent = null
-      
-      events.map((event) => {
-        const eventDate = new Date(event.createdAt)
-
-        if (eventDate < endOfMonth) {
-          latestEvent = event
+  function filterRecurringEvents(
+    events: EventType<AggregateType>[][]
+  ) {
+    return events
+      .map((events) => {
+        if (!events.length) {
+          return
         }
-      })
 
-      return latestEvent
-    })
-    .filter(Boolean))
+        let latestEvent: EventType = null
+        
+        events.map((event) => {
+          const eventDate = new Date(event.createdAt)
+
+          if (eventDate < endOfMonth) {
+            latestEvent = event
+          }
+        })
+
+        return latestEvent
+      })
+      .filter(Boolean)
+  }
+
+  function calculateTransactionTotals<T extends AggregateType>(
+    aggregateType: T,
+    transactionType: TransactionType,
+    reducerFn: (event: EventType<T>) => void
+  ) {
+    const events = getEventsByType(aggregateType, transactionType)
+
+    const filterFn = transactionType === 'one_time' ?
+      filterOneTimeEvents :
+      filterRecurringEvents
+
+    filterFn(events).forEach(reducerFn)
+  }
+
+  /**
+   * Calculate the totals for an aggregate type.
+   * 
+   * @param aggregateType The aggregate type to calculate
+   * @param callback Optional callback function called with
+   * `Array.forEach` after main total added
+   */
+  function calculateTotals<T extends AggregateType>(
+    aggregateType: T,
+    callback: ((event: EventType<AggregateType>) => void) | undefined = null
+  ) {
+    function calculateTotals(event: EventType<AggregateType>) {
+      totals[aggregateType] += event.eventData.amount
+      if (typeof callback === 'function') {
+        callback(event)
+      }
+    }
+
+    calculateTransactionTotals(aggregateType, 'one_time', calculateTotals)
+    calculateTransactionTotals(aggregateType, 'recurring', calculateTotals)
+  }
+
+  calculateTotals(
+    'expense',
+    function(event: EventType<'expense'>) {
+      const { eventData: expense } = event
+
+      totals.expenseCategories[expense.category] = expense.amount + 
+        (totals.expenseCategories[expense.category] || 0)
+    }
+  )
+  calculateTotals('income')
+
+  totals.surplus = totals.income - totals.expense
 
   const reportData = {
     userId,
-    total,
-    categories,
+    totals,
     date
   }
 
@@ -143,19 +193,13 @@ export async function generateReport(
 
   if (existingReport) {
     await Report.updateOne({ _id: existingReport._id }, reportData)
-    return {
-      total,
-      categories
-    }
+    return totals
   }
 
   const report = new Report(reportData)
   await report.save()
 
-  return {
-    total,
-    categories
-  }
+  return totals
 }
 
 
@@ -166,7 +210,12 @@ export async function get(req: Request, res: Response) {
   const date = new Date(Number(year), Number(month) - 1)
   const report = await Report.findOne({ userId, date })
 
-  res.status(200).send(report)
+  if (report) {
+    res.status(200).send(report)
+    return
+  }
+
+  res.status(400).send({ message: 'Report not found' })
 }
 
 
@@ -175,6 +224,7 @@ export async function generate(req: Request, res: Response) {
   const { year, month } = req.params
 
   const data = await generateReport(userId, Number(year), Number(month))
+  console.log(`handling req for ${year}/${month}`)
 
   res.status(200).send(data)
 }

@@ -6,7 +6,7 @@ import { Report } from '@/types'
 import { useEffect, useState } from 'react'
 
 export default function Reports() {
-  const [report, setReport] = useState<Report>()
+  const [report, setReport] = useState<Report | null>(null)
 
   const date = new Date()
   const [activeYM, setActiveYM] = useState<[number, number]>([
@@ -19,7 +19,7 @@ export default function Reports() {
       const data = await getExpenseReports(activeYM[0], activeYM[1])
 
       if (data instanceof Error) {
-        alert(data.message)
+        setReport(null)
         return
       }
 
@@ -37,16 +37,23 @@ export default function Reports() {
       />
       {report ? (
         <>
-          <Money amount={report.total} />
-          {Object.keys(report.categories).map((categoryId) => (
+          <h2>Income</h2>
+          <Money amount={report.totals.income} />
+          <h2>Expense</h2>
+          <Money amount={report.totals.expense} />
+          {Object.keys(report.totals.expenseCategories).map((categoryId) => (
             <Category
               key={categoryId}
               categoryId={categoryId}
-              total={report.categories[categoryId]}
+              total={report.totals.expenseCategories[categoryId]}
             />
           ))}
+          <h2>Surplus</h2>
+          <Money amount={report.totals.surplus} />
         </>
-      ) : null}
+      ) : (
+        <p>Report could not be found.</p>
+      )}
     </main>
   )
 }

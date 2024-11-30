@@ -1,31 +1,32 @@
 import { Schema, model } from 'mongoose'
 
-export interface Report {
-  _id: string
-  total: number
-  categories: {
-    [k: string]: any
-  }
-  userId: string
-  date: Date
-}
 
-const monthlyReportSchema = new Schema<Report>({
-  total: {
-    type: 'number',
-    required: true
-  },
-  categories: {
+const monthlyReportSchema = new Schema({
+  totals: {
     type: 'object',
+    required: true,
     properties: {
-      id: {
-        type: 'string',
-        required: true
-      },
-      total: {
+      income: {
         type: 'number',
         required: true
-      }
+      },
+      expense: {
+        type: 'number',
+        required: true
+      },
+      expenseCategories: {
+        type: 'object',
+        properties: {
+          id: {
+            type: 'string',
+            required: true
+          },
+          total: {
+            type: 'number',
+            required: true
+          }
+        }
+      },
     }
   },
   userId: {

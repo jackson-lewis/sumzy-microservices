@@ -16,7 +16,7 @@ export default function Category({
 
   return (
     <div>
-      <h2>{category?.name}</h2>
+      <h3>{category?.name}</h3>
       <Money amount={total} />
     </div>
   )

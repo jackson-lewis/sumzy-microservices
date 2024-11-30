@@ -19,10 +19,14 @@ export type Category = {
 export type Report = {
   _id: string
   userId: string
-  categories: {
-    [k: string]: number
+  totals: {
+    income: number
+    expense: number
+    surplus: number
+    expenseCategories: {
+      [k: string]: number
+    }
   }
-  total: number
   date: Date
 }
 
