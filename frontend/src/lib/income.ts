@@ -20,7 +20,7 @@ export async function getIncomes(type: TransactionType = 'one_time')
  */
 export async function createIncome(
   income: Income
-) {
+): Promise<Income | Error> {
   return await apiRequest(
     'v1/income',
     'POST',

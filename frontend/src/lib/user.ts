@@ -6,7 +6,7 @@ export async function register(event: React.FormEvent<HTMLFormElement>) {
   const data = new FormData(event.target as HTMLFormElement)
   const body = Object.fromEntries(data.entries())
 
-  await apiRequest('v1/users', 'post', body, false)
+  await apiRequest('v1/users', 'POST', body, false)
 }
 
 
@@ -16,7 +16,7 @@ export async function login(event: React.FormEvent<HTMLFormElement>) {
   const data = new FormData(event.target as HTMLFormElement)
   const body = Object.fromEntries(data.entries())
 
-  await apiRequest('v1/users/login', 'post', body, false)
+  await apiRequest('v1/users/login', 'POST', body, false)
     .then((data: {
       token: string
       message?: string

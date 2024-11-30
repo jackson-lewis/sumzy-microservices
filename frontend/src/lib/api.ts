@@ -11,13 +11,13 @@ type HttpMethods = 'POST' | 'PATCH' | 'DELETE'
  * @param body The object or array to pass as the request body
  * @param auth Should the request be authenticated
  */
-export async function apiRequest<E extends string, M extends HttpMethods>(
-  endpoint: E,
-  method?: M,
+export async function apiRequest(
+  endpoint: string,
+  method?: HttpMethods,
   body?: any,
   auth?: boolean
 ): Promise<
-  (E extends 'v1/expenses' ? M extends 'post' ? Expense : any : any) | 
+  any |
   Error
 >
 
@@ -28,23 +28,23 @@ export async function apiRequest<E extends string, M extends HttpMethods>(
  * @param options The options to pass to `fetch()`
  * @param auth Should the request be authenticated
  */
-export async function apiRequest<E>(
-  endpoint: E,
+export async function apiRequest(
+  endpoint: string,
   options?: RequestInit,
   auth?: boolean
 ): Promise<
-  (E extends `v1/expenses${any}` ? Expense[] : any[]) | 
+  any |
   Error
 >
 
 
-export async function apiRequest<T extends string, M extends HttpMethods>(
-  endpoint: T,
-  optionsOrMethod?: RequestInit | M,
+export async function apiRequest(
+  endpoint: string,
+  optionsOrMethod?: RequestInit | HttpMethods,
   authOrBody?: any,
   auth?: boolean
 ): Promise<
-  (T extends 'v1/expenses' ? M extends 'get' ? Expense[] : Expense : any) | 
+  any | 
   Error
 > {
   let options: RequestInit = {}

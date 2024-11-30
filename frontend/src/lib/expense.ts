@@ -20,7 +20,7 @@ export async function getExpenses(type: TransactionType = 'one_time')
  */
 export async function addExpense(
   expense: Expense
-) {
+): Promise<Expense | Error> {
   return await apiRequest(
     'v1/expenses',
     'POST',
