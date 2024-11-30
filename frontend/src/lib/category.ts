@@ -23,7 +23,7 @@ export async function addCategory(
 ): Promise<Category | Error> {
   return await apiRequest(
     'v1/expenses/categories',
-    'post',
+    'POST',
     category,
     true
   )
@@ -38,7 +38,7 @@ export async function deleteCategory(
 ): Promise<{ success: boolean } | Error> {
   return await apiRequest(
     `v1/expenses/categories?id=${id}`,
-    'delete',
+    'DELETE',
     null,
     true
   )

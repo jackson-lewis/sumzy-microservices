@@ -1,6 +1,6 @@
-import amqp from 'amqplib';
+import amqp, { ConsumeMessage } from 'amqplib';
 import { Event } from './models/event'
-import { EventType, Expense } from './types'
+import { AggregateType, EventType, Expense, Income } from './types'
 import { storeEvent } from './controllers/event'
 import { generateReport } from './controllers/report'
 
@@ -26,28 +26,47 @@ export const connectToRabbitMQ = async () => {
 };
 
 
+async function consumeEvent<T extends AggregateType>(
+  message: ConsumeMessage,
+  aggregateType: T
+) {
+  if (!message) {
+    return
+  }
+
+  const data: {
+    eventType: EventType
+    expense: Expense
+    income: Income
+  } = JSON.parse(message.content.toString())
+
+  let eventData: T extends 'expense' ? Expense : Income
+
+  if (aggregateType === 'expense') {
+    eventData = data.expense as typeof eventData
+  } else {
+    eventData = data.income as typeof eventData
+  }
+
+  await storeEvent(eventData, aggregateType, data.eventType)
+  const date = new Date(eventData.date)
+
+  await generateReport(
+    eventData.userId,
+    date.getFullYear(), 
+    date.getMonth() + 1
+  )
+
+  channel.ack(message)
+}
+
 export const consumeFromQueue = () => {
   if (channel) {
-    channel.consume(QUEUE_NAME, async (msg) => {
-      if (msg) {
-        const {
-          expense,
-          eventType
-        }: {
-          expense: Expense,
-          eventType: EventType
-        } = JSON.parse(msg.content.toString())
-
-        await storeEvent(expense, eventType)
-        const expenseDate = new Date(expense.date)
-        await generateReport(
-          expense.userId,
-          expenseDate.getFullYear(), 
-          expenseDate.getMonth() + 1
-        )
-
-        channel.ack(msg)
-      }
-    });
+    channel.consume('expense', (message) => {
+      consumeEvent(message, 'expense')
+    })
+    channel.consume('income', (message) => {
+      consumeEvent(message, 'income')
+    })
   }
-};
+}

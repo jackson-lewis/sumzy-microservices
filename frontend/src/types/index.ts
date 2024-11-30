@@ -1,8 +1,8 @@
-export type ExpenseType = 'one_time' | 'recurring'
+export type TransactionType = 'one_time' | 'recurring'
 
 export type Expense = {
   _id: string
-  type: ExpenseType
+  type: TransactionType
   userId: string
   date: Date
   amount: number
@@ -24,4 +24,12 @@ export type Report = {
   }
   total: number
   date: Date
+}
+
+export type Income = {
+  _id: string
+  type: TransactionType
+  userId: string
+  date: Date
+  amount: number
 }

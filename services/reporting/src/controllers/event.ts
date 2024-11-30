@@ -1,11 +1,15 @@
 import { Event } from '../models/event'
-import { EventType, Expense } from '../types'
+import { AggregateType, EventType, Expense, Income } from '../types'
 
-export async function storeEvent(expense: Expense, type: EventType) {
+export async function storeEvent<T extends Expense | Income>(
+  eventData: T,
+  aggregateType: AggregateType,
+  type: EventType
+) {
   const event = new Event({
-    aggregateId: expense._id,
-    aggregateType: 'expense',
-    eventData: expense,
+    aggregateId: eventData._id,
+    aggregateType,
+    eventData,
     eventType: type
   })
 

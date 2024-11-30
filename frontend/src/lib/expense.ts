@@ -1,11 +1,11 @@
-import { Category, Expense, ExpenseType } from '../types'
+import { Category, Expense, TransactionType } from '../types'
 import { apiRequest } from './api'
 
 
 /**
  * Retrieve a list of expenses for the authenticated user.
  */
-export async function getExpenses(type: ExpenseType = 'one_time')
+export async function getExpenses(type: TransactionType = 'one_time')
 : Promise<Expense[] | Error> {
   return await apiRequest(
     `v1/expenses?type=${type}`,
@@ -20,10 +20,10 @@ export async function getExpenses(type: ExpenseType = 'one_time')
  */
 export async function addExpense(
   expense: Expense
-): Promise<Expense | Error> {
+) {
   return await apiRequest(
     'v1/expenses',
-    'post',
+    'POST',
     expense,
     true
   )
@@ -53,7 +53,7 @@ export async function deleteExpense(
 ): Promise<{ success: boolean } | Error> {
   return await apiRequest(
     `v1/expenses?id=${id}`,
-    'delete',
+    'DELETE',
     null,
     true
   )

@@ -1,10 +1,10 @@
-import { formatDate } from '@/lib/money'
 import { Expense } from '@/types'
 import { deleteExpense, getExpenseCategory } from '@/lib/expense'
 import styles from './index.module.scss'
 import { Dispatch, SetStateAction } from 'react'
 import useExpenses from '@/lib/use-expenses'
 import Money from '@/components/global/money'
+import Date from '@/components/global/date'
 
 
 export default function ExpenseItem({
@@ -14,7 +14,6 @@ export default function ExpenseItem({
     expense: Expense,
     setExpenses: Dispatch<SetStateAction<Expense[]>>
 }) {
-  const formattedDate = formatDate(expense.date)
   const { categories, showEditModal } = useExpenses()
   const category = getExpenseCategory(expense, categories)
 
@@ -40,7 +39,7 @@ export default function ExpenseItem({
 
   return (
     <div className={styles.expense}>
-      <time>{formattedDate}</time>
+      <Date date={expense.date} />
       <div>
         <Money amount={expense.amount} />
         <p className={styles.category}>{category?.name}</p>

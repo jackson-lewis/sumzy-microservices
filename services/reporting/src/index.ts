@@ -2,7 +2,6 @@ import express from 'express'
 import { connect } from 'mongoose'
 import { connectToRabbitMQ, consumeFromQueue } from './rabbitmq'
 import { get, generate } from './controllers/report'
-import notifier from 'node-notifier'
 
 const port = 8003
 const app = express()
@@ -23,11 +22,6 @@ async function main() {
   
     app.listen(port, () => {
       console.log(`reporting service listening on port ${port}`)
-
-      notifier.notify({
-        title: 'Finance Tracker',
-        message: 'Reporting Service online'
-      });
     })
   } catch(error) {
     console.error(error)

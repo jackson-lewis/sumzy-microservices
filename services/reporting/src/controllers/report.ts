@@ -1,7 +1,13 @@
 import { Request, Response } from 'express'
 import { Event } from '../models/event'
 import { Report } from '../models/report'
-import { Expense, ExpenseType } from '../types'
+import {
+  Expense,
+  ExpenseType, 
+  Event as EventType, 
+  AggregateType, 
+  ExpenseEvent
+} from '../types'
 
 /**
  * A report is a monthly summary of expenses.
@@ -12,9 +18,10 @@ export async function generateReport(
   month: number
 ) {
   console.log(`Generating report for ${year}/${month}`)
-  const events = await Event.find({
-    'eventData.userId': userId
-  })
+  const events: EventType<AggregateType>[] = 
+    await Event.find({
+      'eventData.userId': userId
+    })
     .sort({ createdAt: 1 })
 
   if (!events.length) {
@@ -37,52 +44,59 @@ export async function generateReport(
    */
   function getExpenseEventsByType(type: ExpenseType) {
     const expenses: {
-      [k: Expense['_id']]: Event[]
+      [k: Expense['_id']]: ExpenseEvent[]
     } = {}
+    const deletedExpenses: string[] = []
 
-    events.filter((event) => {
-      return event.eventData.type === type
-    }).map((event) => {
-      const { _id } = event.eventData
-  
-      if (expenses[_id]) {
-        expenses[_id].push(event)
-      } else {
-        expenses[_id] = [event]
-      }
+    ;(events as ExpenseEvent[])
+      .filter((event) => {
+        return (
+          event.aggregateType === 'expense' &&
+          event.eventData.type === type
+        )
+      })
+      .map((event) => {
+        const { aggregateId } = event
+
+        if (event.eventType == 'deleted') {
+          deletedExpenses.push(aggregateId)
+        }
+    
+        if (expenses[aggregateId]) {
+          expenses[aggregateId].push(event)
+        } else {
+          expenses[aggregateId] = [event]
+        }
+      })
+
+    deletedExpenses.forEach((expenseId) => {
+      delete expenses[expenseId]
     })
 
-    return expenses
+    return Object.values(expenses)
   }
 
   const oneTimeExpenseEvents = getExpenseEventsByType('one_time')
   const recurringExpenseEvents = getExpenseEventsByType('recurring')
 
-
-  function calculateTotals(events: Event[]) {
-    events.forEach((event) => {
-      const { eventData: expense } = event
+  function calculateTotals(events: ExpenseEvent[]) {
+    events
+      .forEach((event) => {
+        const { eventData: expense } = event
+      
+        total += expense.amount
     
-      total += expense.amount
-  
-      categories[expense.category] = expense.amount + 
-        (categories[expense.category] || 0)
-    })
+        categories[expense.category] = expense.amount + 
+          (categories[expense.category] || 0)
+      })
   }
 
   /**
    * Handle one-time expenses
    */
-  calculateTotals(Object.values(oneTimeExpenseEvents)
+  calculateTotals(oneTimeExpenseEvents
     .map((events) => {
       return events.pop()
-    })
-    .filter((event) => {
-      if (event.eventData.type === 'recurring') {
-        return false
-      }
-
-      return event.eventType !== 'deleted'
     })
     .filter((event) => {
       const expenseDate = new Date(event.eventData.date)
@@ -98,20 +112,9 @@ export async function generateReport(
   /**
    * Handle recurring expenses
    */
-  calculateTotals(Object.values(recurringExpenseEvents)
+  calculateTotals(recurringExpenseEvents
     .map((events) => {
-      const foundEvents = events.filter((event) => {
-        return event.eventData.type === 'recurring'
-      })
-
-      if (foundEvents.length) {
-        return foundEvents
-      }
-
-      return false
-    })
-    .map((events) => {
-      if (!events) {
+      if (!events.length) {
         return
       }
 

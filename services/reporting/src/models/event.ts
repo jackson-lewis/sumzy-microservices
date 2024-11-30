@@ -1,16 +1,8 @@
 import { Schema, model } from 'mongoose'
-import { Expense } from '../types'
+import { AggregateType, Event as EventType } from '../types'
 
-export interface Event {
-  aggregateId: string
-  aggregateType: 'expense'
-  eventData: Expense
-  eventType: 'created' | 'updated' | 'deleted'
-  createdAt: Date
-  version: number
-}
 
-const eventSchema = new Schema<Event>(
+const eventSchema = new Schema<EventType<AggregateType>>(
   {
     aggregateId: {
       type: 'string',

@@ -1,6 +1,7 @@
 import { getUserToken } from '@/lib/user'
+import { Expense } from '@/types'
 
-type HttpMethods = 'post' | 'PATCH' | 'delete'
+type HttpMethods = 'POST' | 'PATCH' | 'DELETE'
 
 /**
  * Make a POST request to the API gateway.
@@ -10,12 +11,15 @@ type HttpMethods = 'post' | 'PATCH' | 'delete'
  * @param body The object or array to pass as the request body
  * @param auth Should the request be authenticated
  */
-export async function apiRequest(
-  endpoint: string,
-  method?: HttpMethods,
+export async function apiRequest<E extends string, M extends HttpMethods>(
+  endpoint: E,
+  method?: M,
   body?: any,
   auth?: boolean
-): Promise<any | Error>
+): Promise<
+  (E extends 'v1/expenses' ? M extends 'post' ? Expense : any : any) | 
+  Error
+>
 
 /**
  * Make a request to the API gateway.
@@ -24,19 +28,25 @@ export async function apiRequest(
  * @param options The options to pass to `fetch()`
  * @param auth Should the request be authenticated
  */
-export async function apiRequest(
-  endpoint: string,
+export async function apiRequest<E>(
+  endpoint: E,
   options?: RequestInit,
   auth?: boolean
-): Promise<any | Error>
+): Promise<
+  (E extends `v1/expenses${any}` ? Expense[] : any[]) | 
+  Error
+>
 
 
-export async function apiRequest(
-  endpoint: string,
-  optionsOrMethod?: RequestInit | HttpMethods,
+export async function apiRequest<T extends string, M extends HttpMethods>(
+  endpoint: T,
+  optionsOrMethod?: RequestInit | M,
   authOrBody?: any,
   auth?: boolean
-): Promise<any | Error> {
+): Promise<
+  (T extends 'v1/expenses' ? M extends 'get' ? Expense[] : Expense : any) | 
+  Error
+> {
   let options: RequestInit = {}
 
   if (typeof optionsOrMethod === 'string') {

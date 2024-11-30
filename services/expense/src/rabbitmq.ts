@@ -38,7 +38,8 @@ export function sendExpenseEvent(expense: Expense, eventType: EventType) {
   if (channel) {
     const message = {
       expense,
-      eventType
+      eventType,
+      aggregateType: 'expense'
     }
 
     channel.sendToQueue(

@@ -1,5 +1,5 @@
 import { addExpense, sortExpensesByDate, updateExpense } from '@/lib/expense'
-import { Expense, ExpenseType } from '@/types'
+import { Expense, TransactionType } from '@/types'
 import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from 'react'
 import DateSelector from './date-selector'
 import useCategories from '@/lib/use-expenses'
@@ -16,7 +16,7 @@ export default function ExpenseDialog({
 }: {
   expense?: Expense
   setExpenses: Dispatch<SetStateAction<Expense[]>>
-  defaultType?: ExpenseType
+  defaultType?: TransactionType
 }) {
   const update = !!expense
   const { categories } = useCategories()
@@ -99,7 +99,7 @@ export default function ExpenseDialog({
               disabled={update}
               checked={type === 'one_time'}
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                setType(event.target.value as ExpenseType)
+                setType(event.target.value as TransactionType)
               }}
             />
             <label htmlFor="type-one_time">One-time</label>
@@ -113,7 +113,7 @@ export default function ExpenseDialog({
               disabled={update}
               checked={type === 'recurring'}
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                setType(event.target.value as ExpenseType)
+                setType(event.target.value as TransactionType)
               }}
             />
             <label htmlFor="type-recurring">Recurring</label>
