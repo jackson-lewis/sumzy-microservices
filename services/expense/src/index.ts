@@ -1,9 +1,9 @@
 import express from 'express'
 import { connect } from 'mongoose'
-import { create, deleteExpense, list, update } from './controllers/expense'
+import { batchCreate, create, deleteExpense, list, update } from './controllers/expense'
 import { createCategory, deleteCategory, listCategories } from './controllers/category'
 import { create as createReport, get as getReport } from './controllers/report'
-import { connectToRabbitMQ, consumeFromQueue } from './rabbitmq'
+import { connectToRabbitMQ } from './rabbitmq'
 
 const port = 8002
 const app = express()
@@ -15,6 +15,8 @@ app.get('/', list)
 app.post('/', create)
 app.patch('/', update)
 app.delete('/', deleteExpense)
+
+app.post('/batch', batchCreate)
 
 app.get('/categories', listCategories)
 app.post('/categories', createCategory)

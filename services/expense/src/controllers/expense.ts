@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { Expense } from '../models/expense'
 import { generateReports } from './report'
 import { sendExpenseEvent, sendToQueue } from '../rabbitmq'
+import { Expense } from '../../types'
 
 
 export async function create(req: Request, res: Response) {
@@ -78,4 +79,49 @@ export async function update(req: Request, res: Response) {
   sendExpenseEvent(expense, 'updated')
 
   res.status(200).send({ success: !!updateRes.modifiedCount })
+}
+
+export async function batchCreate(req: Request, res: Response) {
+  const userId = req.headers['x-user-id']
+  const {
+    expenses
+  }: {
+    expenses: []
+  } = req.body
+
+  expenses.map(async (expenseData) => {
+    const {
+      type,
+      amount,
+      category,
+      date,
+      frequency
+    } = expenseData
+
+    if (['one_time', 'recurring'].indexOf(type) < 0) {
+      res.status(401).send({ 
+        message: 'Expense type invalid'
+      })
+    }
+  
+    if (type === 'recurring' && !frequency) {
+      res.status(401).send({
+        message: 'Field frequency not set for recurring expense'
+      })
+    }
+  
+    const expense = new Expense({
+      userId,
+      type,
+      amount,
+      category,
+      date,
+      frequency
+    })
+  
+    await expense.save()
+    sendExpenseEvent(expense, 'created')
+  })
+
+  res.status(201)
 }
