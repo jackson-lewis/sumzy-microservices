@@ -1,6 +1,7 @@
 import Money from '@/components/global/money'
 import Category from '@/components/reports/category'
 import MonthlySelector from '@/components/reports/monthly-selector'
+import MonthlySummaryReport from '@/components/reports/monthly-summary'
 import { getExpenseReports } from '@/lib/reports'
 import { Report } from '@/types'
 import { useEffect, useState } from 'react'
@@ -35,25 +36,7 @@ export default function Reports() {
         activeYM={activeYM}
         setActiveYM={setActiveYM}
       />
-      {report ? (
-        <>
-          <h2>Income</h2>
-          <Money amount={report.totals.income} />
-          <h2>Expense</h2>
-          <Money amount={report.totals.expense} />
-          {Object.keys(report.totals.expenseCategories).map((categoryId) => (
-            <Category
-              key={categoryId}
-              categoryId={categoryId}
-              total={report.totals.expenseCategories[categoryId]}
-            />
-          ))}
-          <h2>Surplus</h2>
-          <Money amount={report.totals.surplus} />
-        </>
-      ) : (
-        <p>Report could not be found.</p>
-      )}
+      <MonthlySummaryReport report={report} />
     </main>
   )
 }
