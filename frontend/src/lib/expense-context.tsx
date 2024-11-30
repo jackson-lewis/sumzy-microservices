@@ -42,7 +42,7 @@ export default function ExpenseProvider({
       }
     }
     getData()
-  }, [setCategories])
+  }, [])
 
   function showEditModal(expense?: Expense) {
     const dialog = dialogRef.current

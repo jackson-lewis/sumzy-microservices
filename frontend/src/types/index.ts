@@ -14,6 +14,7 @@ export type Category = {
   _id: string
   userId: string
   name: string
+  type: TransactionType
 }
 
 export type Report = {
@@ -36,4 +37,5 @@ export type Income = {
   userId: string
   date: Date
   amount: number
+  category: string
 }

@@ -26,8 +26,9 @@ export default function CategoryItem({
   }
 
   return (
-    <div>
+    <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
       <p>{category.name}</p>
+      <p>{category.type}</p>
       <button onClick={handleDeleteClick}>delete</button>
     </div>
   )

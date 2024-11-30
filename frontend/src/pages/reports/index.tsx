@@ -1,5 +1,3 @@
-import Money from '@/components/global/money'
-import Category from '@/components/reports/category'
 import MonthlySelector from '@/components/reports/monthly-selector'
 import MonthlySummaryReport from '@/components/reports/monthly-summary'
 import { getExpenseReports } from '@/lib/reports'
@@ -8,6 +6,7 @@ import { useEffect, useState } from 'react'
 
 export default function Reports() {
   const [report, setReport] = useState<Report | null>(null)
+  const [title, setTitle] = useState('')
 
   const date = new Date()
   const [activeYM, setActiveYM] = useState<[number, number]>([
@@ -27,11 +26,18 @@ export default function Reports() {
       setReport(data)
     }
     getData()
+
+    const date = new Date(activeYM[0], activeYM[1] - 1)
+    const monthYear = date.toLocaleDateString('en-GB', {
+      month: 'long',
+      year: 'numeric'
+    })
+    setTitle(`${monthYear} Report`)
   }, [activeYM])
 
   return (
     <main>
-      <h1>Monthly Reports</h1>
+      <h1>{title}</h1>
       <MonthlySelector
         activeYM={activeYM}
         setActiveYM={setActiveYM}

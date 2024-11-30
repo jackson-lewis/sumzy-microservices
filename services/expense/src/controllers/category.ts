@@ -3,12 +3,13 @@ import { Category } from '../models/category'
 
 export async function createCategory(req: Request, res: Response) {
   const userId = req.headers['x-user-id']
-  const { name } = req.body
+  const { name, type } = req.body
 
   try {
     const category = new Category({
       userId,
-      name
+      name,
+      type
     })
   
     await category.save()

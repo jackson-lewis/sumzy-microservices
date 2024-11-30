@@ -1,7 +1,5 @@
 import Money from '@/components/global/money'
 import { Report } from '@/types'
-import Category from '../category'
-import { useState } from 'react'
 import styles from './style.module.scss'
 import ExpenseCategories from './expense-categories'
 
@@ -10,7 +8,6 @@ export default function MonthlySummaryReport({
 } : {
   report: Report | null
 }) {
-  const [showExpenseCats, setExpenseCats] = useState(false)
   if (!report) {
     return (
       <p>Report could not be found.</p>
@@ -19,9 +16,6 @@ export default function MonthlySummaryReport({
 
   return (
     <>
-      <button onClick={() => {
-        setExpenseCats(!showExpenseCats)
-      }}>{showExpenseCats ? 'Hide' : 'Show'} expense categories</button>
       <ExpenseCategories
         categories={report.totals.expenseCategories}
       />

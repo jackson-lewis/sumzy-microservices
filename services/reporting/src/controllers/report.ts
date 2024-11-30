@@ -4,10 +4,8 @@ import { Report } from '../models/report'
 import {
   TransactionType, 
   Event as EventType, 
-  AggregateType, 
-  ExpenseEvent,
+  AggregateType,
   Transaction,
-  Expense
 } from '../types'
 
 /**

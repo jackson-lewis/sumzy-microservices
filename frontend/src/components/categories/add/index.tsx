@@ -27,7 +27,19 @@ export default function AddCategory({
         ]
       })
     }}>
-      <input type="text" name="name" required />
+      <label htmlFor="name">Name</label>
+      <input type="text" name="name" id="name" required />
+      <fieldset>
+        <legend>Type</legend>
+        <div>
+          <input type="radio" name="type" id="type_one_time" value="one_time" />
+          <label htmlFor="type_one_time">One-time</label>
+        </div>
+        <div>
+          <input type="radio" name="type" id="type_recurring" value="recurring" />
+          <label htmlFor="type_recurring">Recurring</label>
+        </div>
+      </fieldset>
       <button>Add</button>
     </form>
   )
