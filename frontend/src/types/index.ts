@@ -1,4 +1,5 @@
 export type TransactionType = 'one_time' | 'recurring'
+export type ComparePeriod = 'prevMonth' | 'yearOverYear'
 
 export type Expense = {
   _id: string
@@ -17,16 +18,29 @@ export type Category = {
   type: TransactionType
 }
 
+export type ReportTotals = {
+  income: number
+  expense: number
+  surplus: number
+}
+
+export type CompareTotal = {
+  amount: number
+  percentage: number
+}
+
 export type Report = {
   _id: string
   userId: string
-  totals: {
-    income: number
-    expense: number
-    surplus: number
+  totals: ReportTotals & {
     expenseCategories: {
       [k: string]: number
     }
+  }
+  compare: {
+    [k in ComparePeriod]: {
+      [k in keyof ReportTotals]: CompareTotal
+    } | null
   }
   date: Date
 }

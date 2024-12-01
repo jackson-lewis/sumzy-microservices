@@ -1,8 +1,6 @@
 import { Request, Response } from 'express'
 import { Expense } from '../models/expense'
-import { generateReports } from './report'
-import { sendExpenseEvent, sendToQueue } from '../rabbitmq'
-import { Expense } from '../../types'
+import { sendExpenseEvent } from '../rabbitmq'
 
 
 export async function create(req: Request, res: Response) {

@@ -6,7 +6,12 @@ import {
   Event as EventType, 
   AggregateType,
   Transaction,
+  ComparePeriod,
+  ReportTotals,
+  CompareTotals,
+  Totals,
 } from '../types'
+
 
 /**
  * A report is a monthly summary of expenses.
@@ -35,14 +40,7 @@ export async function generateReport(
   const endOfMonth = new Date(date)
   endOfMonth.setDate(30)
 
-  const totals: {
-    income: number
-    expense: number
-    surplus: number
-    expenseCategories: {
-      [k: string]: number
-    }
-  } = {
+  const totals: ReportTotals = {
     income: 0,
     expense: 0,
     surplus: 0,
@@ -155,9 +153,9 @@ export async function generateReport(
    */
   function calculateTotals<T extends AggregateType>(
     aggregateType: T,
-    callback: ((event: EventType<AggregateType>) => void) | undefined = null
+    callback: ((event: EventType<T>) => void) | undefined = null
   ) {
-    function calculateTotals(event: EventType<AggregateType>) {
+    function calculateTotals(event: EventType<T>) {
       totals[aggregateType] += event.eventData.amount
       if (typeof callback === 'function') {
         callback(event)
@@ -181,9 +179,63 @@ export async function generateReport(
 
   totals.surplus = totals.income - totals.expense
 
+  /**
+   * Compare this report:
+   * - previous month
+   * - year on year
+   */
+  async function compareTotals(
+    period: ComparePeriod
+  ): Promise<CompareTotals | null> {
+    const compareDate = new Date(date)
+
+    if (period === 'prevMonth') {
+      if (month === 1) {
+        compareDate.setMonth(11)
+        compareDate.setFullYear(year - 1)
+      } else {
+        compareDate.setMonth(month - 2)
+      }
+    } else {
+      compareDate.setFullYear(year - 1)
+    }
+  
+    const compareReport = await Report.findOne({ userId, date: compareDate })
+
+    if (!compareReport) {
+      return null
+    }
+
+    function calculateCompareTotal(type: keyof Totals) {
+      const total = totals[type]
+      const compareTotal = compareTotals[type]
+
+      return {
+        amount: total - compareTotal,
+        percentage: Number((((total - compareTotal) / total) * 100).toFixed(2))
+      }
+    }
+
+    const compareTotals = compareReport.totals as ReportTotals
+
+    return {
+      income: calculateCompareTotal('income'),
+      expense: calculateCompareTotal('expense'),
+      surplus: calculateCompareTotal('surplus')
+    }
+  }
+
+  const compare: {
+    [k in ComparePeriod]: CompareTotals | null
+  } = {
+    prevMonth: await compareTotals('prevMonth'),
+    yearOverYear: await compareTotals('yearOverYear')
+  }
+
   const reportData = {
     userId,
     totals,
+    compare,
     date
   }
 
@@ -191,13 +243,13 @@ export async function generateReport(
 
   if (existingReport) {
     await Report.updateOne({ _id: existingReport._id }, reportData)
-    return totals
+    return reportData
   }
 
   const report = new Report(reportData)
   await report.save()
 
-  return totals
+  return reportData
 }
 
 

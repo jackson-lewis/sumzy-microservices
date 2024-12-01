@@ -42,11 +42,26 @@
     }
 
     dd {
-        grid-row: 2;
         margin: 0;
 
-        font-weight: 600;
-        font-size: 1.25rem;
+        &.total {
+            grid-row: 2;
+    
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+        &.compare {
+            grid-row: 3;
+        }
+
+        &.positive {
+            color: green;
+        }
+
+        &.negative {
+            color: red;
+        }
     }
 }
 
@@ -64,4 +79,10 @@
         padding-bottom: 4px;
         border-bottom: 1px solid #ddd;
     }
+}
+
+.compare-selector {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
 }

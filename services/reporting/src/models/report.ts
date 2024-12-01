@@ -29,6 +29,64 @@ const monthlyReportSchema = new Schema({
       },
     }
   },
+  compare: {
+    type: 'object',
+    required: true,
+    properties: {
+      prevMonth: {
+        type: 'object',
+        properties: {
+          income: {
+            type: 'object',
+            properties: {
+              amount: {
+                type: 'number'
+              },
+              percentage: {
+                type: 'number'
+              }
+            }
+          },
+          expense: {
+            type: 'object',
+            properties: {
+              amount: {
+                type: 'number'
+              },
+              percentage: {
+                type: 'number'
+              }
+            }
+          },
+          surplus: {
+            type: 'object',
+            properties: {
+              amount: {
+                type: 'number'
+              },
+              percentage: {
+                type: 'number'
+              }
+            }
+          }
+        }
+      },
+      yearOverYear: {
+        type: 'object',
+        properties: {
+          income: {
+            type: 'number'
+          },
+          expense: {
+            type: 'number'
+          },
+          surplus: {
+            type: 'number'
+          }
+        }
+      }
+    }
+  },
   userId: {
     type: 'string',
     required: true

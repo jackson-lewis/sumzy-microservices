@@ -35,6 +35,7 @@ export default function MonthlySelector({
         value={activeYM[0]}
         onChange={handleChange}
       >
+        <option>2023</option>
         <option>2024</option>
       </select>
       <select

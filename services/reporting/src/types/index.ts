@@ -1,6 +1,7 @@
 export type TransactionType = 'one_time' | 'recurring'
 export type EventType = 'created' | 'updated' | 'deleted'
 export type AggregateType = 'expense' | 'income'
+export type ComparePeriod = 'prevMonth' | 'yearOverYear'
 
 export type Transaction = {
   _id: string
@@ -28,3 +29,22 @@ export type Event<T = AggregateType> = {
 
 export type ExpenseEvent = Event<'expense'>
 export type IncomeEvent = Event<'income'>
+
+export type Totals = {
+  income: number
+  expense: number
+  surplus: number
+}
+
+export type ReportTotals = Totals & {
+  expenseCategories?: {
+    [k: string]: number
+  }
+}
+
+export type CompareTotals = {
+  [k in keyof Totals]: {
+    amount: number
+    percentage: number
+  }
+}
