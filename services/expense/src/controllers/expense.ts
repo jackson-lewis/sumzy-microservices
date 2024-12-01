@@ -1,7 +1,9 @@
 import { Request, Response } from 'express'
 import { Expense } from '../models/expense'
 import { sendExpenseEvent } from '../rabbitmq'
-
+import { RootFilterQuery } from 'mongoose'
+import { Expense as ExpenseType } from '../../types'
+import { formatDate } from '../lib/utils'
 
 export async function create(req: Request, res: Response) {
   const userId = req.headers['x-user-id']
@@ -40,12 +42,17 @@ export async function create(req: Request, res: Response) {
   res.status(201).send(expense)
 }
 
+
 export async function list(req: Request, res: Response) {
   const userId = req.headers['x-user-id']
   const {
-    type = 'one_time'
+    type = 'one_time',
+    from,
+    to
   }: {
     type?: string
+    from?: string
+    to?: string
   } = req.query
 
   if (['one_time', 'recurring'].indexOf(type) < 0) {
@@ -55,7 +62,29 @@ export async function list(req: Request, res: Response) {
     return
   }
 
-  const expenses = await Expense.find({ userId, type }).sort({ date: 'desc' })
+  const find: RootFilterQuery<ExpenseType> = {
+    userId,
+    type
+  }
+
+  /**
+   * Support unix time stamp and YYYY-MM-DD or YYYY/MM/DD
+   */
+  if (from && to) {
+    const fromDate = formatDate(from)
+    const toDate = formatDate(to)
+
+    if (fromDate && toDate) {
+      find.date = {
+        $gte: fromDate.toISOString(),
+        $lt: toDate.toISOString()
+      }
+    }
+  }
+
+  const expenses = await Expense
+    .find(find)
+    .sort({ date: 'desc' })
 
   res.status(200).send(expenses)
 }
