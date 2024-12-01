@@ -43,6 +43,7 @@ export type Report = {
     } | null
   }
   date: Date
+  lastUpdatedDate: Date
 }
 
 export type Income = {

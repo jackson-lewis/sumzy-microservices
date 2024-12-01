@@ -54,6 +54,22 @@ function Total({
   )
 }
 
+function LastUpdatedDate({ date } : { date: Date }) {
+  const dateTime = date.toLocaleDateString('en-GB', {
+    'dateStyle': 'medium'
+  })
+
+  const displayTime = date.toLocaleDateString('en-GB')
+
+  return (
+    <p>
+      Last updated:
+      {' '}
+      <time dateTime={dateTime}>{displayTime}</time>
+    </p>
+  )
+}
+
 export default function MonthlySummaryReport({
   report
 } : {
@@ -70,6 +86,7 @@ export default function MonthlySummaryReport({
 
   return (
     <>
+      <LastUpdatedDate date={new Date(report.lastUpdatedDate)} />
       <ExpenseCategories
         categories={report.totals.expenseCategories}
       />
@@ -93,6 +110,8 @@ export default function MonthlySummaryReport({
       <CompareSelector
         comparePeriod={comparePeriod}
         setComparePeriod={setComparePeriod}
+        hasPrevMonthReport={!!report.compare.prevMonth}
+        hasYearOverYearReport={!!report.compare.yearOverYear}
       />
     </>
   )    

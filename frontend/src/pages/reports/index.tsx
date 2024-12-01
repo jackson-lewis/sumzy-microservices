@@ -37,11 +37,11 @@ export default function Reports() {
 
   return (
     <main>
-      <h1>{title}</h1>
       <MonthlySelector
         activeYM={activeYM}
         setActiveYM={setActiveYM}
       />
+      <h1>{title}</h1>
       <MonthlySummaryReport report={report} />
     </main>
   )
