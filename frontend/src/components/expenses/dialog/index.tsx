@@ -1,4 +1,4 @@
-import { addExpense, sortExpensesByDate, updateExpense } from '@/lib/expense'
+import { addExpense, updateExpense } from '@/lib/expense'
 import { Expense, TransactionType } from '@/types'
 import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from 'react'
 import DateSelector from './date-selector'
@@ -6,7 +6,8 @@ import useCategories from '@/lib/use-expenses'
 import CurrencyInput from '@/components/global/currency-input'
 import styles from './style.module.scss'
 import useExpenses from '@/lib/use-expenses'
-import { getFormDataAsExpense } from '@/lib/form-submit'
+import { getFormDataAs } from '@/lib/form-submit'
+import { sortTransactionsByDate } from '@/lib/shared'
 
 
 export default function ExpenseDialog({
@@ -45,7 +46,7 @@ export default function ExpenseDialog({
           event.preventDefault()
 
           const form = event.target as HTMLFormElement
-          const data = getFormDataAsExpense(form)
+          const data = getFormDataAs(form, 'expense')
 
           let apiData: Expense | Error | { success: boolean }
           let updated: Expense
@@ -83,7 +84,7 @@ export default function ExpenseDialog({
               ]
             }
 
-            return newExpenses.sort(sortExpensesByDate)
+            return newExpenses.sort(sortTransactionsByDate)
           })
 
           closeAction(form)

@@ -1,4 +1,4 @@
-import { Category, Expense, TransactionType } from '../types'
+import { Category, Expense, Income, TransactionType } from '../types'
 import { apiRequest } from './api'
 
 
@@ -70,16 +70,4 @@ export function getExpenseCategory(
   return categories.find((category) => {
     return category._id === expense.category
   })
-}
-
-export function sortExpensesByDate(a: Expense, b: Expense) {
-  if (a.date > b.date) {
-    return -1
-  }
-
-  if (a.date < b.date) {
-    return 1
-  }
-
-  return 0
 }
