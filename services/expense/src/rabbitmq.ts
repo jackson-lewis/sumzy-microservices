@@ -1,5 +1,4 @@
 import amqp from 'amqplib';
-import { generateReports } from './controllers/report'
 import { Expense, EventType } from '../types'
 export const RABBITMQ_URL = 'amqp://rabbitmq';
 export const QUEUE_NAME = 'expense';
@@ -53,26 +52,3 @@ export function sendExpenseEvent(expense: Expense, eventType: EventType) {
     console.log('Message sent:', message)
   }
 }
-
-
-export const consumeFromQueue = () => {
-  if (channel) {
-    channel.consume(QUEUE_NAME, (msg) => {
-      if (msg) {
-        const expense = JSON.parse(msg.content.toString());
-        console.log('Expense received:', expense);
-
-        const date = new Date(expense.date)
-
-        generateReports(
-          expense.userId,
-          date.getFullYear(),
-          date.getMonth() + 1
-        )
-
-        // Acknowledge the message as processed
-        channel.ack(msg);
-      }
-    });
-  }
-};
