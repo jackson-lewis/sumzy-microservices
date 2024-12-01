@@ -7,12 +7,14 @@ export async function create(req: Request, res: Response) {
   const userId = req.headers['x-user-id']
   const {
     amount,
+    type,
     date,
   } = req.body
 
   const income = new Income({
     userId,
     amount,
+    type,
     date
   })
 

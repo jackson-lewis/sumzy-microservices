@@ -3,11 +3,15 @@ import { Income as IncomeType } from '../../types'
 
 const incomeSchema = new Schema<IncomeType>(
   {
+    userId: {
+      type: 'string',
+      required: true
+    },
     amount: {
       type: 'number',
       required: true
     },
-    userId: {
+    type: {
       type: 'string',
       required: true
     },
