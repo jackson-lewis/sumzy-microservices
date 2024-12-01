@@ -94,6 +94,10 @@ const monthlyReportSchema = new Schema({
   date: {
     type: Date,
     default: Date.now
+  },
+  lastUpdatedDate: {
+    type: Date,
+    default: Date.now
   }
 })
 

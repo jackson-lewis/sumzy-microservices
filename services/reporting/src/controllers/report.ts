@@ -232,17 +232,52 @@ export async function generateReport(
     yearOverYear: await compareTotals('yearOverYear')
   }
 
+  const lastUpdatedDate = new Date()
+
   const reportData = {
     userId,
     totals,
     compare,
-    date
+    date,
+    lastUpdatedDate
+  }
+
+  async function regenerateComparableReport(period: 'nextMonth' | 'yearOverYear') {
+    const compareDate = new Date(date)
+
+    if (period === 'nextMonth') {
+      if (month === 12) {
+        compareDate.setMonth(0)
+        compareDate.setFullYear(year + 1)
+      } else {
+        compareDate.setMonth(month)
+      }
+    } else {
+      compareDate.setFullYear(year + 1)
+    }
+
+    const report = await Report.findOne({ userId, date: compareDate })
+
+    if (report) {
+      await generateReport(
+        userId,
+        compareDate.getFullYear(),
+        compareDate.getMonth() + 1
+      )
+    }
   }
 
   const existingReport = await Report.findOne({ userId, date })
 
   if (existingReport) {
     await Report.updateOne({ _id: existingReport._id }, reportData)
+
+    /**
+     * update comparable reports
+     */
+    await regenerateComparableReport('nextMonth')
+    await regenerateComparableReport('yearOverYear')
+
     return reportData
   }
 
