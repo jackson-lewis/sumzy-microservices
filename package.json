@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "docker-compose up --build"
+    "start": "docker-compose up",
+    "build": "docker-compose up --build"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
