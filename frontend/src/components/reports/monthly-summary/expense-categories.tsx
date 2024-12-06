@@ -22,7 +22,7 @@ function CategoryGroup({
           }
 
           return (
-            <Fragment key={category._id}>
+            <Fragment key={category.id}>
               <dt>{category?.name}</dt>
               <dd>
                 <Money amount={category.amount} />
@@ -38,39 +38,39 @@ function CategoryGroup({
 export default function ExpenseCategories({
   categories
 } : {
-  categories: Report['totals']['expenseCategories']
+  categories: Report['tExpenseCats']
 }) {
   const { categories: userCategories } = useExpenses()
 
   const groupedSpending = [
-    '673a3a9a7ef89306638ade50',
-    '673a3c42759f61937acce663'
+    0,
+    0
   ]
 
   const recurringGroup = [
-    '6742098453c7473c5b3c7f6b',
-    '6742098853c7473c5b3c7f6d'
+    0,
+    0
   ]
 
   const recurringCategories = userCategories
     .filter((category) => {
-      return recurringGroup.indexOf(category._id) >= 0
+      return recurringGroup.indexOf(category.id) >= 0
     })
     .map((category) => {
       return {
         ...category,
-        amount: categories[category._id] || 0
+        amount: categories[category.id] || 0
       }
     })
 
   const oneTimeCategories = userCategories
     .filter((category) => {
-      return recurringGroup.indexOf(category._id) < 0
+      return recurringGroup.indexOf(category.id) < 0
     })
     .map((category) => {
       return {
         ...category,
-        amount: categories[category._id] || 0
+        amount: categories[category.id] || 0
       }
     })
 

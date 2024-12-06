@@ -27,7 +27,7 @@ export default function IncomePage() {
       <CreateIncome setIncomes={setIncomes} />
       <ul>
         {incomes.map((income) => (
-          <li key={income._id}>
+          <li key={income.id}>
             <Money amount={income.amount} />
             <Date date={income.date} />
           </li>

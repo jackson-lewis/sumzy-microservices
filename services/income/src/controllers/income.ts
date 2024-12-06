@@ -22,7 +22,7 @@ export async function create(req: Request, res: Response) {
       userId: Number(userId),
       amount: Number(amount),
       type,
-      category: Number(category as string),
+      category: 0,
       date: trueDate.toISOString()
     }
   })

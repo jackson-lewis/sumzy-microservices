@@ -2,18 +2,18 @@ export type TransactionType = 'one_time' | 'recurring'
 export type ComparePeriod = 'prevMonth' | 'yearOverYear'
 
 export type Expense = {
-  _id: string
+  id: number
   type: TransactionType
-  userId: string
+  userId: number
   date: Date
   amount: number
-  category: string
+  category: number
   frequency?: 'monthly'
 }
 
 export type Category = {
-  _id: string
-  userId: string
+  id: number
+  userId: number
   name: string
   type: TransactionType
 }
@@ -29,13 +29,13 @@ export type CompareTotal = {
   percentage: number
 }
 
+type TotalKeys = `t${Capitalize<keyof ReportTotals>}`
+
 export type Report = {
-  _id: string
-  userId: string
-  totals: ReportTotals & {
-    expenseCategories: {
-      [k: string]: number
-    }
+  id: number
+  userId: number
+  tExpenseCats: {
+    [k: number]: number
   }
   compare: {
     [k in ComparePeriod]: {
@@ -44,13 +44,15 @@ export type Report = {
   }
   date: Date
   lastUpdatedDate: Date
+} & {
+  [k in TotalKeys]: number
 }
 
 export type Income = {
-  _id: string
+  id: number
   type: TransactionType
-  userId: string
+  userId: number
   date: Date
   amount: number
-  category: string
+  category: number
 }

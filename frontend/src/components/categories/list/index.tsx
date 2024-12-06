@@ -19,7 +19,7 @@ export default function CategoriesList({
     <div>
       {categories.map((category) => (
         <CategoryItem
-          key={category._id}
+          key={category.id}
           category={category}
           setCategories={setCategories}
         />

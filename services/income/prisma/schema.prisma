@@ -20,7 +20,7 @@ model Income {
   userId    Int
   amount    Int
   type      TransactionType
-  category  Int
+  category  Int?
   date      DateTime @default(now())
 }
 

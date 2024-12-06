@@ -30,13 +30,15 @@ export async function create(req: Request, res: Response) {
     })
   }
 
+  const trueDate = new Date(date)
+
   const expense = await prisma.expense.create({
     data: {
       userId: Number(userId as string),
       type,
       amount: Number(amount as string),
       category: Number(category as string),
-      date,
+      date: trueDate.toISOString(),
       frequency
     }
   })
@@ -65,7 +67,7 @@ export async function list(req: Request, res: Response) {
     return
   }
 
-  const where: Prisma.ExpensesWhereInput = {
+  const where: Prisma.ExpenseWhereInput = {
     userId: Number(userId as string),
     type
   }
@@ -112,6 +114,7 @@ export async function update(req: Request, res: Response) {
   }: {
     [k: string]: string
   } = req.body
+  const trueDate = new Date(date)
   const expense = await prisma.expense.update({
     where: {
       id: Number(id as string)
@@ -119,7 +122,7 @@ export async function update(req: Request, res: Response) {
     data: {
       amount: Number(amount),
       category: Number(category),
-      date
+      date: trueDate
     }
   })
 

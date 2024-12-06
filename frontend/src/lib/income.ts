@@ -49,7 +49,7 @@ export async function updateIncome(
  * Delete an income for the authenticated user.
  */
 export async function deleteIncome(
-  id: Income['_id']
+  id: Income['id']
 ): Promise<{ success: boolean } | Error> {
   return await apiRequest(
     `v1/income?id=${id}`,

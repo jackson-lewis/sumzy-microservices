@@ -34,7 +34,7 @@ export async function addCategory(
  * Delete a category for the authenticated user.
  */
 export async function deleteCategory(
-  id: Category['_id']
+  id: Category['id']
 ): Promise<{ success: boolean } | Error> {
   return await apiRequest(
     `v1/expenses/categories?id=${id}`,

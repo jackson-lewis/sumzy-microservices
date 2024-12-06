@@ -88,22 +88,22 @@ export default function MonthlySummaryReport({
     <>
       <LastUpdatedDate date={new Date(report.lastUpdatedDate)} />
       <ExpenseCategories
-        categories={report.totals.expenseCategories}
+        categories={report.tExpenseCats}
       />
       <dl className={styles.totals}>
         <Total
           title="Income"
-          total={report.totals.income}
+          total={report.tIncome}
           compareTotal={report.compare[comparePeriod]?.income}
         />
         <Total
           title="Expense"
-          total={report.totals.expense}
+          total={report.tExpense}
           compareTotal={report.compare[comparePeriod]?.expense}
         />
         <Total
           title="Surplus"
-          total={report.totals.surplus}
+          total={report.tSurplus}
           compareTotal={report.compare[comparePeriod]?.surplus}
         />
       </dl>

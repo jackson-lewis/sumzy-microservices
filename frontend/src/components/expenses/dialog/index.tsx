@@ -22,7 +22,7 @@ export default function ExpenseDialog({
   const update = !!expense
   const { categories } = useCategories()
   const { closeEditModal, dialogRef } = useExpenses()
-  const [categoryValue, setCategoryValue] = useState<string>()
+  const [categoryValue, setCategoryValue] = useState<number>()
   const [type, setType] = useState(defaultType)
   const headingPrefix = update ? 'Edit' : 'Add new'
 
@@ -34,7 +34,7 @@ export default function ExpenseDialog({
 
   function closeAction(form: HTMLFormElement) {
     closeEditModal()
-    setCategoryValue('')
+    setCategoryValue(0)
     form.reset()
   }
 
@@ -72,7 +72,7 @@ export default function ExpenseDialog({
 
             if (update) {
               newExpenses = expenses.map((_e) => {
-                if (_e._id === expense._id) {
+                if (_e.id === expense.id) {
                   return updated
                 }
                 return _e
@@ -129,13 +129,13 @@ export default function ExpenseDialog({
             value={categoryValue}
             required
             onChange={(event) => {
-              setCategoryValue(event.target.value)
+              setCategoryValue(Number(event.target.value))
             }}
           >
             {categories.map((category) => (
               <option
-                key={category._id}
-                value={category._id}
+                key={category.id}
+                value={category.id}
               >
                 {category.name}
               </option>

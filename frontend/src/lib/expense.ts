@@ -49,7 +49,7 @@ export async function updateExpense(
  * Delete an expense for the authenticated user.
  */
 export async function deleteExpense(
-  id: Expense['_id']
+  id: Expense['id']
 ): Promise<{ success: boolean } | Error> {
   return await apiRequest(
     `v1/expenses?id=${id}`,
@@ -68,6 +68,6 @@ export function getExpenseCategory(
   categories: Category[]
 ) {
   return categories.find((category) => {
-    return category._id === expense.category
+    return category.id === expense.category
   })
 }

@@ -5,13 +5,13 @@ export default function Category({
   categoryId,
   total
 }: {
-  categoryId: string
+  categoryId: number
   total: number
 }) {
   const { categories } = useExpenses()
 
   const category = categories.find((category) => {
-    return category._id === categoryId
+    return category.id === categoryId
   })
 
   return (

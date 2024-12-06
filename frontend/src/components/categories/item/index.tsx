@@ -12,7 +12,7 @@ export default function CategoryItem({
   async function handleDeleteClick(
     event: React.MouseEvent<HTMLButtonElement>
   ) {
-    const data = await deleteCategory(category._id)
+    const data = await deleteCategory(category.id)
     if (data instanceof Error) {
       console.error(data.message)
       return
@@ -20,7 +20,7 @@ export default function CategoryItem({
 
     setCategories((categories) => {
       return categories.filter((_c) => {
-        return _c._id !== category._id
+        return _c.id !== category.id
       })
     })
   }

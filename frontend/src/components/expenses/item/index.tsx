@@ -20,7 +20,7 @@ export default function ExpenseItem({
   async function handleDeleteClick(
     event: React.MouseEvent<HTMLButtonElement>
   ) {
-    const data = await deleteExpense(expense._id)
+    const data = await deleteExpense(expense.id)
     if (data instanceof Error) {
       console.error(data.message)
       return
@@ -28,7 +28,7 @@ export default function ExpenseItem({
 
     setExpenses((expenses) => {
       return expenses.filter((_e) => {
-        return _e._id !== expense._id
+        return _e.id !== expense.id
       })
     })
   }

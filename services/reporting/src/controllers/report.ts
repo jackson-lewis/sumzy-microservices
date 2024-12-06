@@ -70,7 +70,7 @@ export async function generateReport(
     type: TransactionType
   ) {
     const expenses: {
-      [k: Transaction['_id']]: Event[]
+      [k: Transaction['id']]: Event[]
     } = {}
     const deletedExpenses: number[] = []
 
@@ -138,7 +138,11 @@ export async function generateReport(
         let latestEvent: Event = null
         
         events.map((event) => {
-          const eventDate = new Date(event.createdAt)
+          const transactionDate = getEventField(event, 'date') as string
+          const eventDate = new Date(
+            event.eventType === 'created' && transactionDate ?
+              transactionDate : event.createdAt
+          )
 
           if (eventDate < endOfMonth) {
             latestEvent = event
@@ -176,7 +180,7 @@ export async function generateReport(
     callback: ((event: Event) => void) | undefined = null
   ) {
     function calculateTotals(event: Event) {
-      const amount = getEventField(event, 'number') as number
+      const amount = getEventField(event, 'amount') as number
 
       totals[aggregateType] += amount
       if (typeof callback === 'function') {
@@ -192,10 +196,10 @@ export async function generateReport(
     'expense',
     function(event: Event) {
       const category = getEventField(event, 'category') as number
-      const amount = getEventField(event, 'number') as number
+      const amount = getEventField(event, 'amount') as number
 
       totals.expenseCategories[category] = amount + 
-        (totals.expenseCategories[category] || 0)
+        (totals.expenseCategories[category] || 0) || 0
     }
   )
   calculateTotals('income')
@@ -234,9 +238,19 @@ export async function generateReport(
       return null
     }
 
+    const compareTotals: ReportTotals = {
+      income: compareReport.tIncome,
+      expense: compareReport.tExpense,
+      surplus: compareReport.tSurplus
+    }
+
     function calculateCompareTotal(type: keyof Totals) {
       const total = totals[type]
       const compareTotal = compareTotals[type]
+
+      if (compareTotal === undefined) {
+        return null
+      }
 
       return {
         amount: total - compareTotal,
@@ -244,11 +258,23 @@ export async function generateReport(
       }
     }
 
-    return {
+    const returnTotals = {
       income: calculateCompareTotal('income'),
       expense: calculateCompareTotal('expense'),
       surplus: calculateCompareTotal('surplus')
     }
+
+    const allNull = Object
+      .values(returnTotals)
+      .filter((totalValue) => {
+        return !!totalValue
+      })
+
+    if (allNull.length > 0) {
+      return returnTotals
+    }
+
+    return null
   }
 
   const compare: {
@@ -262,9 +288,9 @@ export async function generateReport(
 
   const reportData: Omit<Report, 'id'> = {
     userId: Number(userId),
-    tExpense: totals.expense,
-    tIncome: totals.expense,
-    tSurplus: totals.surplus,
+    tExpense: totals.expense || 0,
+    tIncome: totals.income || 0,
+    tSurplus: totals.surplus || 0,
     tExpenseCats: totals.expenseCategories,
     compare,
     date,

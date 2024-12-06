@@ -4,7 +4,7 @@ export type AggregateType = 'expense' | 'income'
 export type ComparePeriod = 'prevMonth' | 'yearOverYear'
 
 export type Transaction = {
-  _id: string
+  id: number
   type: TransactionType
   userId: string
   date: Date

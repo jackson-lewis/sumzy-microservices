@@ -21,7 +21,7 @@ export default function ExpensesList({
     <div className={styles.expenses}>
       {expenses.map((expense) => (
         <ExpenseItem
-          key={expense._id}
+          key={expense.id}
           expense={expense}
           setExpenses={setExpenses}
         />

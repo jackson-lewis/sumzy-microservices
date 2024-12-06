@@ -8,7 +8,7 @@ export async function storeEvent<T extends Expense | Income>(
 ) {
   const event = await prisma.event.create({
     data: {
-      aggregateId: Number(eventData._id),
+      aggregateId: Number(eventData.id),
       aggregateType,
       eventData,
       eventType: type
