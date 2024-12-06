@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "nodemon src/index.ts",
     "start": "node dist/index.js",
-    "build": "tsc"
+    "build": "tsc",
+    "prisma-studio": "BROWSER=\"Google Chrome\" prisma studio"
   },
   "keywords": [],
   "author": "",

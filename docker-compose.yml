@@ -71,6 +71,7 @@ services:
       - "8001:8001"
     environment:
       - PORT=8001
+      - DATABASE_URL=postgres://admin:password@db:5432/user
     volumes:
       - ./services/user:/app
       - /app/node_modules
@@ -87,6 +88,7 @@ services:
       - "8002:8002"
     environment:
       - PORT=8002
+      - DATABASE_URL=postgres://admin:password@db:5432/expense
     volumes:
       - ./services/expense:/app
       - /app/node_modules
@@ -104,6 +106,7 @@ services:
       - "8003:8003"
     environment:
       - PORT=8003
+      - DATABASE_URL=postgres://admin:password@db:5432/reporting
     volumes:
       - ./services/reporting:/app
       - /app/node_modules
@@ -121,6 +124,7 @@ services:
       - "8004:8004"
     environment:
       - PORT=8004
+      - DATABASE_URL=postgres://admin:password@db:5432/income
     volumes:
       - ./services/income:/app
       - /app/node_modules
