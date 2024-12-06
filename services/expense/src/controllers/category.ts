@@ -1,18 +1,22 @@
 import { Request, Response } from 'express'
-import { Category } from '../models/category'
+import { prisma } from '../prisma'
+import { TransactionType } from '@prisma/client'
 
 export async function createCategory(req: Request, res: Response) {
   const userId = req.headers['x-user-id']
-  const { name, type } = req.body
+  const { name, type }: {
+    type: TransactionType
+    [k: string]: string
+  } = req.body
 
   try {
-    const category = new Category({
-      userId,
-      name,
-      type
+    const category = await prisma.categories.create({
+      data: {
+        userId: Number(userId as string),
+        name,
+        type
+      }
     })
-  
-    await category.save()
   
     res.status(201).send(category)
   } catch (error: any) {
@@ -27,14 +31,22 @@ export async function createCategory(req: Request, res: Response) {
 
 export async function listCategories(req: Request, res: Response) {
   const userId = req.headers['x-user-id']
-  const categories = await Category.find({ userId })
+  const categories = await prisma.categories.findMany({
+    where: {
+      userId: Number(userId as string)
+    }
+  })
 
   res.status(200).send(categories)
 }
 
 export async function deleteCategory(req: Request, res: Response) {
   const { id } = req.query
-  const delRes = await Category.deleteOne({ _id: id })
+  const category = await prisma.categories.delete({
+    where: {
+      id: Number(id as string)
+    }
+  })
 
-  res.status(200).send({ success: delRes.deletedCount > 0 })
+  res.status(200).send({ category })
 }

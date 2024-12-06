@@ -1,5 +1,6 @@
 import amqp from 'amqplib';
-import { Expense, EventType } from '../types'
+import { EventType } from '../types'
+import { Expenses } from '@prisma/client'
 export const RABBITMQ_URL = 'amqp://rabbitmq';
 export const QUEUE_NAME = 'expense';
 export let channel: amqp.Channel;
@@ -33,7 +34,7 @@ export const sendToQueue = (message: string) => {
 };
 
 
-export function sendExpenseEvent(expense: Expense, eventType: EventType) {
+export function sendExpenseEvent(expense: Expenses, eventType: EventType) {
   if (channel) {
     const message = {
       expense,
