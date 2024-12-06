@@ -1,9 +1,6 @@
 import { Request, Response } from 'express'
-import { Event } from '../models/event'
-import { Report } from '../models/report'
 import {
-  TransactionType, 
-  Event as EventType, 
+  TransactionType,
   AggregateType,
   Transaction,
   ComparePeriod,
@@ -11,7 +8,18 @@ import {
   CompareTotals,
   Totals,
 } from '../types'
+import { prisma } from '../prisma'
+import { Event, Report } from '@prisma/client'
+import { JsonObject } from '@prisma/client/runtime/library'
 
+
+function getEventField(event: Event, field: string) {
+  if (event.eventData && typeof event.eventData === 'object') {
+    const eventData = event.eventData as JsonObject
+    return eventData[field]
+  }
+  return false
+}
 
 /**
  * A report is a monthly summary of expenses.
@@ -22,11 +30,18 @@ export async function generateReport(
   month: number
 ) {
   console.log(`Generating report for ${year}/${month}`)
-  const events: EventType<AggregateType>[] = 
-    await Event.find({
-      'eventData.userId': userId
-    })
-    .sort({ createdAt: 1 })
+
+  const events = await prisma.event.findMany({
+    where: {
+      eventData: {
+        path: ['userId'],
+        equals: Number(userId)
+      }
+    },
+    orderBy: {
+      createdAt: 'asc'
+    }
+  })
 
   if (!events.length) {
     return
@@ -55,15 +70,16 @@ export async function generateReport(
     type: TransactionType
   ) {
     const expenses: {
-      [k: Transaction['_id']]: EventType<T>[]
+      [k: Transaction['_id']]: Event[]
     } = {}
-    const deletedExpenses: string[] = []
+    const deletedExpenses: number[] = []
 
-    ;(events as EventType<T>[])
+    ;(events)
       .filter((event) => {
+        const transactionType = getEventField(event, 'type')
         return (
           event.aggregateType === aggregateType &&
-          event.eventData.type === type
+          transactionType === type
         )
       })
       .map((event) => {
@@ -88,14 +104,18 @@ export async function generateReport(
   }
 
   function filterOneTimeEvents(
-    events: EventType<AggregateType>[][]
+    events: Event[][]
   ) {
     return events
       .map((events) => {
         return events.pop()
       })
       .filter((event) => {
-        const transactionDate = new Date(event.eventData.date)
+        const _transactionDate = getEventField(event, 'date') as string
+        if (!_transactionDate) {
+          return false
+        }
+        const transactionDate = new Date(_transactionDate)
 
         /**
          * Transactions from a previous month may be changes, so this
@@ -107,7 +127,7 @@ export async function generateReport(
   }
 
   function filterRecurringEvents(
-    events: EventType<AggregateType>[][]
+    events: Event[][]
   ) {
     return events
       .map((events) => {
@@ -115,7 +135,7 @@ export async function generateReport(
           return
         }
 
-        let latestEvent: EventType = null
+        let latestEvent: Event = null
         
         events.map((event) => {
           const eventDate = new Date(event.createdAt)
@@ -133,7 +153,7 @@ export async function generateReport(
   function calculateTransactionTotals<T extends AggregateType>(
     aggregateType: T,
     transactionType: TransactionType,
-    reducerFn: (event: EventType<T>) => void
+    reducerFn: (event: Event) => void
   ) {
     const events = getEventsByType(aggregateType, transactionType)
 
@@ -153,10 +173,12 @@ export async function generateReport(
    */
   function calculateTotals<T extends AggregateType>(
     aggregateType: T,
-    callback: ((event: EventType<T>) => void) | undefined = null
+    callback: ((event: Event) => void) | undefined = null
   ) {
-    function calculateTotals(event: EventType<T>) {
-      totals[aggregateType] += event.eventData.amount
+    function calculateTotals(event: Event) {
+      const amount = getEventField(event, 'number') as number
+
+      totals[aggregateType] += amount
       if (typeof callback === 'function') {
         callback(event)
       }
@@ -168,11 +190,12 @@ export async function generateReport(
 
   calculateTotals(
     'expense',
-    function(event: EventType<'expense'>) {
-      const { eventData: expense } = event
+    function(event: Event) {
+      const category = getEventField(event, 'category') as number
+      const amount = getEventField(event, 'number') as number
 
-      totals.expenseCategories[expense.category] = expense.amount + 
-        (totals.expenseCategories[expense.category] || 0)
+      totals.expenseCategories[category] = amount + 
+        (totals.expenseCategories[category] || 0)
     }
   )
   calculateTotals('income')
@@ -199,8 +222,13 @@ export async function generateReport(
     } else {
       compareDate.setFullYear(year - 1)
     }
-  
-    const compareReport = await Report.findOne({ userId, date: compareDate })
+
+    const compareReport = await prisma.report.findFirst({
+      where: {
+        userId: Number(userId),
+        date: compareDate
+      }
+    })
 
     if (!compareReport) {
       return null
@@ -216,8 +244,6 @@ export async function generateReport(
       }
     }
 
-    const compareTotals = compareReport.totals as ReportTotals
-
     return {
       income: calculateCompareTotal('income'),
       expense: calculateCompareTotal('expense'),
@@ -227,16 +253,19 @@ export async function generateReport(
 
   const compare: {
     [k in ComparePeriod]: CompareTotals | null
-  } = {
+  } & JsonObject = {
     prevMonth: await compareTotals('prevMonth'),
     yearOverYear: await compareTotals('yearOverYear')
   }
 
   const lastUpdatedDate = new Date()
 
-  const reportData = {
-    userId,
-    totals,
+  const reportData: Omit<Report, 'id'> = {
+    userId: Number(userId),
+    tExpense: totals.expense,
+    tIncome: totals.expense,
+    tSurplus: totals.surplus,
+    tExpenseCats: totals.expenseCategories,
     compare,
     date,
     lastUpdatedDate
@@ -256,7 +285,12 @@ export async function generateReport(
       compareDate.setFullYear(year + 1)
     }
 
-    const report = await Report.findOne({ userId, date: compareDate })
+    const report = await prisma.report.findFirst({
+      where: {
+        userId: Number(userId),
+        date: compareDate
+      }
+    })
 
     if (report) {
       await generateReport(
@@ -267,10 +301,20 @@ export async function generateReport(
     }
   }
 
-  const existingReport = await Report.findOne({ userId, date })
+  const existingReport = await prisma.report.findFirst({
+    where: {
+      userId: Number(userId),
+      date
+    }
+  })
 
   if (existingReport) {
-    await Report.updateOne({ _id: existingReport._id }, reportData)
+    await prisma.report.update({
+      where: {
+        id: existingReport.id
+      },
+      data: reportData
+    })
 
     /**
      * update comparable reports
@@ -281,19 +325,22 @@ export async function generateReport(
     return reportData
   }
 
-  const report = new Report(reportData)
-  await report.save()
-
-  return reportData
+  return await prisma.report.create({
+    data: reportData
+  })
 }
 
 
 export async function get(req: Request, res: Response) {
   const userId = req.headers['x-user-id']
   const { year, month } = req.params
-
   const date = new Date(Number(year), Number(month) - 1)
-  const report = await Report.findOne({ userId, date })
+  const report = await prisma.report.findFirst({
+    where: {
+      userId: Number(userId),
+      date
+    }
+  })
 
   if (report) {
     res.status(200).send(report)

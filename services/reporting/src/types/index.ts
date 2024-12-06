@@ -12,19 +12,18 @@ export type Transaction = {
 }
 
 export type Expense = Transaction & {
-  category: string
+  category: number
   frequency?: 'monthly'
 }
 
 export type Income = Transaction
 
 export type Event<T = AggregateType> = {
-  aggregateId: string
+  aggregateId: number
   aggregateType: T
   eventData: T extends 'expense' ? Expense : Income
   eventType: EventType
   createdAt: Date
-  version: number
 }
 
 export type ExpenseEvent = Event<'expense'>

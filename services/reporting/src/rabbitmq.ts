@@ -1,5 +1,4 @@
 import amqp, { ConsumeMessage } from 'amqplib';
-import { Event } from './models/event'
 import { AggregateType, EventType, Expense, Income } from './types'
 import { storeEvent } from './controllers/event'
 import { generateReport } from './controllers/report'

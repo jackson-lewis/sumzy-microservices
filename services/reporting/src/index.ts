@@ -1,5 +1,4 @@
 import express from 'express'
-import { connect } from 'mongoose'
 import { connectToRabbitMQ, consumeFromQueue } from './rabbitmq'
 import { get, generate } from './controllers/report'
 
@@ -18,8 +17,6 @@ app.get('/generate/:year/:month', generate)
 
 async function main() {
   try {
-    await connect('mongodb://mongo:27017/reporting')
-  
     app.listen(port, () => {
       console.log(`reporting service listening on port ${port}`)
     })
