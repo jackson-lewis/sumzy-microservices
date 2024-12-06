@@ -77,7 +77,7 @@ services:
     networks:
       - finance-net
     depends_on:
-      - mongo
+      - db
 
   expense:
     build:
@@ -93,7 +93,7 @@ services:
     networks:
       - finance-net
     depends_on:
-      - mongo
+      - db
       - rabbitmq
 
   reporting:
@@ -110,7 +110,7 @@ services:
     networks:
       - finance-net
     depends_on:
-      - mongo
+      - db
       - rabbitmq
 
   income:
@@ -127,18 +127,8 @@ services:
     networks:
       - finance-net
     depends_on:
-      - mongo
-      - rabbitmq
       - db
-
-  mongo:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
-    networks:
-      - finance-net
+      - rabbitmq
 
 volumes:
   mongo_data:
