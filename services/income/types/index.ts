@@ -1,8 +1,8 @@
 export type EventType = 'created' | 'updated' | 'deleted'
 
 export interface Income {
-  _id: string
-  userId: string
+  id: number
+  userId: number
   date: Date
   type: 'one_time' | 'recurring'
   amount: number

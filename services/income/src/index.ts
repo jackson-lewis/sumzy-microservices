@@ -1,5 +1,4 @@
 import express from 'express'
-import { connect } from 'mongoose'
 import { create, deleteIncome, list, update } from './controllers/income'
 import { connectToRabbitMQ } from './rabbitmq'
 
@@ -16,8 +15,6 @@ app.delete('/', deleteIncome)
 
 async function main() {
   try {
-    await connect('mongodb://mongo:27017/income')
-  
     app.listen(port, () => {
       console.log(`income service listening on port ${port}`)
     })
