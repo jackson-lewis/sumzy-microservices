@@ -14,7 +14,7 @@ export async function create(req: Request, res: Response) {
     [k: string]: string
   } = req.body
 
-  const existingUser = await prisma.users.findFirst({
+  const existingUser = await prisma.user.findFirst({
     where: {
       email
     }
@@ -28,7 +28,7 @@ export async function create(req: Request, res: Response) {
   // const hashedPassword = await bcrypt.hash(password, 10)
   const hashedPassword = password
 
-  const user = await prisma.users.create({
+  const user = await prisma.user.create({
     data: {
       firstName,
       lastName,
@@ -53,7 +53,7 @@ export function generateToken(userId: number) {
 export async function login(req: Request, res: Response) {
   const { email, password } = req.body
 
-  const user = await prisma.users.findFirst({
+  const user = await prisma.user.findFirst({
     where: {
       email
     }

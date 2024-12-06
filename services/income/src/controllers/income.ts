@@ -17,7 +17,7 @@ export async function create(req: Request, res: Response) {
 
   const trueDate = new Date(date)
 
-  const income = await prisma.incomes.create({
+  const income = await prisma.income.create({
     data: {
       userId: Number(userId),
       amount: Number(amount),
@@ -33,7 +33,7 @@ export async function create(req: Request, res: Response) {
 
 export async function list(req: Request, res: Response) {
   const userId = req.headers['x-user-id'] as string
-  const incomes = await prisma.incomes.findMany({
+  const incomes = await prisma.income.findMany({
     where: {
       userId: Number(userId)
     }
@@ -44,7 +44,7 @@ export async function list(req: Request, res: Response) {
 
 export async function deleteIncome(req: Request, res: Response) {
   const { id } = req.query
-  const income = await prisma.incomes.delete({
+  const income = await prisma.income.delete({
     where: {
       id: Number(id as string)
     }
@@ -56,7 +56,7 @@ export async function deleteIncome(req: Request, res: Response) {
 
 export async function update(req: Request, res: Response) {
   const { id, amount, category, date } = req.body
-  const income = await prisma.incomes.update({
+  const income = await prisma.income.update({
     where: {
       id: Number(id as string)
     },

@@ -30,7 +30,7 @@ export async function create(req: Request, res: Response) {
     })
   }
 
-  const expense = await prisma.expenses.create({
+  const expense = await prisma.expense.create({
     data: {
       userId: Number(userId as string),
       type,
@@ -85,7 +85,7 @@ export async function list(req: Request, res: Response) {
     }
   }
 
-  const expenses = await prisma.expenses.findMany({
+  const expenses = await prisma.expense.findMany({
     where
   })
   res.status(200).send(expenses)
@@ -93,7 +93,7 @@ export async function list(req: Request, res: Response) {
 
 export async function deleteExpense(req: Request, res: Response) {
   const { id } = req.query
-  const expense = await prisma.expenses.delete({
+  const expense = await prisma.expense.delete({
     where: {
       id: Number(id as string)
     }
@@ -112,7 +112,7 @@ export async function update(req: Request, res: Response) {
   }: {
     [k: string]: string
   } = req.body
-  const expense = await prisma.expenses.update({
+  const expense = await prisma.expense.update({
     where: {
       id: Number(id as string)
     },

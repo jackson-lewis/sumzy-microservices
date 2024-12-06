@@ -15,7 +15,7 @@ enum TransactionType {
   recurring
 }
 
-model Incomes {
+model Income {
   id        Int     @id @default(autoincrement())
   userId    Int
   amount    Int
@@ -24,7 +24,7 @@ model Incomes {
   date      DateTime @default(now())
 }
 
-model Categories {
+model Category {
   id      Int     @id @default(autoincrement())
   userId  Int  
   name    String

@@ -10,7 +10,7 @@ export async function createCategory(req: Request, res: Response) {
   } = req.body
 
   try {
-    const category = await prisma.categories.create({
+    const category = await prisma.category.create({
       data: {
         userId: Number(userId as string),
         name,
@@ -31,7 +31,7 @@ export async function createCategory(req: Request, res: Response) {
 
 export async function listCategories(req: Request, res: Response) {
   const userId = req.headers['x-user-id']
-  const categories = await prisma.categories.findMany({
+  const categories = await prisma.category.findMany({
     where: {
       userId: Number(userId as string)
     }
@@ -42,7 +42,7 @@ export async function listCategories(req: Request, res: Response) {
 
 export async function deleteCategory(req: Request, res: Response) {
   const { id } = req.query
-  const category = await prisma.categories.delete({
+  const category = await prisma.category.delete({
     where: {
       id: Number(id as string)
     }
