@@ -1,13 +1,8 @@
 import { Request, Response } from 'express'
-import { User } from './model'
 // import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import { Kafka } from 'kafkajs'
+import { prisma } from './prisma'
 
-const kafka = new Kafka({
-  clientId: 'finance-tracker',
-  brokers: ['kafka1:9092'],
-})
 
 export async function create(req: Request, res: Response) {
   const {
@@ -15,11 +10,17 @@ export async function create(req: Request, res: Response) {
     lastName,
     email,
     password
+  }: {
+    [k: string]: string
   } = req.body
 
-  const existing = await User.findOne({ email })
+  const existingUser = await prisma.users.findFirst({
+    where: {
+      email
+    }
+  })
   
-  if (existing) {
+  if (existingUser) {
     res.status(400).send({ message: 'Email address already in use' })
     return
   }
@@ -27,34 +28,22 @@ export async function create(req: Request, res: Response) {
   // const hashedPassword = await bcrypt.hash(password, 10)
   const hashedPassword = password
 
-  const user = new User({
-    firstName,
-    lastName,
-    email,
-    password: hashedPassword
+  const user = await prisma.users.create({
+    data: {
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword
+    }
   })
 
-  await user.save()
-
-  const producer = kafka.producer()
-
-  await producer.connect()
-  await producer.send({
-    topic: 'user.registration',
-    messages: [
-      { value: JSON.stringify(user) },
-    ],
-  })
-
-  await producer.disconnect()
-
-  res.status(201).send({ id: user.id })
+  res.status(201).send(user)
 }
 
 
 const JWT_SECRET = process.env.JWT_SECRET || 'jwtsecret'
 
-export function generateToken(userId: string) {
+export function generateToken(userId: number) {
   return jwt.sign({ userId }, JWT_SECRET, {
     expiresIn: '1d'
   })
@@ -64,7 +53,11 @@ export function generateToken(userId: string) {
 export async function login(req: Request, res: Response) {
   const { email, password } = req.body
 
-  const user = await User.findOne({ email })
+  const user = await prisma.users.findFirst({
+    where: {
+      email
+    }
+  })
   
   if (!user) {
    res.status(400).send({ message: 'Email address or password invalid' })
