@@ -78,7 +78,7 @@ export async function apiRequest(
   }
 
   try {
-    const res = await fetch(`http://localhost:8000/${endpoint}`, options)
+    const res = await fetch(`${process.env.REACT_APP_API_GATEWAY_URL}/${endpoint}`, options)
 
     if (res.status >= 500) {
       return new Error('Something went wrong')
