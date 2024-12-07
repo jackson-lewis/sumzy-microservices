@@ -88,7 +88,6 @@ const router = createBrowserRouter([
       }
     ]
   },
-  
 ])
 
 root.render(
