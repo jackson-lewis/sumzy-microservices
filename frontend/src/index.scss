@@ -4,6 +4,9 @@
 
 :root {
   --primary: #42EEBA;
+
+  --white: #ceebe3;
+  --black: #262e2c;
 }
 
 body {
@@ -13,6 +16,9 @@ body {
   font-optical-sizing: auto;
   font-weight: normal;
   font-style: normal;
+  
+  background-color: var(--black);
+  color: var(--white);
 }
 
 img,
