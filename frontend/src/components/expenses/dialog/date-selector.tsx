@@ -10,11 +10,12 @@ export default function DateSelector({
 
   useEffect(() => {
     const today = value ? new Date(value) : new Date()
+    const dayOfTheMonth = today.getDate()
 
     setDate([
       today.getFullYear(),
       today.getMonth() + 1,
-      today.getDate()
+      dayOfTheMonth > 10 ? dayOfTheMonth : `0${dayOfTheMonth}`
     ].join('-'))
   }, [value])
 
