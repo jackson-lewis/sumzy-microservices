@@ -1,6 +1,6 @@
 import Money from '@/components/global/money'
 import useExpenses from '@/lib/use-expenses'
-import { Category, Report } from '@/types'
+import { Category, Report, TransactionType } from '@/types'
 import { Fragment } from 'react/jsx-runtime'
 import styles from './style.module.scss'
 
@@ -42,37 +42,21 @@ export default function ExpenseCategories({
 }) {
   const { categories: userCategories } = useExpenses()
 
-  const groupedSpending = [
-    0,
-    0
-  ]
+  function getCategoriesByType(type: TransactionType) {
+    return userCategories
+      .filter((category) => {
+        return category.type === type
+      })
+      .map((category) => {
+        return {
+          ...category,
+          amount: categories[category.id] || 0
+        }
+      })
+  }
 
-  const recurringGroup = [
-    0,
-    0
-  ]
-
-  const recurringCategories = userCategories
-    .filter((category) => {
-      return recurringGroup.indexOf(category.id) >= 0
-    })
-    .map((category) => {
-      return {
-        ...category,
-        amount: categories[category.id] || 0
-      }
-    })
-
-  const oneTimeCategories = userCategories
-    .filter((category) => {
-      return recurringGroup.indexOf(category.id) < 0
-    })
-    .map((category) => {
-      return {
-        ...category,
-        amount: categories[category.id] || 0
-      }
-    })
+  const recurringCategories = getCategoriesByType('recurring')
+  const oneTimeCategories = getCategoriesByType('one_time')
 
   return (
     <div>
