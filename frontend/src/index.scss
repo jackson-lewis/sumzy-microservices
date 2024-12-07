@@ -2,10 +2,14 @@
   box-sizing: border-box;
 }
 
+:root {
+  --primary: #42EEBA;
+}
+
 body {
   margin: 0;
 
-  font-family: "Outfit", sans-serif;
+  font-family: "Onest", sans-serif;
   font-optical-sizing: auto;
   font-weight: normal;
   font-style: normal;
