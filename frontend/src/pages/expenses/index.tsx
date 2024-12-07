@@ -1,31 +1,21 @@
 import ExpenseDialog from '@/components/expenses/dialog'
 import ExpensesList from '@/components/expenses/list'
-import { getExpenses } from '@/lib/expense'
 import useExpenses from '@/lib/use-expenses'
-import { Transaction } from '@/types'
-import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 
 export default function Expenses() {
-  const [expenses, setExpenses] = useState<Transaction[]>([])
-  const { expense, showEditModal } = useExpenses()
-
-  useEffect(() => {
-    async function getData() {
-      const expenses = await getExpenses()
-      if (Array.isArray(expenses)) {
-        setExpenses(expenses)
-      }
-
-      if (expenses instanceof Error) {
-        alert(expenses.message)
-      }
-    }
-    getData()
-  }, [])
+  const {
+    expense,
+    expenses,
+    setExpenses,
+    showEditModal
+  } = useExpenses()
 
   return (
     <main>
       <h1>Expenses</h1>
+      <Link to="/expenses/recurring">Recurring</Link>
+      <Link to="/expenses/categories">Categories</Link>
       <button onClick={() => showEditModal()}>Add</button>
       <ExpensesList
         expenses={expenses}

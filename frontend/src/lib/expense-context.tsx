@@ -1,8 +1,11 @@
 import { Category, Transaction } from '@/types'
 import { createContext, Dispatch, ReactNode, RefObject, SetStateAction, useEffect, useRef, useState } from 'react'
 import { getCategories } from './category'
+import { getExpenses } from './expense'
 
 export const ExpenseContext = createContext<{
+  expenses: Transaction[]
+  setExpenses: Dispatch<SetStateAction<Transaction[]>>
   expense: Transaction | undefined
   setExpense: Dispatch<SetStateAction<Transaction | undefined>>
   categories: Category[]
@@ -17,9 +20,24 @@ export default function ExpenseProvider({
 }: {
   children: ReactNode
 }) {
+  const [expenses, setExpenses] = useState<Transaction[]>([])
   const [expense, setExpense] = useState<Transaction>()
   const [categories, setCategories] = useState<Category[]>([])
   const dialogRef = useRef<HTMLDialogElement>(null)
+
+  useEffect(() => {
+    async function getData() {
+      const expenses = await getExpenses()
+      if (Array.isArray(expenses)) {
+        setExpenses(expenses)
+      }
+
+      if (expenses instanceof Error) {
+        alert(expenses.message)
+      }
+    }
+    getData()
+  }, [])
 
   useEffect(() => {
     async function getData() {
@@ -79,6 +97,8 @@ export default function ExpenseProvider({
     <ExpenseContext.Provider value={{
       expense,
       setExpense,
+      expenses,
+      setExpenses,
       categories,
       setCategories,
       dialogRef,
