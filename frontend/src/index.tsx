@@ -12,22 +12,10 @@ import ExpenseCatgories from './pages/expenses/categories'
 import RecurringExpenses from './pages/expenses/recurring'
 import Reports from './pages/reports'
 import Income from './pages/income'
-// import { promises } from 'fs'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 )
-
-// async function getPages() {
-//   const entries = await promises.readdir('./src/pages', { withFileTypes: true })
-//   const directories = entries
-//     .filter((entry) => entry.isFile())
-//     .map((entry) => entry.name)
-
-//   console.log(directories)
-// }
-
-// getPages()
 
 const router = createBrowserRouter([
   {
