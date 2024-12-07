@@ -4,18 +4,24 @@ import styles from './style.module.scss'
 export default function DateSelector({
   value
 } : {
-  value?: Date
+  value?: string
 }) {
-  const [date, setDate] = useState<string>()
+  const [date, setDate] = useState<string>('')
 
   useEffect(() => {
-    const today = value ? new Date(value) : new Date()
-    const dayOfTheMonth = today.getDate()
+    let today = value ? new Date(value) : new Date()
+
+    if (today.toString() === 'Invalid Date') {
+      today = new Date()
+    }
+
+    const day = today.getDate()
+    const month = today.getMonth() + 1
 
     setDate([
       today.getFullYear(),
-      today.getMonth() + 1,
-      dayOfTheMonth > 10 ? dayOfTheMonth : `0${dayOfTheMonth}`
+      month > 10 ? month : `0${month}`,
+      day > 10 ? day : `0${day}`
     ].join('-'))
   }, [value])
 
@@ -30,6 +36,7 @@ export default function DateSelector({
         type="date" 
         name="date"
         id="date"
+        data-testid="date_selector_input"
         value={date}
         onChange={handleChange}
       />
