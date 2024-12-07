@@ -2,7 +2,8 @@ name: Test
 
 on:
   push:
-    paths: frontend
+    paths:
+    - frontend
 
 jobs:
   test:
