@@ -16,7 +16,7 @@ import Income from './pages/income'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
-);
+)
 
 // async function getPages() {
 //   const entries = await promises.readdir('./src/pages', { withFileTypes: true })
