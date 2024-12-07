@@ -3,7 +3,7 @@ import { formatDate } from '@/lib/money'
 export default function Date({
   date
 } : {
-  date: Date
+  date: string
 }) {
   const formattedDate = formatDate(date)
 

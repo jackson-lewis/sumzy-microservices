@@ -1,14 +1,14 @@
-import { Category, Expense } from '@/types'
+import { Category, Transaction } from '@/types'
 import { createContext, Dispatch, ReactNode, RefObject, SetStateAction, useEffect, useRef, useState } from 'react'
 import { getCategories } from './category'
 
 export const ExpenseContext = createContext<{
-  expense: Expense | undefined
-  setExpense: Dispatch<SetStateAction<Expense | undefined>>
+  expense: Transaction | undefined
+  setExpense: Dispatch<SetStateAction<Transaction | undefined>>
   categories: Category[]
   setCategories: Dispatch<SetStateAction<Category[]>>
   dialogRef: RefObject<HTMLDialogElement>
-  showEditModal: (expense?: Expense) => void
+  showEditModal: (expense?: Transaction) => void
   closeEditModal: () => void
 } | null>(null)
 
@@ -17,7 +17,7 @@ export default function ExpenseProvider({
 }: {
   children: ReactNode
 }) {
-  const [expense, setExpense] = useState<Expense>()
+  const [expense, setExpense] = useState<Transaction>()
   const [categories, setCategories] = useState<Category[]>([])
   const dialogRef = useRef<HTMLDialogElement>(null)
 
@@ -44,7 +44,7 @@ export default function ExpenseProvider({
     getData()
   }, [])
 
-  function showEditModal(expense?: Expense) {
+  function showEditModal(expense?: Transaction) {
     const dialog = dialogRef.current
 
     if (!dialog) {

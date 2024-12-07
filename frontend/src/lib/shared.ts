@@ -1,8 +1,8 @@
-import { Expense, Income } from '@/types'
+import { Transaction } from '@/types'
 
-export function sortTransactionsByDate<T extends Expense | Income>(
-  a: T,
-  b: T
+export function sortTransactionsByDate(
+  a: Transaction,
+  b: Transaction
 ) {
   if (a.date > b.date) {
     return -1

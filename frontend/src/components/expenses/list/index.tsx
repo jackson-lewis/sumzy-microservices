@@ -1,15 +1,15 @@
 import { Dispatch, SetStateAction } from 'react'
 import styles from './index.module.scss'
 import ExpenseItem from '../item'
-import { Expense } from '@/types'
+import { Transaction } from '@/types'
 
 
 export default function ExpensesList({
   expenses,
   setExpenses
 }: {
-  expenses: Expense[],
-  setExpenses: Dispatch<SetStateAction<Expense[]>>
+  expenses: Transaction[],
+  setExpenses: Dispatch<SetStateAction<Transaction[]>>
 }) {
   if (expenses.length === 0) {
     return (

@@ -1,15 +1,15 @@
 import DateSelector from '@/components/expenses/dialog/date-selector'
 import CurrencyInput from '@/components/global/currency-input'
-import { getFormDataAs } from '@/lib/form-submit'
+import { getFormData } from '@/lib/form-submit'
 import { createIncome } from '@/lib/income'
 import { sortTransactionsByDate } from '@/lib/shared'
-import { Income, TransactionType } from '@/types'
+import { Transaction, TransactionType } from '@/types'
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
 
 export default function CreateIncome({
   setIncomes
 } : {
-  setIncomes: Dispatch<SetStateAction<Income[]>>
+  setIncomes: Dispatch<SetStateAction<Transaction[]>>
 }) {
   const [type, setType] = useState<'one_time' | 'recurring'>('one_time')
 
@@ -19,7 +19,7 @@ export default function CreateIncome({
         event.preventDefault()
 
         const form = event.target as HTMLFormElement
-        const data = getFormDataAs(form, 'income')
+        const data = getFormData(form)
 
         const apiData = await createIncome(data)
 
@@ -29,7 +29,7 @@ export default function CreateIncome({
         }
 
         setIncomes((incomes) => {
-          const newIncomes: Income[] = [
+          const newIncomes: Transaction[] = [
             ...incomes,
             apiData
           ]

@@ -2,11 +2,11 @@ import ExpenseDialog from '@/components/expenses/dialog'
 import ExpensesList from '@/components/expenses/list'
 import { getExpenses } from '@/lib/expense'
 import useExpenses from '@/lib/use-expenses'
-import { Expense } from '@/types'
+import { Transaction } from '@/types'
 import { useEffect, useState } from 'react'
 
 export default function Expenses() {
-  const [expenses, setExpenses] = useState<Expense[]>([])
+  const [expenses, setExpenses] = useState<Transaction[]>([])
   const { expense, showEditModal } = useExpenses()
 
   useEffect(() => {

@@ -2,11 +2,11 @@ import Date from '@/components/global/date'
 import Money from '@/components/global/money'
 import CreateIncome from '@/components/income/create'
 import { getIncomes } from '@/lib/income'
-import { Income } from '@/types'
+import { Transaction } from '@/types'
 import { useEffect, useState } from 'react'
 
 export default function IncomePage() {
-  const [incomes, setIncomes] = useState<Income[]>([])
+  const [incomes, setIncomes] = useState<Transaction[]>([])
 
   useEffect(() => {
     async function getData() {

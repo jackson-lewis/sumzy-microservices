@@ -1,12 +1,12 @@
 import { addExpense, updateExpense } from '@/lib/expense'
-import { Expense, TransactionType } from '@/types'
+import { Transaction, TransactionType } from '@/types'
 import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from 'react'
 import DateSelector from './date-selector'
 import useCategories from '@/lib/use-expenses'
 import CurrencyInput from '@/components/global/currency-input'
 import styles from './style.module.scss'
 import useExpenses from '@/lib/use-expenses'
-import { getFormDataAs } from '@/lib/form-submit'
+import { getFormData } from '@/lib/form-submit'
 import { sortTransactionsByDate } from '@/lib/shared'
 
 
@@ -15,8 +15,8 @@ export default function ExpenseDialog({
   setExpenses,
   defaultType = 'one_time'
 }: {
-  expense?: Expense
-  setExpenses: Dispatch<SetStateAction<Expense[]>>
+  expense?: Transaction
+  setExpenses: Dispatch<SetStateAction<Transaction[]>>
   defaultType?: TransactionType
 }) {
   const update = !!expense
@@ -46,10 +46,10 @@ export default function ExpenseDialog({
           event.preventDefault()
 
           const form = event.target as HTMLFormElement
-          const data = getFormDataAs(form, 'expense')
+          const data = getFormData(form)
 
-          let apiData: Expense | Error | { success: boolean }
-          let updated: Expense
+          let apiData: Transaction | Error | { success: boolean }
+          let updated: Transaction
 
           if (update) {
             updated = {
@@ -68,7 +68,7 @@ export default function ExpenseDialog({
           }
 
           setExpenses((expenses) => {
-            let newExpenses: Expense[]
+            let newExpenses: Transaction[]
 
             if (update) {
               newExpenses = expenses.map((_e) => {
@@ -80,7 +80,7 @@ export default function ExpenseDialog({
             } else {
               newExpenses = [
                 ...expenses,
-                apiData as Expense
+                apiData as Transaction
               ]
             }
 

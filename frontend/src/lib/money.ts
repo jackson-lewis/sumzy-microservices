@@ -7,7 +7,7 @@ export function formatAmount(amount: number) {
   return amount.toLocaleString('en-GB', options)
 }
 
-export function formatDate(date: Date) {
+export function formatDate(date: string) {
   const _date = new Date(date)
 
   return _date.toLocaleDateString('en-GB')

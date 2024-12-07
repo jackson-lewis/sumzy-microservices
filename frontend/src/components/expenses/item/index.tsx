@@ -1,4 +1,4 @@
-import { Expense } from '@/types'
+import { Transaction } from '@/types'
 import { deleteExpense, getExpenseCategory } from '@/lib/expense'
 import styles from './index.module.scss'
 import { Dispatch, SetStateAction } from 'react'
@@ -11,8 +11,8 @@ export default function ExpenseItem({
     expense,
     setExpenses
 }: {
-    expense: Expense,
-    setExpenses: Dispatch<SetStateAction<Expense[]>>
+    expense: Transaction,
+    setExpenses: Dispatch<SetStateAction<Transaction[]>>
 }) {
   const { categories, showEditModal } = useExpenses()
   const category = getExpenseCategory(expense, categories)

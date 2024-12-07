@@ -1,4 +1,4 @@
-import { TransactionType, Income } from '../types'
+import { TransactionType, Transaction } from '../types'
 import { apiRequest } from './api'
 
 
@@ -6,7 +6,7 @@ import { apiRequest } from './api'
  * Retrieve a list of incomes for the authenticated user.
  */
 export async function getIncomes(type: TransactionType = 'one_time')
-: Promise<Income[] | Error> {
+: Promise<Transaction[] | Error> {
   return await apiRequest(
     `v1/income?type=${type}`,
     {},
@@ -19,8 +19,8 @@ export async function getIncomes(type: TransactionType = 'one_time')
  * Add an income for the authenticated user.
  */
 export async function createIncome(
-  income: Income
-): Promise<Income | Error> {
+  income: Transaction
+): Promise<Transaction | Error> {
   return await apiRequest(
     'v1/income',
     'POST',
@@ -34,8 +34,8 @@ export async function createIncome(
  * Update a income for the authenticated user.
  */
 export async function updateIncome(
-  income: Income
-): Promise<{ success: boolean } | Error> {
+  income: Transaction
+): Promise<Transaction | Error> {
   return await apiRequest(
     'v1/income',
     'PATCH',
@@ -49,8 +49,8 @@ export async function updateIncome(
  * Delete an income for the authenticated user.
  */
 export async function deleteIncome(
-  id: Income['id']
-): Promise<{ success: boolean } | Error> {
+  id: Transaction['id']
+): Promise<Transaction | Error> {
   return await apiRequest(
     `v1/income?id=${id}`,
     'DELETE',

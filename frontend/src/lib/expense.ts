@@ -1,4 +1,4 @@
-import { Category, Expense, Income, TransactionType } from '../types'
+import { Category, Transaction, TransactionType } from '../types'
 import { apiRequest } from './api'
 
 
@@ -6,7 +6,7 @@ import { apiRequest } from './api'
  * Retrieve a list of expenses for the authenticated user.
  */
 export async function getExpenses(type: TransactionType = 'one_time')
-: Promise<Expense[] | Error> {
+: Promise<Transaction[] | Error> {
   return await apiRequest(
     `v1/expenses?type=${type}`,
     {},
@@ -19,8 +19,8 @@ export async function getExpenses(type: TransactionType = 'one_time')
  * Add a expense for the authenticated user.
  */
 export async function addExpense(
-  expense: Expense
-): Promise<Expense | Error> {
+  expense: Transaction
+): Promise<Transaction | Error> {
   return await apiRequest(
     'v1/expenses',
     'POST',
@@ -34,8 +34,8 @@ export async function addExpense(
  * Update a expense for the authenticated user.
  */
 export async function updateExpense(
-  expense: Expense
-): Promise<{ success: boolean } | Error> {
+  expense: Transaction
+): Promise<Transaction | Error> {
   return await apiRequest(
     'v1/expenses',
     'PATCH',
@@ -49,8 +49,8 @@ export async function updateExpense(
  * Delete an expense for the authenticated user.
  */
 export async function deleteExpense(
-  id: Expense['id']
-): Promise<{ success: boolean } | Error> {
+  id: Transaction['id']
+): Promise<Transaction | Error> {
   return await apiRequest(
     `v1/expenses?id=${id}`,
     'DELETE',
@@ -64,7 +64,7 @@ export async function deleteExpense(
  * Get the category for the expense
  */
 export function getExpenseCategory(
-  expense: Expense,
+  expense: Transaction,
   categories: Category[]
 ) {
   return categories.find((category) => {

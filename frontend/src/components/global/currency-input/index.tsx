@@ -1,13 +1,13 @@
 import { DetailedHTMLProps, HTMLAttributes, useState } from 'react'
 import styles from './style.module.scss'
-import { Expense } from '@/types'
+import { Transaction } from '@/types'
 
 /**
  * Props are passed to the `<input />` except for `value` and
  * `onChange` which get overridden 
  */
 export default function CurrencyInput(props: {
-  value?: Expense['amount']
+  value?: Transaction['amount']
   autoFocus?: boolean
 } & DetailedHTMLProps<
   HTMLAttributes<HTMLInputElement>,

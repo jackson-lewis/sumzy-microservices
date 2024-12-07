@@ -1,14 +1,13 @@
 export type TransactionType = 'one_time' | 'recurring'
 export type ComparePeriod = 'prevMonth' | 'yearOverYear'
 
-export type Expense = {
+export type Transaction = {
   id: number
   type: TransactionType
   userId: number
-  date: Date
+  date: string
   amount: number
   category: number
-  frequency?: 'monthly'
 }
 
 export type Category = {
@@ -46,13 +45,4 @@ export type Report = {
   lastUpdatedDate: Date
 } & {
   [k in TotalKeys]: number
-}
-
-export type Income = {
-  id: number
-  type: TransactionType
-  userId: number
-  date: Date
-  amount: number
-  category: number
 }

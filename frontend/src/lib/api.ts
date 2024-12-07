@@ -1,5 +1,4 @@
 import { getUserToken } from '@/lib/user'
-import { Expense } from '@/types'
 
 type HttpMethods = 'POST' | 'PATCH' | 'DELETE'
 
