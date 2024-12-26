@@ -1,4 +1,5 @@
 import ExpensesList from '@/components/expenses/list'
+import FrequencySelector from '@/components/transaction/frequency-selector'
 import { getExpenses } from '@/lib/expense'
 import useExpenses from '@/lib/use-expenses'
 import { Transaction } from '@/types'
@@ -24,7 +25,8 @@ export default function RecurringExpenses() {
 
   return (
     <main>
-      <h1>Recurring Expenses</h1>
+      <h1>Expenses</h1>
+      <FrequencySelector direction="expense" />
       <button onClick={() => showEditModal()}>Add</button>
       <ExpensesList
         expenses={expenses}

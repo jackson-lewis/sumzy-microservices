@@ -1,6 +1,7 @@
 import ExpensesList from '@/components/expenses/list'
+import CategoryLink from '@/components/transaction/category'
+import FrequencySelector from '@/components/transaction/frequency-selector'
 import useExpenses from '@/lib/use-expenses'
-import { Link } from 'react-router-dom'
 
 export default function Expenses() {
   const {
@@ -12,8 +13,8 @@ export default function Expenses() {
   return (
     <main>
       <h1>Expenses</h1>
-      <Link to="/expenses/recurring">Recurring</Link>
-      <Link to="/expenses/categories">Categories</Link>
+      <CategoryLink direction="expense" />
+      <FrequencySelector direction="expense" />
       <button onClick={() => showEditModal()}>Add</button>
       <ExpensesList
         expenses={expenses}
