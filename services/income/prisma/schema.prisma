@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum TransactionType {
+enum TransactionFrequency {
   one_time
   recurring
 }
@@ -19,7 +19,7 @@ model Income {
   id        Int     @id @default(autoincrement())
   userId    Int
   amount    Int
-  type      TransactionType
+  type      TransactionFrequency
   category  Int?
   date      DateTime @default(now())
 }
@@ -28,5 +28,5 @@ model Category {
   id      Int     @id @default(autoincrement())
   userId  Int  
   name    String
-  type    TransactionType
+  type    TransactionFrequency
 }

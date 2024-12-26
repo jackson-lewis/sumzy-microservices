@@ -3,7 +3,7 @@ import CurrencyInput from '@/components/global/currency-input'
 import { getFormData } from '@/lib/form-submit'
 import { createIncome } from '@/lib/income'
 import { sortTransactionsByDate } from '@/lib/shared'
-import { Transaction, TransactionType } from '@/types'
+import { Transaction, TransactionFrequency } from '@/types'
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react'
 
 export default function CreateIncome({
@@ -47,7 +47,7 @@ export default function CreateIncome({
             id="type-one_time"
             checked={type === 'one_time'}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
-              setType(event.target.value as TransactionType)
+              setType(event.target.value as TransactionFrequency)
             }}
           />
           <label htmlFor="type-one_time">One-time</label>
@@ -60,7 +60,7 @@ export default function CreateIncome({
             id="type-recurring"
             checked={type === 'recurring'}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
-              setType(event.target.value as TransactionType)
+              setType(event.target.value as TransactionFrequency)
             }}
           />
           <label htmlFor="type-recurring">Recurring</label>

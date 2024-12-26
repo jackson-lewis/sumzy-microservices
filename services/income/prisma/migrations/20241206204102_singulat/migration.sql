@@ -16,7 +16,7 @@ CREATE TABLE "Income" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
     "amount" INTEGER NOT NULL,
-    "type" "TransactionType" NOT NULL,
+    "type" "TransactionFrequency" NOT NULL,
     "category" INTEGER NOT NULL,
     "date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -28,7 +28,7 @@ CREATE TABLE "Category" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
-    "type" "TransactionType" NOT NULL,
+    "type" "TransactionFrequency" NOT NULL,
 
     CONSTRAINT "Category_pkey" PRIMARY KEY ("id")
 );

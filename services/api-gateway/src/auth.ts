@@ -14,6 +14,13 @@ export default function auth(
 ) {
   const authHeader = req.headers['authorization']
 
+  /**
+   * Bypass requests for user create/login
+   */
+  if (/^\/v1\/users/.test(req.path) && req.method === 'POST') {
+    next()
+  }
+
   if (!authHeader) {
     res.status(401).send({ message: 'Authorization header missing' })
     return

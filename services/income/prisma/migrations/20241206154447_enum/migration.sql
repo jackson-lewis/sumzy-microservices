@@ -6,12 +6,12 @@
 
 */
 -- CreateEnum
-CREATE TYPE "TransactionType" AS ENUM ('one_time', 'recurring');
+CREATE TYPE "TransactionFrequency" AS ENUM ('one_time', 'recurring');
 
 -- AlterTable
 ALTER TABLE "Categories" DROP COLUMN "type",
-ADD COLUMN     "type" "TransactionType" NOT NULL;
+ADD COLUMN     "type" "TransactionFrequency" NOT NULL;
 
 -- AlterTable
 ALTER TABLE "Incomes" DROP COLUMN "type",
-ADD COLUMN     "type" "TransactionType" NOT NULL;
+ADD COLUMN     "type" "TransactionFrequency" NOT NULL;

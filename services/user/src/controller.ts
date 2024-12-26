@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 // import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { prisma } from './prisma'
+import { User } from '@prisma/client'
 
 
 export async function create(req: Request, res: Response) {
@@ -75,4 +76,18 @@ export async function login(req: Request, res: Response) {
   const token = generateToken(user.id)
 
   res.status(200).send({ token })
+}
+
+export async function get(req: Request, res: Response) {
+  const userId = req.headers['x-user-id'] as string
+  const user = await prisma.user.findFirst({
+    where: {
+      id: Number(userId)
+    }
+  })
+
+  const userData = user
+  delete userData.password
+
+  res.status(200).send(userData)
 }

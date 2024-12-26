@@ -1,6 +1,6 @@
 import Money from '@/components/global/money'
 import useExpenses from '@/lib/use-expenses'
-import { Category, Report, TransactionType } from '@/types'
+import { Category, Report, TransactionFrequency } from '@/types'
 import { Fragment } from 'react/jsx-runtime'
 import styles from './style.module.scss'
 
@@ -42,7 +42,7 @@ export default function ExpenseCategories({
 }) {
   const { categories: userCategories } = useExpenses()
 
-  function getCategoriesByType(type: TransactionType) {
+  function getCategoriesByType(type: TransactionFrequency) {
     return userCategories
       .filter((category) => {
         return category.type === type

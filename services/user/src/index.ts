@@ -1,11 +1,12 @@
 import express from 'express'
-import { create, login } from './controller'
+import { create, get, login } from './controller'
 
 const port = 8001
 const app = express()
 
 app.use(express.json())
 app.post('/', create)
+app.get('/', get)
 app.post('/login', login)
 
 async function main() {

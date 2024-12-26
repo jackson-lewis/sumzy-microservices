@@ -34,7 +34,7 @@ export default function ExpenseItem({
   }
 
   function handleUpdateClick() {
-    showEditModal(expense)
+    showEditModal('expense', expense.type, expense)
   }
 
   return (

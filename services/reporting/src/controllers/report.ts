@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import {
-  TransactionType,
+  TransactionFrequency,
   AggregateType,
   Transaction,
   ComparePeriod,
@@ -67,7 +67,7 @@ export async function generateReport(
    */
   function getEventsByType<T extends AggregateType>(
     aggregateType: T,
-    type: TransactionType
+    type: TransactionFrequency
   ) {
     const expenses: {
       [k: Transaction['id']]: Event[]
@@ -76,10 +76,10 @@ export async function generateReport(
 
     ;(events)
       .filter((event) => {
-        const transactionType = getEventField(event, 'type')
+        const TransactionFrequency = getEventField(event, 'type')
         return (
           event.aggregateType === aggregateType &&
-          transactionType === type
+          TransactionFrequency === type
         )
       })
       .map((event) => {
@@ -156,12 +156,12 @@ export async function generateReport(
 
   function calculateTransactionTotals<T extends AggregateType>(
     aggregateType: T,
-    transactionType: TransactionType,
+    TransactionFrequency: TransactionFrequency,
     reducerFn: (event: Event) => void
   ) {
-    const events = getEventsByType(aggregateType, transactionType)
+    const events = getEventsByType(aggregateType, TransactionFrequency)
 
-    const filterFn = transactionType === 'one_time' ?
+    const filterFn = TransactionFrequency === 'one_time' ?
       filterOneTimeEvents :
       filterRecurringEvents
 

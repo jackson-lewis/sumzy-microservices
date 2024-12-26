@@ -1,17 +1,33 @@
-import { Category, Transaction } from '@/types'
-import { createContext, Dispatch, ReactNode, RefObject, SetStateAction, useEffect, useRef, useState } from 'react'
+import { Category, Transaction, TransactionDialogSetup, TransactionDirection, TransactionFrequency } from '@/types'
+import {
+  createContext,
+  Dispatch,
+  ReactNode,
+  RefObject,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState
+} from 'react'
 import { getCategories } from './category'
 import { getExpenses } from './expense'
+
 
 export const ExpenseContext = createContext<{
   expenses: Transaction[]
   setExpenses: Dispatch<SetStateAction<Transaction[]>>
-  expense: Transaction | undefined
-  setExpense: Dispatch<SetStateAction<Transaction | undefined>>
+  transaction: Transaction | undefined
+  setTransaction: Dispatch<SetStateAction<Transaction | undefined>>
+  transactionSetup: TransactionDialogSetup
+  setTransactionSetup: Dispatch<SetStateAction<TransactionDialogSetup>>
   categories: Category[]
   setCategories: Dispatch<SetStateAction<Category[]>>
   dialogRef: RefObject<HTMLDialogElement>
-  showEditModal: (expense?: Transaction) => void
+  showEditModal: (
+    direction?: TransactionDirection,
+    frequency?: TransactionFrequency,
+    transaction?: Transaction
+  ) => void
   closeEditModal: () => void
 } | null>(null)
 
@@ -21,8 +37,13 @@ export default function ExpenseProvider({
   children: ReactNode
 }) {
   const [expenses, setExpenses] = useState<Transaction[]>([])
-  const [expense, setExpense] = useState<Transaction>()
   const [categories, setCategories] = useState<Category[]>([])
+
+  const [transaction, setTransaction] = useState<Transaction>()
+  const [transactionSetup, setTransactionSetup] = useState<
+    TransactionDialogSetup
+  >([undefined, undefined])
+
   const dialogRef = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {
@@ -62,14 +83,28 @@ export default function ExpenseProvider({
     getData()
   }, [])
 
-  function showEditModal(expense?: Transaction) {
+  function showEditModal(
+    direction?: TransactionDirection,
+    frequency?: TransactionFrequency,
+    transaction?: Transaction
+  ) {
     const dialog = dialogRef.current
 
     if (!dialog) {
       return
     }
 
-    setExpense(expense)
+    setTransactionSetup((setup) => {
+      if (direction) {
+        setup[0] = direction
+      }
+      if (frequency) {
+        setup[1] = frequency
+      }
+      return setup
+    })
+
+    setTransaction(transaction)
 
     dialog.showModal()
   }
@@ -95,8 +130,10 @@ export default function ExpenseProvider({
 
   return (
     <ExpenseContext.Provider value={{
-      expense,
-      setExpense,
+      transaction,
+      setTransaction,
+      transactionSetup,
+      setTransactionSetup,
       expenses,
       setExpenses,
       categories,

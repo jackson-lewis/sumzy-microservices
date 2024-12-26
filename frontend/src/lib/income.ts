@@ -1,12 +1,13 @@
-import { TransactionType, Transaction } from '../types'
+import { TransactionFrequency, Transaction } from '../types'
 import { apiRequest } from './api'
 
 
 /**
  * Retrieve a list of incomes for the authenticated user.
  */
-export async function getIncomes(type: TransactionType = 'one_time')
-: Promise<Transaction[] | Error> {
+export async function getIncomes(
+  type: TransactionFrequency = 'one_time'
+): Promise<Transaction[] | Error> {
   return await apiRequest(
     `v1/income?type=${type}`,
     {},

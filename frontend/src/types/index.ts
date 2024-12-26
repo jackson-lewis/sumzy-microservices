@@ -1,9 +1,10 @@
-export type TransactionType = 'one_time' | 'recurring'
+export type TransactionDirection = 'income' | 'expense'
+export type TransactionFrequency = 'one_time' | 'recurring'
 export type ComparePeriod = 'prevMonth' | 'yearOverYear'
 
 export type Transaction = {
   id: number
-  type: TransactionType
+  type: TransactionFrequency
   userId: number
   date: string
   amount: number
@@ -14,7 +15,7 @@ export type Category = {
   id: number
   userId: number
   name: string
-  type: TransactionType
+  type: TransactionFrequency
 }
 
 export type ReportTotals = {
@@ -45,4 +46,15 @@ export type Report = {
   lastUpdatedDate: Date
 } & {
   [k in TotalKeys]: number
+}
+
+export type TransactionDialogSetup = [
+  TransactionDirection | undefined,
+  TransactionFrequency | undefined
+]
+
+export type User = {
+  firstName: string
+  lastName: string
+  email: string
 }

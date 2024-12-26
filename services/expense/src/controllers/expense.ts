@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { sendExpenseEvent } from '../rabbitmq'
 import { formatDate } from '../lib/utils'
-import { Prisma, TransactionType } from '@prisma/client'
+import { Prisma, TransactionFrequency } from '@prisma/client'
 import { prisma } from '../prisma'
 
 export async function create(req: Request, res: Response) {
@@ -13,7 +13,7 @@ export async function create(req: Request, res: Response) {
     date,
     frequency
   }: {
-    type: TransactionType
+    type: TransactionFrequency
     frequency?: string
     [k: string]: string
   } = req.body
@@ -32,19 +32,24 @@ export async function create(req: Request, res: Response) {
 
   const trueDate = new Date(date)
 
-  const expense = await prisma.expense.create({
-    data: {
-      userId: Number(userId as string),
-      type,
-      amount: Number(amount as string),
-      category: Number(category as string),
-      date: trueDate.toISOString(),
-      frequency
-    }
-  })
-
-  sendExpenseEvent(expense, 'created')
-  res.status(201).send(expense)
+  try {
+    const expense = await prisma.expense.create({
+      data: {
+        userId: Number(userId as string),
+        type,
+        amount: Number(amount as string),
+        category: Number(category as string),
+        date: trueDate.toISOString(),
+        frequency
+      }
+    })
+  
+    sendExpenseEvent(expense, 'created')
+    res.status(201).send(expense)
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Expected error occured')
+  }
 }
 
 
@@ -55,7 +60,7 @@ export async function list(req: Request, res: Response) {
     from,
     to
   }: {
-    type?: TransactionType
+    type?: TransactionFrequency
     from?: string
     to?: string
   } = req.query
@@ -87,10 +92,15 @@ export async function list(req: Request, res: Response) {
     }
   }
 
-  const expenses = await prisma.expense.findMany({
-    where
-  })
-  res.status(200).send(expenses)
+  try {
+    const expenses = await prisma.expense.findMany({
+      where
+    })
+    res.status(200).send(expenses)
+  } catch (error) {
+    console.log(error)
+    res.status(500).send('Unexpected error occured.')
+  }
 }
 
 export async function deleteExpense(req: Request, res: Response) {

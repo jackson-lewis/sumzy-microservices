@@ -1,4 +1,3 @@
-import ExpenseDialog from '@/components/expenses/dialog'
 import ExpensesList from '@/components/expenses/list'
 import { getExpenses } from '@/lib/expense'
 import useExpenses from '@/lib/use-expenses'
@@ -7,7 +6,7 @@ import { useEffect, useState } from 'react'
 
 export default function RecurringExpenses() {
   const [expenses, setExpenses] = useState<Transaction[]>([])
-  const { expense, showEditModal } = useExpenses()
+  const { showEditModal } = useExpenses()
 
   useEffect(() => {
     async function getData() {
@@ -30,11 +29,6 @@ export default function RecurringExpenses() {
       <ExpensesList
         expenses={expenses}
         setExpenses={setExpenses}
-      />
-      <ExpenseDialog
-        expense={expense}
-        setExpenses={setExpenses}
-        defaultType="recurring"
       />
     </main>
   )

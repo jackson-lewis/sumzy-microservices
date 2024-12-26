@@ -1,3 +1,4 @@
+import { User } from '@/types'
 import { apiRequest } from './api'
 
 export async function register(event: React.FormEvent<HTMLFormElement>) {
@@ -55,4 +56,12 @@ export function getUserToken()  {
 
 export function isUserLoggedIn() {
   return !!getUserToken()
+}
+
+export async function getUser(): Promise<User | Error> {
+  return await apiRequest(
+    'v1/users',
+    {},
+    true
+  )
 }

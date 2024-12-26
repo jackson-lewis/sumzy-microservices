@@ -1,11 +1,11 @@
 import { Request, Response } from 'express'
 import { prisma } from '../prisma'
-import { TransactionType } from '@prisma/client'
+import { TransactionFrequency } from '@prisma/client'
 
 export async function createCategory(req: Request, res: Response) {
   const userId = req.headers['x-user-id']
   const { name, type }: {
-    type: TransactionType
+    type: TransactionFrequency
     [k: string]: string
   } = req.body
 

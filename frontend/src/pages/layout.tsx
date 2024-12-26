@@ -1,3 +1,4 @@
+import ExpenseDialog from '@/components/expenses/dialog'
 import DashboardHeader from '@/components/layout/header'
 import MobileNavBar from '@/components/layout/mobile-nav-bar'
 import CategoriesProvider from '@/lib/expense-context'
@@ -9,6 +10,7 @@ export default function Layout() {
       <DashboardHeader />
       <MobileNavBar />
       <Outlet />
+      <ExpenseDialog />
     </CategoriesProvider>
   );
 }

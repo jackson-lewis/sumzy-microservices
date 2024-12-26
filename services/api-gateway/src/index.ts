@@ -12,6 +12,7 @@ app.use(cors({
 app.use('/v1/expenses*', auth)
 app.use('/v1/reporting*', auth)
 app.use('/v1/income*', auth)
+app.use('/v1/users*', auth)
 
 type Service = {
   endpoint: string,

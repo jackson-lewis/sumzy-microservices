@@ -1,12 +1,12 @@
 -- CreateEnum
-CREATE TYPE "TransactionType" AS ENUM ('one_time', 'recurring');
+CREATE TYPE "TransactionFrequency" AS ENUM ('one_time', 'recurring');
 
 -- CreateTable
 CREATE TABLE "Expense" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
     "amount" INTEGER NOT NULL,
-    "type" "TransactionType" NOT NULL,
+    "type" "TransactionFrequency" NOT NULL,
     "category" INTEGER NOT NULL,
     "frequency" TEXT,
     "date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -19,7 +19,7 @@ CREATE TABLE "Category" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
-    "type" "TransactionType" NOT NULL,
+    "type" "TransactionFrequency" NOT NULL,
 
     CONSTRAINT "Category_pkey" PRIMARY KEY ("id")
 );

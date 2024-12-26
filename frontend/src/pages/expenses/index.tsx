@@ -1,11 +1,9 @@
-import ExpenseDialog from '@/components/expenses/dialog'
 import ExpensesList from '@/components/expenses/list'
 import useExpenses from '@/lib/use-expenses'
 import { Link } from 'react-router-dom'
 
 export default function Expenses() {
   const {
-    expense,
     expenses,
     setExpenses,
     showEditModal
@@ -19,10 +17,6 @@ export default function Expenses() {
       <button onClick={() => showEditModal()}>Add</button>
       <ExpensesList
         expenses={expenses}
-        setExpenses={setExpenses}
-      />
-      <ExpenseDialog
-        expense={expense}
         setExpenses={setExpenses}
       />
     </main>

@@ -1,11 +1,11 @@
-export type TransactionType = 'one_time' | 'recurring'
+export type TransactionFrequency = 'one_time' | 'recurring'
 export type EventType = 'created' | 'updated' | 'deleted'
 export type AggregateType = 'expense' | 'income'
 export type ComparePeriod = 'prevMonth' | 'yearOverYear'
 
 export type Transaction = {
   id: number
-  type: TransactionType
+  type: TransactionFrequency
   userId: string
   date: Date
   amount: number

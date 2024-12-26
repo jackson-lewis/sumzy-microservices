@@ -1,6 +1,6 @@
 import { addExpense, updateExpense } from '@/lib/expense'
-import { Transaction, TransactionType } from '@/types'
-import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Transaction, TransactionFrequency } from '@/types'
+import { ChangeEvent, useEffect, useState } from 'react'
 import DateSelector from './date-selector'
 import useCategories from '@/lib/use-expenses'
 import CurrencyInput from '@/components/global/currency-input'
@@ -11,26 +11,22 @@ import { sortTransactionsByDate } from '@/lib/shared'
 
 
 export default function ExpenseDialog({
-  expense,
-  setExpenses,
   defaultType = 'one_time'
 }: {
-  expense?: Transaction
-  setExpenses: Dispatch<SetStateAction<Transaction[]>>
-  defaultType?: TransactionType
+  defaultType?: TransactionFrequency
 }) {
-  const update = !!expense
   const { categories } = useCategories()
-  const { closeEditModal, dialogRef } = useExpenses()
+  const { closeEditModal, dialogRef, transaction, setExpenses } = useExpenses()
   const [categoryValue, setCategoryValue] = useState<number>()
   const [type, setType] = useState(defaultType)
+  const update = !!transaction
   const headingPrefix = update ? 'Edit' : 'Add new'
 
   useEffect(() => {
-    if (expense) {
-      setCategoryValue(expense.category)
+    if (transaction) {
+      setCategoryValue(transaction.category)
     }
-  }, [expense])
+  }, [transaction])
 
   function closeAction(form: HTMLFormElement) {
     closeEditModal()
@@ -53,7 +49,7 @@ export default function ExpenseDialog({
 
           if (update) {
             updated = {
-              ...expense,
+              ...transaction,
               ...data
             }
         
@@ -72,7 +68,7 @@ export default function ExpenseDialog({
 
             if (update) {
               newExpenses = expenses.map((_e) => {
-                if (_e.id === expense.id) {
+                if (_e.id === transaction.id) {
                   return updated
                 }
                 return _e
@@ -100,7 +96,7 @@ export default function ExpenseDialog({
               disabled={update}
               checked={type === 'one_time'}
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                setType(event.target.value as TransactionType)
+                setType(event.target.value as TransactionFrequency)
               }}
             />
             <label htmlFor="type-one_time">One-time</label>
@@ -114,13 +110,13 @@ export default function ExpenseDialog({
               disabled={update}
               checked={type === 'recurring'}
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                setType(event.target.value as TransactionType)
+                setType(event.target.value as TransactionFrequency)
               }}
             />
             <label htmlFor="type-recurring">Recurring</label>
           </div>
         </div>
-        <CurrencyInput autoFocus={true} value={expense?.amount} />
+        <CurrencyInput autoFocus={true} value={transaction?.amount} />
         <div className={styles.field}>
           <label htmlFor="category">Category</label>
           <select
@@ -142,7 +138,7 @@ export default function ExpenseDialog({
             ))}
           </select>
         </div>
-        <DateSelector value={expense?.date} />
+        <DateSelector value={transaction?.date} />
         {type === 'recurring' ? (
           <div className={styles.field}>
             <label htmlFor="frequency">Frequency</label>
