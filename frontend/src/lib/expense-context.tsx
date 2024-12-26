@@ -91,6 +91,7 @@ export default function ExpenseProvider({
     const dialog = dialogRef.current
 
     if (!dialog) {
+      console.log('dialog not found')
       return
     }
 
@@ -101,7 +102,7 @@ export default function ExpenseProvider({
       if (frequency) {
         setup[1] = frequency
       }
-      return setup
+      return [...setup]
     })
 
     setTransaction(transaction)

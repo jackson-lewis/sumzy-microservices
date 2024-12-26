@@ -180,7 +180,7 @@ export async function generateReport(
     callback: ((event: Event) => void) | undefined = null
   ) {
     function calculateTotals(event: Event) {
-      const amount = getEventField(event, 'amount') as number
+      const amount = Number(getEventField(event, 'amount'))
 
       totals[aggregateType] += amount
       if (typeof callback === 'function') {
@@ -196,7 +196,7 @@ export async function generateReport(
     'expense',
     function(event: Event) {
       const category = getEventField(event, 'category') as number
-      const amount = getEventField(event, 'amount') as number
+      const amount = Number(getEventField(event, 'amount')) as number
 
       totals.expenseCategories[category] = amount + 
         (totals.expenseCategories[category] || 0) || 0

@@ -1,5 +1,6 @@
 import amqp from 'amqplib';
-import { EventType, Income } from '../types'
+import { EventType } from '../types'
+import { Income } from '@prisma/client'
 
 export const RABBITMQ_URL = 'amqp://rabbitmq'
 export const QUEUE_NAME = 'income'

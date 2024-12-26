@@ -21,7 +21,7 @@ enum TransactionFrequency {
 model Expense {
   id        Int     @id @default(autoincrement())
   userId    Int
-  amount    Int
+  amount    Decimal
   type      TransactionFrequency
   category  Int
   frequency String?

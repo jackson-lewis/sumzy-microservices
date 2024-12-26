@@ -1,4 +1,4 @@
-import { Category } from '../types'
+import { Category, TransactionDirection } from '../types'
 import { apiRequest } from './api'
 
 
@@ -19,10 +19,11 @@ export async function getCategories()
  * Add a category for the authenticated user.
  */
 export async function addCategory(
-  category: Category
+  category: Category,
+  direction: TransactionDirection
 ): Promise<Category | Error> {
   return await apiRequest(
-    'v1/expenses/categories',
+    `v1/${direction === 'expense' ? 'expenses' : 'income'}/categories`,
     'POST',
     category,
     true

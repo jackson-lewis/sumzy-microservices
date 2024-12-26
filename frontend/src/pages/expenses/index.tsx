@@ -15,7 +15,7 @@ export default function Expenses() {
       <h1>Expenses</h1>
       <CategoryLink direction="expense" />
       <FrequencySelector direction="expense" />
-      <button onClick={() => showEditModal()}>Add</button>
+      <button onClick={() => showEditModal('expense', 'one_time')}>Add</button>
       <ExpensesList
         expenses={expenses}
         setExpenses={setExpenses}

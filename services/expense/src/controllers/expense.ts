@@ -32,12 +32,17 @@ export async function create(req: Request, res: Response) {
 
   const trueDate = new Date(date)
 
+  console.log({
+    amount,
+    asNumber: Number(amount)
+  })
+
   try {
     const expense = await prisma.expense.create({
       data: {
         userId: Number(userId as string),
         type,
-        amount: Number(amount as string),
+        amount: Number(amount),
         category: Number(category as string),
         date: trueDate.toISOString(),
         frequency

@@ -1,6 +1,7 @@
 import Date from '@/components/global/date'
 import Money from '@/components/global/money'
-import CreateIncome from '@/components/income/create'
+import CategoryLink from '@/components/transaction/category'
+import FrequencySelector from '@/components/transaction/frequency-selector'
 import { getIncomes } from '@/lib/income'
 import { Transaction } from '@/types'
 import { useEffect, useState } from 'react'
@@ -24,7 +25,8 @@ export default function IncomePage() {
   return (
     <main>
       <h1>Income</h1>
-      <CreateIncome setIncomes={setIncomes} />
+      <CategoryLink direction="income" />
+      <FrequencySelector direction="income" />
       <ul>
         {incomes.map((income) => (
           <li key={income.id}>

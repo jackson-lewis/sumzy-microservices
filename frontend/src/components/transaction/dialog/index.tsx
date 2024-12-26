@@ -12,6 +12,7 @@ import styles from './style.module.scss'
 import useExpenses from '@/lib/use-expenses'
 import { getFormData } from '@/lib/form-submit'
 import { sortTransactionsByDate } from '@/lib/shared'
+import { createIncome } from '@/lib/income'
 
 
 export default function TransactionDialog() {
@@ -46,6 +47,8 @@ export default function TransactionDialog() {
           event.preventDefault()
 
           const form = event.target as HTMLFormElement
+          const formData = new FormData(form)
+          const direction = formData.get('direction') as TransactionDirection
           const data = getFormData(form)
 
           let apiData: Transaction | Error | { success: boolean }
@@ -59,7 +62,11 @@ export default function TransactionDialog() {
         
             apiData = await updateExpense(updated)
           } else {
-            apiData = await addExpense(data)
+            if (direction === 'expense') {
+              apiData = await addExpense(data)
+            } else {
+              apiData = await createIncome(data)
+            }
           }
 
           if (apiData instanceof Error) {
@@ -67,25 +74,27 @@ export default function TransactionDialog() {
             return
           }
 
-          setExpenses((expenses) => {
-            let newExpenses: Transaction[]
-
-            if (update) {
-              newExpenses = expenses.map((_e) => {
-                if (_e.id === transaction.id) {
-                  return updated
-                }
-                return _e
-              })
-            } else {
-              newExpenses = [
-                ...expenses,
-                apiData as Transaction
-              ]
-            }
-
-            return newExpenses.sort(sortTransactionsByDate)
-          })
+          if (direction === 'expense') {
+            setExpenses((expenses) => {
+              let newExpenses: Transaction[]
+  
+              if (update) {
+                newExpenses = expenses.map((_e) => {
+                  if (_e.id === transaction.id) {
+                    return updated
+                  }
+                  return _e
+                })
+              } else {
+                newExpenses = [
+                  ...expenses,
+                  apiData as Transaction
+                ]
+              }
+  
+              return newExpenses.sort(sortTransactionsByDate)
+            })
+          }
 
           closeAction(form)
         }}

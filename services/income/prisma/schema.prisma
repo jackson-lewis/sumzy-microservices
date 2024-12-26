@@ -18,7 +18,7 @@ enum TransactionFrequency {
 model Income {
   id        Int     @id @default(autoincrement())
   userId    Int
-  amount    Int
+  amount    Decimal
   type      TransactionFrequency
   category  Int?
   date      DateTime @default(now())

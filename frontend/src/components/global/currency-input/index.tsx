@@ -26,10 +26,9 @@ export default function CurrencyInput(props: {
     <div className={styles.wrapper}>
       <span>£</span>
       <input
-        type="text"
+        type="number"
         name="amount"
-        inputMode="decimal"
-        pattern="[0-9.]*"
+        step="0.01"
         required
         {...newProps}
         onChange={(event) => {

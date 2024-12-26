@@ -1,10 +1,12 @@
 export function formatAmount(amount: number) {
-  const options: Intl.NumberFormatOptions = {
-    style: 'currency',
-    currency: 'GBP'
-  }
-
-  return amount.toLocaleString('en-GB', options)
+  return Number(amount).toLocaleString(
+    'en-GB',
+    {
+      style: 'currency',
+      currency: 'GBP',
+      // roundingPriority: 'morePrecision'
+    }
+  )
 }
 
 export function formatDate(date: string) {

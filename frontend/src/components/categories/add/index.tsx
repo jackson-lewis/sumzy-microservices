@@ -1,11 +1,13 @@
 import { Dispatch, SetStateAction } from 'react'
 import { addCategory } from '@/lib/category'
-import { Category } from '@/types'
+import { Category, TransactionDirection } from '@/types'
 
 export default function AddCategory({
-  setCategories
+  setCategories,
+  direction
 } : {
   setCategories: Dispatch<SetStateAction<Category[]>>
+  direction: TransactionDirection
 }) {
   return (
     <form onSubmit={async (event) => {
@@ -13,7 +15,7 @@ export default function AddCategory({
 
       const data = new FormData(event.target as HTMLFormElement)
       const category: unknown = Object.fromEntries(data.entries())
-      const added = await addCategory(category as Category)
+      const added = await addCategory(category as Category, direction)
       
       if (added instanceof Error) {
         console.error(added.message)
@@ -27,6 +29,28 @@ export default function AddCategory({
         ]
       })
     }}>
+      <fieldset name="direction">
+        <div>
+          <div>
+            <input
+              type="radio"
+              name="direction"
+              value="income"
+              id="direction-income"
+            />
+            <label htmlFor="direction-income">Income</label>
+          </div>
+          <div>
+            <input
+              type="radio"
+              name="direction"
+              value="expense"
+              id="direction-expense"
+            />
+            <label htmlFor="direction-expense">Expense</label>
+          </div>
+        </div>
+      </fieldset>
       <label htmlFor="name">Name</label>
       <input type="text" name="name" id="name" required />
       <fieldset>

@@ -12,6 +12,8 @@ import ExpenseCatgories from './pages/expenses/categories'
 import RecurringExpenses from './pages/expenses/recurring'
 import Reports from './pages/reports'
 import Income from './pages/income'
+import IncomeCatgories from './pages/income/categories'
+import RecurringIncome from './pages/income/recurring'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -61,6 +63,26 @@ const router = createBrowserRouter([
           }
           return null
         },
+      },
+      {
+        path: 'income/recurring',
+        element: <RecurringIncome />,
+        loader: () => {
+          if (!isUserLoggedIn()) {
+            return redirect('/login?next=/income/recurring')
+          }
+          return null
+        }
+      },
+      {
+        path: 'income/categories',
+        element: <IncomeCatgories />,
+        loader: () => {
+          if (!isUserLoggedIn()) {
+            return redirect('/login?next=/income')
+          }
+          return null
+        }
       },
       {
         path: 'reports',
