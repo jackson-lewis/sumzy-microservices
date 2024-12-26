@@ -1,28 +1,13 @@
-import ExpensesList from '@/components/expenses/list'
 import FrequencySelector from '@/components/transaction/frequency-selector'
-import { getExpenses } from '@/lib/expense'
-import { getIncomes } from '@/lib/income'
+import TransactionsList from '@/components/transaction/list'
 import useExpenses from '@/lib/use-expenses'
-import { Transaction } from '@/types'
-import { useEffect, useState } from 'react'
 
 export default function RecurringIncome() {
-  const [expenses, setExpenses] = useState<Transaction[]>([])
-  const { showEditModal } = useExpenses()
-
-  useEffect(() => {
-    async function getData() {
-      const expenses = await getIncomes('recurring')
-      if (Array.isArray(expenses)) {
-        setExpenses(expenses)
-      }
-
-      if (expenses instanceof Error) {
-        alert(expenses.message)
-      }
-    }
-    getData()
-  }, [])
+  const {
+    transactions,
+    setExpenses,
+    showEditModal
+  } = useExpenses()
 
   return (
     <main>
@@ -35,9 +20,11 @@ export default function RecurringIncome() {
       >
         Add
       </button>
-      <ExpensesList
-        expenses={expenses}
+      <TransactionsList
+        transactions={transactions}
         setExpenses={setExpenses}
+        direction="income"
+        frequency="recurring"
       />
     </main>
   )

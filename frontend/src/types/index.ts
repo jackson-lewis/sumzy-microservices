@@ -4,18 +4,17 @@ export type ComparePeriod = 'prevMonth' | 'yearOverYear'
 
 export type Transaction = {
   id: number
-  type: TransactionFrequency
   userId: number
   date: string
   amount: number
   category: number
+  frequency: TransactionFrequency
 }
 
 export type Category = {
   id: number
   userId: number
   name: string
-  type: TransactionFrequency
 }
 
 export type ReportTotals = {

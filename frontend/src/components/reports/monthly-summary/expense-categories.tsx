@@ -44,9 +44,6 @@ export default function ExpenseCategories({
 
   function getCategoriesByType(type: TransactionFrequency) {
     return userCategories
-      .filter((category) => {
-        return category.type === type
-      })
       .map((category) => {
         return {
           ...category,

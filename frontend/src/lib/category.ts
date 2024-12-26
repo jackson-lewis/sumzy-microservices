@@ -1,4 +1,4 @@
-import { Category, TransactionDirection } from '../types'
+import { Category } from '../types'
 import { apiRequest } from './api'
 
 
@@ -8,7 +8,7 @@ import { apiRequest } from './api'
 export async function getCategories()
 : Promise<Category[] | Error> {
   return await apiRequest(
-    'v1/expenses/categories',
+    'v1/transactions/categories',
     {},
     true
   )
@@ -19,11 +19,10 @@ export async function getCategories()
  * Add a category for the authenticated user.
  */
 export async function addCategory(
-  category: Category,
-  direction: TransactionDirection
+  category: Category
 ): Promise<Category | Error> {
   return await apiRequest(
-    `v1/${direction === 'expense' ? 'expenses' : 'income'}/categories`,
+    'v1/transactions/categories',
     'POST',
     category,
     true
@@ -38,7 +37,7 @@ export async function deleteCategory(
   id: Category['id']
 ): Promise<{ success: boolean } | Error> {
   return await apiRequest(
-    `v1/expenses/categories?id=${id}`,
+    `v1/transactions/categories?id=${id}`,
     'DELETE',
     null,
     true

@@ -10,12 +10,14 @@ import {
   useState
 } from 'react'
 import { getCategories } from './category'
-import { getExpenses } from './expense'
+import { getTransactions } from './transactions'
 
 
 export const ExpenseContext = createContext<{
   expenses: Transaction[]
   setExpenses: Dispatch<SetStateAction<Transaction[]>>
+  transactions: Transaction[]
+  setTransactions: Dispatch<SetStateAction<Transaction[]>>
   transaction: Transaction | undefined
   setTransaction: Dispatch<SetStateAction<Transaction | undefined>>
   transactionSetup: TransactionDialogSetup
@@ -36,6 +38,7 @@ export default function ExpenseProvider({
 }: {
   children: ReactNode
 }) {
+  const [transactions, setTransactions] = useState<Transaction[]>([])
   const [expenses, setExpenses] = useState<Transaction[]>([])
   const [categories, setCategories] = useState<Category[]>([])
 
@@ -48,13 +51,13 @@ export default function ExpenseProvider({
 
   useEffect(() => {
     async function getData() {
-      const expenses = await getExpenses()
-      if (Array.isArray(expenses)) {
-        setExpenses(expenses)
+      const transactions = await getTransactions()
+      if (Array.isArray(transactions)) {
+        setTransactions(transactions)
       }
 
-      if (expenses instanceof Error) {
-        alert(expenses.message)
+      if (transactions instanceof Error) {
+        alert(transactions.message)
       }
     }
     getData()
@@ -135,6 +138,8 @@ export default function ExpenseProvider({
       setTransaction,
       transactionSetup,
       setTransactionSetup,
+      transactions,
+      setTransactions,
       expenses,
       setExpenses,
       categories,

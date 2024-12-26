@@ -1,11 +1,11 @@
-import ExpensesList from '@/components/expenses/list'
 import CategoryLink from '@/components/transaction/category'
 import FrequencySelector from '@/components/transaction/frequency-selector'
+import TransactionsList from '@/components/transaction/list'
 import useExpenses from '@/lib/use-expenses'
 
 export default function Expenses() {
   const {
-    expenses,
+    transactions,
     setExpenses,
     showEditModal
   } = useExpenses()
@@ -13,12 +13,14 @@ export default function Expenses() {
   return (
     <main>
       <h1>Expenses</h1>
-      <CategoryLink direction="expense" />
+      <CategoryLink />
       <FrequencySelector direction="expense" />
       <button onClick={() => showEditModal('expense', 'one_time')}>Add</button>
-      <ExpensesList
-        expenses={expenses}
+      <TransactionsList
+        transactions={transactions}
         setExpenses={setExpenses}
+        direction="expense"
+        frequency="one_time"
       />
     </main>
   )

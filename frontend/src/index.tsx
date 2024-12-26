@@ -8,12 +8,11 @@ import Layout from './pages/layout'
 import Expenses from './pages/expenses'
 import { isUserLoggedIn } from './lib/user'
 import Account from './pages/account'
-import ExpenseCatgories from './pages/expenses/categories'
 import RecurringExpenses from './pages/expenses/recurring'
 import Reports from './pages/reports'
 import Income from './pages/income'
-import IncomeCatgories from './pages/income/categories'
 import RecurringIncome from './pages/income/recurring'
+import TransactionCategories from './pages/transaction-categories'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -45,16 +44,6 @@ const router = createBrowserRouter([
         }
       },
       {
-        path: 'expenses/categories',
-        element: <ExpenseCatgories />,
-        loader: () => {
-          if (!isUserLoggedIn()) {
-            return redirect('/login?next=/expenses')
-          }
-          return null
-        }
-      },
-      {
         path: 'income',
         element: <Income />,
         loader: () => {
@@ -75,11 +64,11 @@ const router = createBrowserRouter([
         }
       },
       {
-        path: 'income/categories',
-        element: <IncomeCatgories />,
+        path: 'transaction-categories',
+        element: <TransactionCategories />,
         loader: () => {
           if (!isUserLoggedIn()) {
-            return redirect('/login?next=/income')
+            return redirect('/login?next=/transaction-categories')
           }
           return null
         }

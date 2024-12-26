@@ -13,6 +13,7 @@ import useExpenses from '@/lib/use-expenses'
 import { getFormData } from '@/lib/form-submit'
 import { sortTransactionsByDate } from '@/lib/shared'
 import { createIncome } from '@/lib/income'
+import { createTransaction } from '@/lib/transactions'
 
 
 export default function TransactionDialog() {
@@ -48,11 +49,14 @@ export default function TransactionDialog() {
 
           const form = event.target as HTMLFormElement
           const formData = new FormData(form)
-          const direction = formData.get('direction') as TransactionDirection
           const data = getFormData(form)
 
           let apiData: Transaction | Error | { success: boolean }
           let updated: Transaction
+
+          if (formData.get('direction') === 'expense') {
+            data.amount = data.amount * -1
+          }
 
           if (update) {
             updated = {
@@ -62,11 +66,7 @@ export default function TransactionDialog() {
         
             apiData = await updateExpense(updated)
           } else {
-            if (direction === 'expense') {
-              apiData = await addExpense(data)
-            } else {
-              apiData = await createIncome(data)
-            }
+            apiData = await createTransaction(data)
           }
 
           if (apiData instanceof Error) {
@@ -74,27 +74,25 @@ export default function TransactionDialog() {
             return
           }
 
-          if (direction === 'expense') {
-            setExpenses((expenses) => {
-              let newExpenses: Transaction[]
-  
-              if (update) {
-                newExpenses = expenses.map((_e) => {
-                  if (_e.id === transaction.id) {
-                    return updated
-                  }
-                  return _e
-                })
-              } else {
-                newExpenses = [
-                  ...expenses,
-                  apiData as Transaction
-                ]
-              }
-  
-              return newExpenses.sort(sortTransactionsByDate)
-            })
-          }
+          setExpenses((expenses) => {
+            let newExpenses: Transaction[]
+
+            if (update) {
+              newExpenses = expenses.map((_e) => {
+                if (_e.id === transaction.id) {
+                  return updated
+                }
+                return _e
+              })
+            } else {
+              newExpenses = [
+                ...expenses,
+                apiData as Transaction
+              ]
+            }
+
+            return newExpenses.sort(sortTransactionsByDate)
+          })
 
           closeAction(form)
         }}
@@ -146,9 +144,9 @@ export default function TransactionDialog() {
             <div>
               <input
                 type="radio"
-                name="type"
+                name="frequency"
                 value="one_time"
-                id="type-one_time"
+                id="frequency-one_time"
                 disabled={update}
                 checked={transactionSetup[1] === 'one_time'}
                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
@@ -160,14 +158,14 @@ export default function TransactionDialog() {
                   })
                 }}
               />
-              <label htmlFor="type-one_time">One-time</label>
+              <label htmlFor="frequency-one_time">One-time</label>
             </div>
             <div>
               <input
                 type="radio"
-                name="type"
+                name="frequency"
                 value="recurring"
-                id="type-recurring"
+                id="frequency-recurring"
                 disabled={update}
                 checked={transactionSetup[1] === 'recurring'}
                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
@@ -179,12 +177,14 @@ export default function TransactionDialog() {
                   })
                 }}
               />
-              <label htmlFor="type-recurring">Recurring</label>
+              <label htmlFor="frequency-recurring">Recurring</label>
             </div>
           </div>
         </fieldset>
         <fieldset name="details">
           <CurrencyInput autoFocus={true} value={transaction?.amount} />
+          <label htmlFor="desc">Description</label>
+          <input type="text" name="description" id="desc" />
           <div className={styles.field}>
             <label htmlFor="category">Category</label>
             <select
@@ -207,14 +207,6 @@ export default function TransactionDialog() {
             </select>
           </div>
           <DateSelector value={transaction?.date} />
-          {transactionSetup[1] === 'recurring' ? (
-            <div className={styles.field}>
-              <label htmlFor="frequency">Frequency</label>
-              <select name="frequency" id="frequency">
-                <option value="monthly">Monthly</option>
-              </select>
-            </div>
-          ) : null}
           <button
             className={styles.submit}
           >

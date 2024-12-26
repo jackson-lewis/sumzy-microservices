@@ -52,7 +52,7 @@ services:
     networks:
       - finance-net
     depends_on:
-      - expense
+      - transaction
       - reporting
 
   user:
@@ -72,24 +72,6 @@ services:
     depends_on:
       - db
 
-  expense:
-    build:
-      context: ./services/expense
-      dockerfile: dockerfile.dev
-    ports:
-      - "8002:8002"
-    environment:
-      - PORT=8002
-      - DATABASE_URL=postgres://postgres:example@db/expense
-    volumes:
-      - ./services/expense:/app
-      - /app/node_modules
-    networks:
-      - finance-net
-    depends_on:
-      - db
-      - rabbitmq
-
   reporting:
     build:
       context: ./services/reporting
@@ -108,17 +90,17 @@ services:
       - db
       - rabbitmq
 
-  income:
+  transaction:
     build:
-      context: ./services/income
+      context: ./services/transaction
       dockerfile: dockerfile.dev
     ports:
-      - "8004:8004"
+      - "8005:8005"
     environment:
-      - PORT=8004
-      - DATABASE_URL=postgres://postgres:example@db/income
+      - PORT=8005
+      - DATABASE_URL=postgres://postgres:example@db/transaction
     volumes:
-      - ./services/income:/app
+      - ./services/transaction:/app
       - /app/node_modules
     networks:
       - finance-net

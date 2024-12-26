@@ -1,4 +1,4 @@
-import express, { Request } from 'express'
+import express from 'express'
 import httpProxy from 'express-http-proxy'
 import cors from 'cors'
 import auth from './auth'
@@ -9,10 +9,9 @@ app.use(express.json())
 app.use(cors({
   origin: 'http://localhost:3000'
 }))
-app.use('/v1/expenses*', auth)
 app.use('/v1/reporting*', auth)
-app.use('/v1/income*', auth)
 app.use('/v1/users*', auth)
+app.use('/v1/transactions*', auth)
 
 type Service = {
   endpoint: string,
@@ -25,16 +24,12 @@ const services: Service[] = [
     host: 'user:8001'
   },
   {
-    endpoint: '/v1/expenses',
-    host: 'expense:8002'
-  },
-  {
     endpoint: '/v1/reporting',
     host: 'reporting:8003'
   },
   {
-    endpoint: '/v1/income',
-    host: 'income:8004'
+    endpoint: '/v1/transactions',
+    host: 'transaction:8005'
   }
 ]
 
