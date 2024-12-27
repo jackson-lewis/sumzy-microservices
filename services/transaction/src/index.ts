@@ -1,5 +1,6 @@
 import express from 'express'
 import {
+  batch,
   create,
   deleteExpense,
   list,
@@ -22,6 +23,8 @@ app.get('/', list)
 app.post('/', create)
 app.patch('/', update)
 app.delete('/', deleteExpense)
+
+app.post('/batch', batch)
 
 app.get('/categories', listCategories)
 app.post('/categories', createCategory)

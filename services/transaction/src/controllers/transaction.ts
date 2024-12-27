@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { sendTransactionEvent } from '../rabbitmq'
 import { formatDate } from '../lib/utils'
-import { Prisma, Frequency } from '@prisma/client'
+import { Prisma, Frequency, Transaction } from '@prisma/client'
 import { prisma } from '../prisma'
 
 export async function create(req: Request, res: Response) {
@@ -123,4 +123,42 @@ export async function update(req: Request, res: Response) {
 
   sendTransactionEvent(expense, 'updated')
   res.status(200).send(expense)
+}
+
+export async function batch(req: Request, res: Response) {
+  const userId = req.headers['x-user-id']
+  const {
+    transactions
+  }: {
+    transactions: Omit<Transaction, 'id'>[]
+  } = req.body
+
+  const stored = []
+  if (transactions) {
+    for (const tx of transactions) {
+      const {
+        amount,
+        category,
+        frequency,
+        description,
+        date
+      } = tx
+      const trueDate = new Date(date)
+
+      const transaction = await prisma.transaction.create({
+        data: {
+          userId: Number(userId as string),
+          amount: Number(amount),
+          category: Number(category),
+          date: trueDate.toISOString(),
+          frequency,
+          description
+        }
+      })
+      stored.push(transaction)
+      sendTransactionEvent(transaction, 'created')
+    }
+  }
+
+  res.status(200).send(stored)
 }
