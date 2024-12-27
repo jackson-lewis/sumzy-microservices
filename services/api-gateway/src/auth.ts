@@ -17,8 +17,8 @@ export default function auth(
   /**
    * Bypass requests for user create/login
    */
-  if (/^\/v1\/users/.test(req.path) && req.method === 'POST') {
-    next()
+  if (/^\/v1\/users/.test(req.baseUrl) && req.method === 'POST') {
+    return next()
   }
 
   if (!authHeader) {
