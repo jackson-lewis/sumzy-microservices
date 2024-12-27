@@ -1,6 +1,8 @@
 import {
   DetailedHTMLProps,
+  Dispatch,
   HTMLAttributes,
+  SetStateAction,
   useEffect,
   useState
 } from 'react'
@@ -11,8 +13,13 @@ import { Transaction } from '@/types'
  * Props are passed to the `<input />` except for `value`
  * and `onChange` which get overridden 
  */
-export default function CurrencyInput(props: {
+export default function CurrencyInput({
+  value,
+  setAmountValue,
+  ...rest
+} : {
   value?: Transaction['amount']
+  setAmountValue: Dispatch<SetStateAction<string>>
   autoFocus?: boolean
 } & DetailedHTMLProps<
   HTMLAttributes<HTMLInputElement>,
@@ -22,7 +29,7 @@ export default function CurrencyInput(props: {
 
   useEffect(() => {
     setInputValue(() => {
-      const rawValue = props.value
+      const rawValue = value
       let parsedValue = ''
     
       if (rawValue) {
@@ -39,10 +46,10 @@ export default function CurrencyInput(props: {
 
       return parsedValue
     })
-  }, [props])
+  }, [value])
 
   const newProps = {
-    ...props,
+    ...rest,
     value: inputValue
   }
 
@@ -56,7 +63,7 @@ export default function CurrencyInput(props: {
         required
         {...newProps}
         onChange={(event) => {
-          setInputValue(
+          setAmountValue(
             (event.target as HTMLInputElement)
               .value
           )

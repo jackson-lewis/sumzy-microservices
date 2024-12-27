@@ -26,12 +26,14 @@ export default function TransactionDialog() {
     transactionSetup,
     setTransactionSetup
   } = useExpenses()
+  const [amountValue, setAmountValue] = useState<string>('')
   const [categoryValue, setCategoryValue] = useState<number>()
   const [descValue, setDescValue] = useState<string>('')
   const update = !!transaction
 
   useEffect(() => {
     if (transaction) {
+      setAmountValue(transaction.amount.toString())
       setCategoryValue(transaction.category)
       setDescValue(transaction.description)
     }
@@ -188,7 +190,8 @@ export default function TransactionDialog() {
         <fieldset name="details">
           <CurrencyInput
             autoFocus={true}
-            value={Number(transaction?.amount as unknown as string)}
+            value={Number(amountValue)}
+            setAmountValue={setAmountValue}
           />
           <label htmlFor="desc">Description</label>
           <input
