@@ -21,7 +21,7 @@ export default function TransactionDialog() {
     categories,
     closeEditModal,
     dialogRef,
-    setExpenses,
+    setTransactions,
     transaction,
     transactionSetup,
     setTransactionSetup
@@ -52,11 +52,13 @@ export default function TransactionDialog() {
           const form = event.target as HTMLFormElement
           const formData = new FormData(form)
           const data = getFormData(form)
+          const direction = 
+            formData.get('direction') as TransactionDirection
 
           let apiData: Transaction | Error | { success: boolean }
           let updated: Transaction
 
-          if (formData.get('direction') === 'expense') {
+          if (direction === 'expense') {
             data.amount = data.amount * -1
           }
 
@@ -76,24 +78,24 @@ export default function TransactionDialog() {
             return
           }
 
-          setExpenses((expenses) => {
-            let newExpenses: Transaction[]
+          setTransactions((transactions) => {
+            let newTransactions: Transaction[]
 
             if (update) {
-              newExpenses = expenses.map((_e) => {
+              newTransactions = transactions.map((_e) => {
                 if (_e.id === transaction.id) {
                   return updated
                 }
                 return _e
               })
             } else {
-              newExpenses = [
-                ...expenses,
+              newTransactions = [
+                ...transactions,
                 apiData as Transaction
               ]
             }
 
-            return newExpenses.sort(sortTransactionsByDate)
+            return newTransactions.sort(sortTransactionsByDate)
           })
 
           closeAction(form)
