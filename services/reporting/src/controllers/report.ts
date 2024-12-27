@@ -140,7 +140,7 @@ export async function generateReport(
          * check should always be against the transaction date rather
          * than the event date itself.
          */
-        return transactionDate > date && transactionDate < endOfMonth
+        return transactionDate >= date && transactionDate < endOfMonth
       })
   }
 
