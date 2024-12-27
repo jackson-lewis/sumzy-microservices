@@ -7,6 +7,7 @@ export type Transaction = {
   userId: number
   date: string
   amount: number
+  description: string
   category: number
   frequency: TransactionFrequency
 }
@@ -33,7 +34,7 @@ type TotalKeys = `t${Capitalize<keyof ReportTotals>}`
 export type Report = {
   id: number
   userId: number
-  tExpenseCats: {
+  tCategories: {
     [k: number]: number
   }
   compare: {

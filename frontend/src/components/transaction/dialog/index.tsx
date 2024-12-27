@@ -1,24 +1,24 @@
-import { addExpense, updateExpense } from '@/lib/expense'
+import { ChangeEvent, useEffect, useState } from 'react'
+import DateSelector from './date-selector'
+import CurrencyInput from '@/components/global/currency-input'
+import useExpenses from '@/lib/use-expenses'
+import { getFormData } from '@/lib/form-submit'
+import { sortTransactionsByDate } from '@/lib/shared'
+import {
+  createTransaction,
+  updateTransaction
+} from '@/lib/transactions'
 import {
   Transaction,
   TransactionDirection,
   TransactionFrequency,
 } from '@/types'
-import { ChangeEvent, useEffect, useState } from 'react'
-import DateSelector from '../../expenses/dialog/date-selector'
-import useCategories from '@/lib/use-expenses'
-import CurrencyInput from '@/components/global/currency-input'
 import styles from './style.module.scss'
-import useExpenses from '@/lib/use-expenses'
-import { getFormData } from '@/lib/form-submit'
-import { sortTransactionsByDate } from '@/lib/shared'
-import { createIncome } from '@/lib/income'
-import { createTransaction } from '@/lib/transactions'
 
 
 export default function TransactionDialog() {
-  const { categories } = useCategories()
   const {
+    categories,
     closeEditModal,
     dialogRef,
     setExpenses,
@@ -27,11 +27,13 @@ export default function TransactionDialog() {
     setTransactionSetup
   } = useExpenses()
   const [categoryValue, setCategoryValue] = useState<number>()
+  const [descValue, setDescValue] = useState<string>('')
   const update = !!transaction
 
   useEffect(() => {
     if (transaction) {
       setCategoryValue(transaction.category)
+      setDescValue(transaction.description)
     }
   }, [transaction])
 
@@ -64,7 +66,7 @@ export default function TransactionDialog() {
               ...data
             }
         
-            apiData = await updateExpense(updated)
+            apiData = await updateTransaction(updated)
           } else {
             apiData = await createTransaction(data)
           }
@@ -182,9 +184,18 @@ export default function TransactionDialog() {
           </div>
         </fieldset>
         <fieldset name="details">
-          <CurrencyInput autoFocus={true} value={transaction?.amount} />
+          <CurrencyInput
+            autoFocus={true}
+            value={Number(transaction?.amount as unknown as string)}
+          />
           <label htmlFor="desc">Description</label>
-          <input type="text" name="description" id="desc" />
+          <input
+            type="text"
+            name="description"
+            id="desc"
+            value={descValue}
+            onChange={(event) => setDescValue(event.target.value)}
+          />
           <div className={styles.field}>
             <label htmlFor="category">Category</label>
             <select

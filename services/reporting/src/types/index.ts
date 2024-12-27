@@ -5,29 +5,21 @@ export type ComparePeriod = 'prevMonth' | 'yearOverYear'
 
 export type Transaction = {
   id: number
-  type: TransactionFrequency
   userId: string
-  date: Date
   amount: number
+  frequency: TransactionFrequency
+  description: string
+  merchant: string
+  date: Date
 }
-
-export type Expense = Transaction & {
-  category: number
-  frequency?: 'monthly'
-}
-
-export type Income = Transaction
 
 export type Event<T = AggregateType> = {
   aggregateId: number
   aggregateType: T
-  eventData: T extends 'expense' ? Expense : Income
+  eventData: Transaction
   eventType: EventType
   createdAt: Date
 }
-
-export type ExpenseEvent = Event<'expense'>
-export type IncomeEvent = Event<'income'>
 
 export type Totals = {
   income: number
@@ -36,7 +28,7 @@ export type Totals = {
 }
 
 export type ReportTotals = Totals & {
-  expenseCategories?: {
+  categories?: {
     [k: string]: number
   }
 }

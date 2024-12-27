@@ -53,21 +53,30 @@ export async function generateReport(
   )
 
   const endOfMonth = new Date(date)
-  endOfMonth.setDate(30)
+  let lastDayOfMonth = 30
+  if ([0,2,4,6,7,9,11].indexOf(date.getMonth()) >= 0) {
+    lastDayOfMonth = 31
+  } else if (date.getMonth() === 1) {
+    lastDayOfMonth = 28
+  }
+  endOfMonth.setDate(lastDayOfMonth)
+  endOfMonth.setHours(23)
+  endOfMonth.setMinutes(59)
+  endOfMonth.setSeconds(59)
 
   const totals: ReportTotals = {
     income: 0,
     expense: 0,
     surplus: 0,
-    expenseCategories: {}
+    categories: {}
   }
 
   /**
    * Get events by transaction type
    */
-  function getEventsByType<T extends AggregateType>(
-    aggregateType: T,
-    type: TransactionFrequency
+  function getEventsByType(
+    aggregateType: AggregateType,
+    frequency: TransactionFrequency
   ) {
     const expenses: {
       [k: Transaction['id']]: Event[]
@@ -76,10 +85,19 @@ export async function generateReport(
 
     ;(events)
       .filter((event) => {
-        const TransactionFrequency = getEventField(event, 'type')
+        const transactionFrequency = getEventField(event, 'frequency')
         return (
-          event.aggregateType === aggregateType &&
-          TransactionFrequency === type
+          (
+            (
+              aggregateType === 'expense' && 
+              Number((event.eventData as unknown as Transaction).amount) < 0
+            ) || 
+            (
+              aggregateType === 'income' && 
+              Number((event.eventData as unknown as Transaction).amount) > 0
+            )
+          ) &&
+          transactionFrequency === frequency
         )
       })
       .map((event) => {
@@ -146,6 +164,8 @@ export async function generateReport(
 
           if (eventDate < endOfMonth) {
             latestEvent = event
+          } else {
+            console.log('recurring event latest event not found', event.id)
           }
         })
 
@@ -154,14 +174,14 @@ export async function generateReport(
       .filter(Boolean)
   }
 
-  function calculateTransactionTotals<T extends AggregateType>(
-    aggregateType: T,
-    TransactionFrequency: TransactionFrequency,
+  function calculateTransactionTotals(
+    aggregateType: AggregateType,
+    frequency: TransactionFrequency,
     reducerFn: (event: Event) => void
   ) {
-    const events = getEventsByType(aggregateType, TransactionFrequency)
+    const events = getEventsByType(aggregateType, frequency)
 
-    const filterFn = TransactionFrequency === 'one_time' ?
+    const filterFn = frequency === 'one_time' ?
       filterOneTimeEvents :
       filterRecurringEvents
 
@@ -181,8 +201,13 @@ export async function generateReport(
   ) {
     function calculateTotals(event: Event) {
       const amount = Number(getEventField(event, 'amount'))
+      const category = getEventField(event, 'category') as number
 
       totals[aggregateType] += amount
+
+      totals.categories[category] = amount + 
+        (totals.categories[category] || 0) || 0
+
       if (typeof callback === 'function') {
         callback(event)
       }
@@ -192,19 +217,10 @@ export async function generateReport(
     calculateTransactionTotals(aggregateType, 'recurring', calculateTotals)
   }
 
-  calculateTotals(
-    'expense',
-    function(event: Event) {
-      const category = getEventField(event, 'category') as number
-      const amount = Number(getEventField(event, 'amount')) as number
-
-      totals.expenseCategories[category] = amount + 
-        (totals.expenseCategories[category] || 0) || 0
-    }
-  )
+  calculateTotals('expense')
   calculateTotals('income')
 
-  totals.surplus = totals.income - totals.expense
+  totals.surplus = totals.income - (totals.expense * -1)
 
   /**
    * Compare this report:
@@ -291,7 +307,7 @@ export async function generateReport(
     tExpense: totals.expense || 0,
     tIncome: totals.income || 0,
     tSurplus: totals.surplus || 0,
-    tExpenseCats: totals.expenseCategories,
+    tCategories: totals.categories,
     compare,
     date,
     lastUpdatedDate

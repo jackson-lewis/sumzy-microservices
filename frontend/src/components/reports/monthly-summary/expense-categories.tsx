@@ -1,6 +1,6 @@
 import Money from '@/components/global/money'
 import useExpenses from '@/lib/use-expenses'
-import { Category, Report, TransactionFrequency } from '@/types'
+import { Category, Report } from '@/types'
 import { Fragment } from 'react/jsx-runtime'
 import styles from './style.module.scss'
 
@@ -38,11 +38,11 @@ function CategoryGroup({
 export default function ExpenseCategories({
   categories
 } : {
-  categories: Report['tExpenseCats']
+  categories: Report['tCategories']
 }) {
   const { categories: userCategories } = useExpenses()
 
-  function getCategoriesByType(type: TransactionFrequency) {
+  function getCategoriesWithAmount() {
     return userCategories
       .map((category) => {
         return {
@@ -50,15 +50,15 @@ export default function ExpenseCategories({
           amount: categories[category.id] || 0
         }
       })
+      .sort((a, b) => {
+        return a.amount > b.amount ? -1 : 1
+      })
   }
-
-  const recurringCategories = getCategoriesByType('recurring')
-  const oneTimeCategories = getCategoriesByType('one_time')
+  const categoriesWithAmount = getCategoriesWithAmount()
 
   return (
     <div>
-      <CategoryGroup categories={oneTimeCategories} title="One Time Expenses" />
-      <CategoryGroup categories={recurringCategories} title="Recurring Expenses" />
+      <CategoryGroup categories={categoriesWithAmount} title="Categories" />
     </div>
   )
 }

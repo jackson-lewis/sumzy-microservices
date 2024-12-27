@@ -1,10 +1,15 @@
-import { DetailedHTMLProps, HTMLAttributes, useState } from 'react'
+import {
+  DetailedHTMLProps,
+  HTMLAttributes,
+  useEffect,
+  useState
+} from 'react'
 import styles from './style.module.scss'
 import { Transaction } from '@/types'
 
 /**
- * Props are passed to the `<input />` except for `value` and
- * `onChange` which get overridden 
+ * Props are passed to the `<input />` except for `value`
+ * and `onChange` which get overridden 
  */
 export default function CurrencyInput(props: {
   value?: Transaction['amount']
@@ -13,9 +18,28 @@ export default function CurrencyInput(props: {
   HTMLAttributes<HTMLInputElement>,
   HTMLInputElement
 >) {
-  const [inputValue, setInputValue] = useState(
-    props.value
-  )
+  const [inputValue, setInputValue] = useState('')
+
+  useEffect(() => {
+    setInputValue(() => {
+      const rawValue = props.value
+      let parsedValue = ''
+    
+      if (rawValue) {
+        parsedValue = (rawValue < 0 ?
+          (rawValue * -1) :
+          rawValue).toString()
+
+        console.log({
+          raw: rawValue < 0,
+          rawValue,
+          pos: (rawValue * -1),
+          parsedValue })
+      }
+
+      return parsedValue
+    })
+  }, [props])
 
   const newProps = {
     ...props,
@@ -32,7 +56,10 @@ export default function CurrencyInput(props: {
         required
         {...newProps}
         onChange={(event) => {
-          setInputValue(Number((event.target as HTMLInputElement).value))
+          setInputValue(
+            (event.target as HTMLInputElement)
+              .value
+          )
         }}
       />
     </div>

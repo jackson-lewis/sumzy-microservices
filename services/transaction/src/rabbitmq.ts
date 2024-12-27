@@ -2,7 +2,7 @@ import amqp from 'amqplib';
 import { Transaction } from '@prisma/client'
 
 export const RABBITMQ_URL = 'amqp://rabbitmq'
-export const QUEUE_NAME = 'expense'
+export const QUEUE_NAME = 'transaction'
 export let channel: amqp.Channel
 
 export const connectToRabbitMQ = async () => {
@@ -21,17 +21,7 @@ export const connectToRabbitMQ = async () => {
   } catch (error) {
     console.error('Error connecting to RabbitMQ:', error);
   }
-};
-
-// Function to send messages to the queue
-export const sendToQueue = (message: string) => {
-  if (channel) {
-    channel.sendToQueue(QUEUE_NAME, Buffer.from(message), {
-      persistent: true, // Ensure the message survives server restarts
-    });
-    console.log('Message sent:', message);
-  }
-};
+}
 
 
 export function sendTransactionEvent(

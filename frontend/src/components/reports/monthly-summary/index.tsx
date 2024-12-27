@@ -88,7 +88,7 @@ export default function MonthlySummaryReport({
     <>
       <LastUpdatedDate date={new Date(report.lastUpdatedDate)} />
       <ExpenseCategories
-        categories={report.tExpenseCats}
+        categories={report.tCategories}
       />
       <dl className={styles.totals}>
         <Total

@@ -1,15 +1,15 @@
+import { EventType } from '@prisma/client'
 import { prisma } from '../prisma'
-import { AggregateType, EventType, Expense, Income } from '../types'
+import { Transaction } from '../types'
 
-export async function storeEvent<T extends Expense | Income>(
-  eventData: T,
-  aggregateType: AggregateType,
+export async function storeEvent(
+  eventData: Transaction,
   type: EventType
 ) {
+  console.log(eventData)
   const event = await prisma.event.create({
     data: {
       aggregateId: Number(eventData.id),
-      aggregateType,
       eventData,
       eventType: type
     }

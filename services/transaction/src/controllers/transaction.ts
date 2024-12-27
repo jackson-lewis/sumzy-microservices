@@ -103,6 +103,7 @@ export async function update(req: Request, res: Response) {
     id,
     amount,
     category,
+    description,
     date
   }: {
     [k: string]: string
@@ -115,6 +116,7 @@ export async function update(req: Request, res: Response) {
     data: {
       amount: Number(amount),
       category: Number(category),
+      description,
       date: trueDate
     }
   })
