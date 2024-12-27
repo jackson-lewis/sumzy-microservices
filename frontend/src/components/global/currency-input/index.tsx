@@ -36,12 +36,6 @@ export default function CurrencyInput({
         parsedValue = (rawValue < 0 ?
           (rawValue * -1) :
           rawValue).toString()
-
-        console.log({
-          raw: rawValue < 0,
-          rawValue,
-          pos: (rawValue * -1),
-          parsedValue })
       }
 
       return parsedValue
