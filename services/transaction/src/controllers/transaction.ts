@@ -7,11 +7,11 @@ import { prisma } from '../prisma'
 export async function create(req: Request, res: Response) {
   const userId = req.headers['x-user-id']
   const {
-    type,
     amount,
     category,
     date,
-    frequency
+    frequency,
+    description
   }: {
     frequency: Frequency
     [k: string]: string
@@ -24,9 +24,10 @@ export async function create(req: Request, res: Response) {
       data: {
         userId: Number(userId as string),
         amount: Number(amount),
-        category: Number(category as string),
+        category: Number(category),
         date: trueDate.toISOString(),
-        frequency
+        frequency,
+        description
       }
     })
   
