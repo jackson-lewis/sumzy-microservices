@@ -1,4 +1,4 @@
-import { getUserToken } from '@/lib/user'
+import { getUserToken } from './user'
 
 type HttpMethods = 'POST' | 'PATCH' | 'DELETE'
 
