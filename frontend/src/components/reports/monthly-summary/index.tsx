@@ -73,7 +73,7 @@ function LastUpdatedDate({ date } : { date: Date }) {
 export default function MonthlySummaryReport({
   report
 } : {
-  report: Report | null
+  report: Report | undefined
 }) {
   const [comparePeriod, setComparePeriod] = 
     useState<ComparePeriod>('prevMonth')
@@ -88,7 +88,7 @@ export default function MonthlySummaryReport({
     <>
       <LastUpdatedDate date={new Date(report.lastUpdatedDate)} />
       <ExpenseCategories
-        categories={report.tCategories}
+        categoryTotals={report.tCategories}
       />
       <dl className={styles.totals}>
         <Total

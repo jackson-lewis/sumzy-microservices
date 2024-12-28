@@ -1,15 +1,15 @@
 import Money from '@/components/global/money'
-import useExpenses from '@/lib/use-expenses'
 import { Category, Report } from '@/types'
 import { Fragment } from 'react/jsx-runtime'
 import styles from './style.module.scss'
+import { useCategories } from '@/lib/swr'
 
 
 function CategoryGroup({
   categories,
   title
 } : {
-  categories: (Category & { amount: number })[]
+  categories: Category[]
   title: string
 }) {
   return (
@@ -36,18 +36,26 @@ function CategoryGroup({
 }
 
 export default function ExpenseCategories({
-  categories
+  categoryTotals
 } : {
-  categories: Report['tCategories']
+  categoryTotals: Report['tCategories']
 }) {
-  const { categories: userCategories } = useExpenses()
+  const { data: categories } = useCategories()
 
-  function getCategoriesWithAmount() {
-    return userCategories
+  if (!categories) {
+    return <p>Failed to load categories.</p>
+  }
+
+  function getCategoriesWithAmount(): Category[] {
+    if (!categories) {
+      return []
+    }
+    
+    return categories
       .map((category) => {
         return {
           ...category,
-          amount: categories[category.id] || 0
+          amount: categoryTotals[category.id] || 0
         }
       })
       .sort((a, b) => {

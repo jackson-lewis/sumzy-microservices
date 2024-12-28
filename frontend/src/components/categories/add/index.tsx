@@ -1,35 +1,24 @@
-import { Dispatch, SetStateAction } from 'react'
-import { addCategory } from '@/lib/category'
-import { Category } from '@/types'
+'use client'
 
-export default function AddCategory({
-  setCategories
-} : {
-  setCategories: Dispatch<SetStateAction<Category[]>>
-}) {
+import { useActionState, useEffect } from 'react'
+import Form from 'next/form'
+import { createCategoryAction } from '@/lib/form-actions'
+
+export default function AddCategory() {
+  const [state, formAction, pending] = useActionState(
+    createCategoryAction,
+    null
+  )
+
+  useEffect(() => {
+    console.log({ state })
+  }, [state])
+
   return (
-    <form onSubmit={async (event) => {
-      event.preventDefault()
-
-      const data = new FormData(event.target as HTMLFormElement)
-      const category: unknown = Object.fromEntries(data.entries())
-      const added = await addCategory(category as Category)
-      
-      if (added instanceof Error) {
-        console.error(added.message)
-        return
-      }
-
-      setCategories((categories) => {
-        return [
-          ...categories,
-          added
-        ]
-      })
-    }}>
+    <Form action={formAction}>
       <label htmlFor="name">Name</label>
       <input type="text" name="name" id="name" required />
-      <button>Add</button>
-    </form>
+      <button disabled={pending}>Add</button>
+    </Form>
   )
 }

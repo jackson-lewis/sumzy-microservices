@@ -1,0 +1,19 @@
+import LinkButton from '@/components/shared/button'
+import styles from './page.module.scss'
+
+export default function Home() {
+  return (
+    <main>
+      <div className={styles.hero}>
+        <h1>Personal Finance Tracking</h1>
+        <LinkButton
+          href="/signup"
+          color="green"
+          style="fill"
+        >
+          Sign up
+        </LinkButton>
+      </div>
+    </main>
+  )
+}

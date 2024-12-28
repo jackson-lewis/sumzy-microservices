@@ -34,10 +34,15 @@ export default function auth(
   }
 
   try {
+    console.log({
+      token,
+      baseUrl: req.baseUrl
+    })
     const decoded = verify(token, JWT_SECRET) as JwtPayload
     req.headers['x-user-id'] = decoded.userId
     next()
   } catch (error) {
+    console.log({ error })
     res.status(403).send({ message: 'Invalid or expired token' })
   }
 }

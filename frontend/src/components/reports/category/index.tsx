@@ -1,5 +1,5 @@
 import Money from '@/components/global/money'
-import useExpenses from '@/lib/use-expenses'
+import useExpenses from '@/lib/use-transactions'
 
 export default function Category({
   categoryId,

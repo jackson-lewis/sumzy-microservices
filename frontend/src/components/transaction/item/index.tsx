@@ -1,6 +1,6 @@
 import { Transaction } from '@/types'
 import { Dispatch, SetStateAction } from 'react'
-import useExpenses from '@/lib/use-expenses'
+import useExpenses from '@/lib/use-transactions'
 import Money from '@/components/global/money'
 import Date from '@/components/global/date'
 import {
@@ -9,16 +9,16 @@ import {
   txDirection
 } from '@/lib/transactions'
 import styles from './style.module.scss'
+import { useCategories } from '@/lib/swr'
 
 
 export default function TransactionItem({
-  transaction,
-  setExpenses
+  transaction
 }: {
-  transaction: Transaction,
-  setExpenses: Dispatch<SetStateAction<Transaction[]>>
+  transaction: Transaction
 }) {
-  const { categories, showEditModal } = useExpenses()
+  const { showEditModal } = useExpenses()
+  const { data: categories } = useCategories()
   const category = getTransactionCategory(
     transaction,
     categories
@@ -33,11 +33,11 @@ export default function TransactionItem({
       return
     }
 
-    setExpenses((expenses) => {
-      return expenses.filter((_e) => {
-        return _e.id !== transaction.id
-      })
-    })
+    // setExpenses((expenses) => {
+    //   return expenses.filter((_e) => {
+    //     return _e.id !== transaction.id
+    //   })
+    // })
   }
 
   function handleUpdateClick() {
@@ -56,7 +56,9 @@ export default function TransactionItem({
       <Date date={transaction.date} />
       <div>
         <Money amount={posAmount} />
-        <p className={styles.category}>{category?.name}</p>
+        {!!category && (
+          <p className={styles.category}>{category?.name}</p>
+        )}
       </div>
       <button
         onClick={handleUpdateClick}

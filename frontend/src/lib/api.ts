@@ -1,4 +1,5 @@
-import { getUserToken } from './user'
+import { getUserToken } from './form-actions'
+
 
 type HttpMethods = 'POST' | 'PATCH' | 'DELETE'
 
@@ -62,7 +63,7 @@ export async function apiRequest(
      */
     options.headers = {
       ...options.headers,
-      'Authorization': `Bearer ${getUserToken()}`
+      'Authorization': `Bearer ${await getUserToken()}`
     }
   }
 
@@ -78,7 +79,7 @@ export async function apiRequest(
   }
 
   try {
-    const res = await fetch(`${process.env.REACT_APP_API_GATEWAY_URL}/${endpoint}`, options)
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/${endpoint}`, options)
 
     if (res.status >= 500) {
       return new Error('Something went wrong')

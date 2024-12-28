@@ -1,30 +1,26 @@
-import { ChangeEvent, Dispatch, SetStateAction } from 'react'
+import { ChangeEvent } from 'react'
+import { useRouter } from 'next/navigation'
+import {
+  useActiveMonth,
+  useActiveYear
+} from '@/app/(dashboard)/dashboard/reports/page'
 
-export default function MonthlySelector({
-  activeYM,
-  setActiveYM
-}: {
-  activeYM: [number, number]
-  setActiveYM: Dispatch<SetStateAction<[number, number]>>
-}) {
+export default function MonthlySelector() {
+  let year = useActiveYear()
+  let month = useActiveMonth()
+  const router = useRouter()
+
   function handleChange(event: ChangeEvent<HTMLSelectElement>) {
     const { value } = event.target
     const valueAsNumber = Number(value)
 
-    setActiveYM((ym) => {
-      if (value.length === 4) {
-        return [
-          valueAsNumber,
-          ym[1]
-        ]
-      } else if (valueAsNumber > 0 && valueAsNumber <= 12) {
-        return [
-          ym[0],
-          valueAsNumber
-        ]
-      }
-      return ym
-    })
+    if (value.length === 4) {
+      year = value
+    } else if (valueAsNumber > 0 && valueAsNumber <= 12) {
+      month = value
+    }
+
+    router.push(`?year=${year}&month=${month}`)
   }
 
   return (
@@ -32,18 +28,27 @@ export default function MonthlySelector({
       <select
         name="year"
         id="year"
-        value={activeYM[0]}
+        value={year}
         onChange={handleChange}
       >
         <option>2023</option>
         <option>2024</option>
+        <option>2025</option>
       </select>
       <select
         name="month"
         id="month"
-        value={activeYM[1]}
+        value={month}
         onChange={handleChange}
       >
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+        <option>6</option>
+        <option>7</option>
+        <option>8</option>
         <option>9</option>
         <option>10</option>
         <option>11</option>

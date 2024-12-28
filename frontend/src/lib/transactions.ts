@@ -69,8 +69,12 @@ export function txDirection(
  */
 export function getTransactionCategory(
   transaction: Transaction,
-  categories: Category[]
-) {
+  categories: Category[] | undefined
+): Category | undefined {
+  if (!categories) {
+    return null
+  }
+
   return categories.find((category) => {
     return category.id === transaction.category
   })

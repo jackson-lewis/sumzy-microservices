@@ -43,10 +43,12 @@ export async function create(req: Request, res: Response) {
 export async function list(req: Request, res: Response) {
   const userId = req.headers['x-user-id']
   const {
+    direction,
     frequency,
     from,
     to
   }: {
+    direction?: 'expense' | 'income'
     frequency?: Frequency
     from?: string
     to?: string
@@ -54,6 +56,16 @@ export async function list(req: Request, res: Response) {
 
   const where: Prisma.TransactionWhereInput = {
     userId: Number(userId as string)
+  }
+
+  if (direction === 'expense') {
+    where.amount = {
+      lt: 0
+    }
+  } else if (direction === 'income') {
+    where.amount = {
+      gt: 0
+    }
   }
 
   if (frequency) {
@@ -77,7 +89,10 @@ export async function list(req: Request, res: Response) {
 
   try {
     const expenses = await prisma.transaction.findMany({
-      where
+      where,
+      orderBy: {
+        date: 'desc'
+      }
     })
     res.status(200).send(expenses)
   } catch (error) {

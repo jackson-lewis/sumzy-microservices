@@ -1,13 +1,10 @@
-import { Dispatch, SetStateAction } from 'react'
 import { Category } from '@/types'
 import { deleteCategory } from '@/lib/category'
 
 export default function CategoryItem({
-  category,
-  setCategories
+  category
 } : {
   category: Category,
-  setCategories: Dispatch<SetStateAction<Category[]>>
 }) {
   async function handleDeleteClick(
     event: React.MouseEvent<HTMLButtonElement>
@@ -17,12 +14,6 @@ export default function CategoryItem({
       console.error(data.message)
       return
     }
-
-    setCategories((categories) => {
-      return categories.filter((_c) => {
-        return _c.id !== category.id
-      })
-    })
   }
 
   return (

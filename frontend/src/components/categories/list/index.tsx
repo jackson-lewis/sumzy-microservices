@@ -1,15 +1,12 @@
-import { Category } from '@/types'
-import { Dispatch, SetStateAction } from 'react'
-import CategoryItem from '../item'
+'use client'
 
-export default function CategoriesList({
-  categories,
-  setCategories
-}: {
-  categories: Category[]
-  setCategories: Dispatch<SetStateAction<Category[]>>
-}) {
-  if (categories.length === 0) {
+import CategoryItem from '../item'
+import { useCategories } from '@/lib/swr'
+
+export default function CategoriesList() {
+  const { data } = useCategories()
+
+  if (!data || data.length === 0) {
     return (
       <p>Your categories will show up here.</p>
     )
@@ -17,11 +14,10 @@ export default function CategoriesList({
 
   return (
     <div>
-      {categories.map((category) => (
+      {data.map((category) => (
         <CategoryItem
           key={category.id}
           category={category}
-          setCategories={setCategories}
         />
       ))}
     </div>

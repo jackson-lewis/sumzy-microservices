@@ -7,7 +7,10 @@ const port = 8000
 const app = express()
 app.use(express.json())
 app.use(cors({
-  origin: 'http://localhost:3000'
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3010'
+  ]
 }))
 app.use('/v1/reporting*', auth)
 app.use('/v1/users*', auth)
