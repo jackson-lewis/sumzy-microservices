@@ -3,7 +3,7 @@
 import { TransactionDirection, TransactionFrequency } from '@/types'
 import styles from './style.module.scss'
 import Link, { LinkProps } from 'next/link'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 
 export default function FrequencySelector({
   direction
@@ -11,7 +11,6 @@ export default function FrequencySelector({
   direction: TransactionDirection
 }) {
   const path = direction === 'expense' ? 'expenses' : 'income'
-  const pathname = usePathname()
   const searchParams = useSearchParams()
   const frequency = (
     searchParams.get('frequency') || 'one_time'

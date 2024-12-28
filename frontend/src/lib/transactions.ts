@@ -69,10 +69,10 @@ export function txDirection(
  */
 export function getTransactionCategory(
   transaction: Transaction,
-  categories: Category[] | undefined
-): Category | undefined {
+  categories: Omit<Category, 'amount'>[] | undefined
+): Omit<Category, 'amount'> | undefined {
   if (!categories) {
-    return null
+    return
   }
 
   return categories.find((category) => {

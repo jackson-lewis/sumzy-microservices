@@ -202,11 +202,8 @@ export default function TransactionDialog() {
           </button>
           <button
             type="button"
-            onClick={(event) => {
-              closeAction(
-                (event.target as HTMLButtonElement)
-                  .form as HTMLFormElement
-              )
+            onClick={() => {
+              closeAction()
             }}
           >
             Cancel

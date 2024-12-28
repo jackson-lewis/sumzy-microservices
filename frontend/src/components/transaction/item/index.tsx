@@ -1,5 +1,4 @@
 import { Transaction } from '@/types'
-import { Dispatch, SetStateAction } from 'react'
 import useExpenses from '@/lib/use-transactions'
 import Money from '@/components/global/money'
 import Date from '@/components/global/date'
@@ -24,9 +23,7 @@ export default function TransactionItem({
     categories
   )
 
-  async function handleDeleteClick(
-    event: React.MouseEvent<HTMLButtonElement>
-  ) {
+  async function handleDeleteClick() {
     const data = await deleteTransaction(transaction.id)
     if (data instanceof Error) {
       console.error(data.message)

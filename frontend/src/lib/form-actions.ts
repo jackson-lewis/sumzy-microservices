@@ -3,12 +3,12 @@
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { apiRequest } from './api'
-import { Transaction, TransactionDirection } from '@/types'
+import { Category, Transaction, TransactionDirection } from '@/types'
 import { createTransaction, updateTransaction } from './transactions'
 import { addCategory } from './category'
 
 
-export async function login(prevState: any, formData: FormData) {
+export async function login(prevState: unknown, formData: FormData) {
   const body = Object.fromEntries(formData.entries())
   const cookieStore = await cookies()
 
@@ -28,8 +28,12 @@ export async function login(prevState: any, formData: FormData) {
           throw new Error(data.message)
         }
       })
-  } catch (error: any) {
-    return error.message
+  } catch (error) {
+    if (error instanceof Error) {
+      return error.message
+    }
+
+    return error
   }
 
   redirect('/dashboard')
@@ -42,10 +46,12 @@ export async function getUserToken()  {
 }
 
 export async function transactionAction(
-  prevState: any,
+  prevState: unknown,
   formData: FormData
 ) {
-  const data = Object.fromEntries(formData.entries()) as unknown as Transaction
+  const data = Object.fromEntries(
+    formData.entries()
+  ) as unknown as Transaction
   const direction = 
     formData.get('direction') as TransactionDirection
   const update = formData.get('update')
@@ -73,18 +79,22 @@ export async function transactionAction(
 }
 
 export async function createCategoryAction(
-  prevState: any,
+  prevState: unknown,
   formData: FormData
 ) {
   try {
-    const category = await addCategory(formData)
+    const category = await addCategory(
+      formData as unknown as Category
+    )
 
     return {
       category
     }
-  } catch (error: any) {
-    return {
-      message: error.message
+  } catch (error) {
+    if (error instanceof Error) {
+      return error.message
     }
+
+    return error
   }
 }

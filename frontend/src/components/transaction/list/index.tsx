@@ -1,15 +1,12 @@
-import { Dispatch, SetStateAction } from 'react'
 import styles from './style.module.scss'
 import TransactionItem from '../item'
 import { Transaction } from '@/types'
 
 
 export default function TransactionsList({
-  transactions,
-  setExpenses
+  transactions
 }: {
-  transactions: Transaction[] | undefined,
-  setExpenses?: Dispatch<SetStateAction<Transaction[]>>
+  transactions: Transaction[] | undefined
 }) {
 
   if (!transactions || transactions.length === 0) {

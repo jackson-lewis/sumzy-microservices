@@ -6,9 +6,7 @@ export default function CategoryItem({
 } : {
   category: Category,
 }) {
-  async function handleDeleteClick(
-    event: React.MouseEvent<HTMLButtonElement>
-  ) {
+  async function handleDeleteClick() {
     const data = await deleteCategory(category.id)
     if (data instanceof Error) {
       console.error(data.message)

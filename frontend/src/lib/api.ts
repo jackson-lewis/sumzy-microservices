@@ -3,6 +3,13 @@ import { getUserToken } from './form-actions'
 
 type HttpMethods = 'POST' | 'PATCH' | 'DELETE'
 
+type JSONValue =
+  | string
+  | number
+  | boolean
+  | { [x: string]: JSONValue }
+  | Array<JSONValue>
+
 /**
  * Make a POST request to the API gateway.
  * 
@@ -14,10 +21,10 @@ type HttpMethods = 'POST' | 'PATCH' | 'DELETE'
 export async function apiRequest(
   endpoint: string,
   method?: HttpMethods,
-  body?: any,
+  body?: JSONValue,
   auth?: boolean
 ): Promise<
-  any |
+  JSONValue |
   Error
 >
 
@@ -33,7 +40,7 @@ export async function apiRequest(
   options?: RequestInit,
   auth?: boolean
 ): Promise<
-  any |
+  JSONValue |
   Error
 >
 
@@ -41,10 +48,10 @@ export async function apiRequest(
 export async function apiRequest(
   endpoint: string,
   optionsOrMethod?: RequestInit | HttpMethods,
-  authOrBody?: any,
+  authOrBody?: JSONValue,
   auth?: boolean
 ): Promise<
-  any | 
+  JSONValue | 
   Error
 > {
   let options: RequestInit = {}
@@ -94,7 +101,7 @@ export async function apiRequest(
     }
     
     return json
-  } catch (error: any) {
+  } catch (error) {
     return new Error(JSON.stringify(error))
   }
 }

@@ -44,7 +44,7 @@ export default function LoginForm() {
         >
           Login
         </Button>
-        <p className={styles.signup}>Don't have an account? <Link href="/signup">Sign up now</Link></p>
+        <p className={styles.signup}>Don&apos;t have an account? <Link href="/signup">Sign up now</Link></p>
       </Form>
     </div>
   )
