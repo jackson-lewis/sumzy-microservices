@@ -3,6 +3,7 @@ import Form from 'next/form'
 import { Button, ButtonProps } from '@/components/shared/button'
 import styles from './style.module.scss'
 import Link from 'next/link'
+import LoadingIcon from '@/components/shared/loading-icon'
 
 export default function UserForm({
   action,
@@ -65,6 +66,11 @@ export function SubmitButton({
       {...rest}
     >
       {children}
+      {pending && (
+        <div className={styles.loadingWrapper}>
+          <LoadingIcon color="var(--black)" />
+        </div>
+      )}
     </Button>
   )
 }
