@@ -3,14 +3,16 @@ import { useRouter } from 'next/navigation'
 import {
   useActiveMonth,
   useActiveYear
-} from '@/app/(dashboard)/dashboard/reports/page'
+} from '@/lib/form-submit'
 
 export default function MonthlySelector() {
   let year = useActiveYear()
   let month = useActiveMonth()
   const router = useRouter()
 
-  function handleChange(event: ChangeEvent<HTMLSelectElement>) {
+  function handleChange(
+    event: ChangeEvent<HTMLSelectElement>
+  ) {
     const { value } = event.target
     const valueAsNumber = Number(value)
 
