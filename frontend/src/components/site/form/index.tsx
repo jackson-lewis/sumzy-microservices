@@ -2,6 +2,7 @@ import { useFormStatus } from 'react-dom'
 import Form from 'next/form'
 import { Button, ButtonProps } from '@/components/shared/button'
 import styles from './style.module.scss'
+import Link from 'next/link'
 
 export default function UserForm({
   action,
@@ -30,6 +31,14 @@ export function FormField({
   return (
     <div className={styles.field}>
       <label htmlFor={name}>{label}</label>
+      {(name === 'password' && rest.autoComplete === 'current-password') && (
+        <Link
+          href="/sign-in/forgot-password"
+          className={styles.forgotPassword}
+        >
+          Forgot password?
+        </Link>
+      )}
       <input
         type={type}
         name={name}
