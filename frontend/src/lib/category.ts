@@ -5,9 +5,8 @@ import { apiRequest } from './api'
 /**
  * Retrieve a list of categories for the authenticated user.
  */
-export async function getCategories()
-: Promise<Category[] | Error> {
-  return await apiRequest(
+export async function getCategories() {
+  return await apiRequest<Category[]>(
     'v1/transactions/categories',
     {},
     true
@@ -18,9 +17,7 @@ export async function getCategories()
 /**
  * Add a category for the authenticated user.
  */
-export async function addCategory(
-  category: Category
-): Promise<Category | Error> {
+export async function addCategory(category: Category) {
   return await apiRequest(
     'v1/transactions/categories',
     'POST',
@@ -33,13 +30,11 @@ export async function addCategory(
 /**
  * Delete a category for the authenticated user.
  */
-export async function deleteCategory(
-  id: Category['id']
-): Promise<{ success: boolean } | Error> {
-  return await apiRequest(
+export async function deleteCategory(id: Category['id']) {
+  return await apiRequest<Category>(
     `v1/transactions/categories?id=${id}`,
     'DELETE',
-    null,
+    undefined,
     true
   )
 }

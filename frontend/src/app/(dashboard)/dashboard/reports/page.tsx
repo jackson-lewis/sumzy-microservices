@@ -1,25 +1,9 @@
 'use client'
 
-import { useSearchParams } from 'next/navigation'
 import MonthlySelector from '@/components/reports/monthly-selector'
 import MonthlySummaryReport from '@/components/reports/monthly-summary'
 import { useReports } from '@/lib/swr'
-
-export function useActiveYear() {
-  const searchParams = useSearchParams()
-  const today = new Date()
-
-  return searchParams.get('year') || 
-    today.getFullYear().toString()
-}
-
-export function useActiveMonth() {
-  const searchParams = useSearchParams()
-  const today = new Date()
-
-  return searchParams.get('month') || 
-    (today.getMonth() + 1).toString()
-}
+import { useActiveMonth, useActiveYear } from '@/lib/form-submit'
 
 export default function Reports() {
   const { data: report } = useReports()

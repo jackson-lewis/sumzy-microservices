@@ -16,8 +16,11 @@ export type Category = {
   id: number
   userId: number
   name: string
-  amount: number
 }
+
+export type CategoryWithAmount = {
+  amount: number
+} & Category
 
 export type ReportTotals = {
   income: number

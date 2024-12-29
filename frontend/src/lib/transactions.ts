@@ -4,9 +4,8 @@ import { apiRequest } from './api'
 /**
  * Retrieve a list of transactions for the authenticated user.
  */
-export async function getTransactions()
-: Promise<Transaction[] | Error> {
-  return await apiRequest(
+export async function getTransactions() {
+  return await apiRequest<Transaction[]>(
     'v1/transactions',
     {},
     true
@@ -17,9 +16,7 @@ export async function getTransactions()
 /**
  * Add a transaction for the authenticated user.
  */
-export async function createTransaction(
-  transaction: Transaction
-): Promise<Transaction | Error> {
+export async function createTransaction(transaction: Transaction) {
   return await apiRequest(
     'v1/transactions',
     'POST',
@@ -32,9 +29,7 @@ export async function createTransaction(
 /**
  * Update a transaction for the authenticated user.
  */
-export async function updateTransaction(
-  transaction: Transaction
-): Promise<Transaction | Error> {
+export async function updateTransaction(transaction: Transaction) {
   return await apiRequest(
     'v1/transactions',
     'PATCH',
@@ -47,13 +42,11 @@ export async function updateTransaction(
 /**
  * Delete a transaction for the authenticated user.
  */
-export async function deleteTransaction(
-  id: Transaction['id']
-): Promise<Transaction | Error> {
-  return await apiRequest(
+export async function deleteTransaction(id: Transaction['id']) {
+  return await apiRequest<Transaction>(
     `v1/transactions?id=${id}`,
     'DELETE',
-    null,
+    undefined,
     true
   )
 }

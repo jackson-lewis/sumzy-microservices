@@ -1,14 +1,6 @@
 import { getUserToken } from './form-actions'
 
-
 type HttpMethods = 'POST' | 'PATCH' | 'DELETE'
-
-type JSONValue =
-  | string
-  | number
-  | boolean
-  | { [x: string]: JSONValue }
-  | Array<JSONValue>
 
 /**
  * Make a POST request to the API gateway.
@@ -18,14 +10,13 @@ type JSONValue =
  * @param body The object or array to pass as the request body
  * @param auth Should the request be authenticated
  */
-export async function apiRequest(
+export async function apiRequest<T>(
   endpoint: string,
   method?: HttpMethods,
-  body?: JSONValue,
+  body?: T,
   auth?: boolean
 ): Promise<
-  JSONValue |
-  Error
+  T | Error
 >
 
 /**
@@ -35,24 +26,22 @@ export async function apiRequest(
  * @param options The options to pass to `fetch()`
  * @param auth Should the request be authenticated
  */
-export async function apiRequest(
+export async function apiRequest<T>(
   endpoint: string,
   options?: RequestInit,
   auth?: boolean
 ): Promise<
-  JSONValue |
-  Error
+  T | Error
 >
 
 
-export async function apiRequest(
+export async function apiRequest<T>(
   endpoint: string,
   optionsOrMethod?: RequestInit | HttpMethods,
-  authOrBody?: JSONValue,
+  authOrBody?: boolean | T,
   auth?: boolean
 ): Promise<
-  JSONValue | 
-  Error
+  T | Error
 > {
   let options: RequestInit = {}
 

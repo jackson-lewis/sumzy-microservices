@@ -1,5 +1,5 @@
 import Money from '@/components/global/money'
-import { Category, Report } from '@/types'
+import { CategoryWithAmount, Report } from '@/types'
 import { Fragment } from 'react/jsx-runtime'
 import styles from './style.module.scss'
 import { useCategories } from '@/lib/swr'
@@ -9,7 +9,7 @@ function CategoryGroup({
   categories,
   title
 } : {
-  categories: Category[]
+  categories: CategoryWithAmount[]
   title: string
 }) {
   return (
@@ -46,7 +46,7 @@ export default function ExpenseCategories({
     return <p>Failed to load categories.</p>
   }
 
-  function getCategoriesWithAmount(): Category[] {
+  function getCategoriesWithAmount(): CategoryWithAmount[] {
     if (!categories) {
       return []
     }
