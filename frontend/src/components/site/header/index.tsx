@@ -16,7 +16,7 @@ export default function Header() {
         />
         <span>sumzy</span>
       </Link>
-      <LinkButton href="/login">login</LinkButton>
+      <LinkButton href="/sign-in">Sign in</LinkButton>
     </header>
   )
 }

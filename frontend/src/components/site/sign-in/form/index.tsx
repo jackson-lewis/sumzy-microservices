@@ -9,14 +9,13 @@ import UserForm, {
   SubmitButton
 } from '../../form'
 import { login } from '@/lib/form-actions'
-import styles from './style.module.scss'
 
 
-export default function LoginForm() {
+export default function SignInForm() {
   const [message, formAction] = useActionState(login, undefined)
   return (
     <UserForm action={formAction}>
-      <h1>Login</h1>
+      <h1>Sign in</h1>
       <ErrorMessage message={message} />
       <FormField
         label="Email"

@@ -7,7 +7,7 @@ export default function Home() {
       <div className={styles.hero}>
         <h1>Personal Finance Tracking</h1>
         <LinkButton
-          href="/signup"
+          href="/sign-up"
           color="green"
           style="fill"
         >
