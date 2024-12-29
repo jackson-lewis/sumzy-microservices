@@ -3,29 +3,31 @@
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { apiRequest } from './api'
-import { Category, Transaction, TransactionDirection } from '@/types'
-import { createTransaction, updateTransaction } from './transactions'
+import {
+  Category,
+  LoginCredentials,
+  Transaction,
+  TransactionDirection,
+  UserToken 
+} from '@/types'
+import {
+  createTransaction,
+  updateTransaction
+} from './transactions'
 import { addCategory } from './category'
 
 
 export async function login(prevState: unknown, formData: FormData) {
-  const body = Object.fromEntries(formData.entries())
+  const body = Object.fromEntries(formData.entries()) as LoginCredentials
   const cookieStore = await cookies()
 
   try {
-    await apiRequest('v1/users/login', 'POST', body, false)
-      .then((data: {
-        token: string
-        message?: string
-      }) => {
-        if (data.token) {
-          cookieStore.set('token', data.token)
-        }
-        /**
-         * On error, display message
-         */
-        if (data.message) {
+    await apiRequest<UserToken>('v1/users/login', 'POST', body, false)
+      .then((data) => {
+        if (data instanceof Error) {
           throw new Error(data.message)
+        } else {
+          cookieStore.set('token', data.token)
         }
       })
   } catch (error) {

@@ -1,6 +1,8 @@
+import { LoginCredentials } from '@/types'
 import { getUserToken } from './form-actions'
 
 type HttpMethods = 'POST' | 'PATCH' | 'DELETE'
+
 
 /**
  * Make a POST request to the API gateway.
@@ -15,9 +17,7 @@ export async function apiRequest<T>(
   method?: HttpMethods,
   body?: T,
   auth?: boolean
-): Promise<
-  T | Error
->
+): Promise<T | Error>
 
 /**
  * Make a request to the API gateway.
@@ -30,9 +30,22 @@ export async function apiRequest<T>(
   endpoint: string,
   options?: RequestInit,
   auth?: boolean
-): Promise<
-  T | Error
->
+): Promise<T | Error>
+
+/**
+ * Make a POST request to the API gateway.
+ * 
+ * @param endpoint The API endpoint
+ * @param method The HTTP request method
+ * @param body The object or array to pass as the request body
+ * @param auth Should the request be authenticated
+ */
+export async function apiRequest<T>(
+  endpoint: string,
+  optionsOrMethod?: RequestInit | HttpMethods,
+  body?: LoginCredentials,
+  auth?: boolean
+): Promise<T | Error>
 
 
 export async function apiRequest<T>(
@@ -40,9 +53,7 @@ export async function apiRequest<T>(
   optionsOrMethod?: RequestInit | HttpMethods,
   authOrBody?: boolean | T,
   auth?: boolean
-): Promise<
-  T | Error
-> {
+): Promise<T | Error> {
   let options: RequestInit = {}
 
   if (typeof optionsOrMethod === 'string') {

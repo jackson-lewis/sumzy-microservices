@@ -9,12 +9,12 @@ import { useActionState } from 'react'
 
 
 export default function LoginForm() {
-  const [message, formAction, pending] = useActionState(login, null)
+  const [message, formAction, pending] = useActionState(login, undefined)
   return (
     <div className={styles.wrapper}>
       <Form action={formAction} className={styles.form}>
         <h1>Login</h1>
-        {!!message ? (
+        {typeof message === 'string' ? (
           <p
             aria-live="polite"
             className={styles.error}

@@ -62,3 +62,13 @@ export type User = {
   lastName: string
   email: string
 }
+
+export type LoginCredentials = {
+  email: string
+  password: string
+}
+
+export type UserToken = {
+  token: string
+  message?: string
+}
