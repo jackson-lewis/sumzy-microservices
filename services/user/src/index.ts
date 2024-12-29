@@ -1,8 +1,11 @@
 import express from 'express'
 import { create, get, login, update } from './controller'
+import { connectToRabbitMQ } from './rabbitmq'
 
 const port = 8001
 const app = express()
+
+connectToRabbitMQ()
 
 app.use(express.json())
 app.post('/', create)

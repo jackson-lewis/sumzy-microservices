@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 // import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { prisma } from './prisma'
+import { sendUserSignUpEvent } from './rabbitmq'
 
 
 export async function create(req: Request, res: Response) {
@@ -35,6 +36,7 @@ export async function create(req: Request, res: Response) {
     }
   })
 
+  sendUserSignUpEvent(user)
   res.status(201).send(user)
 }
 
