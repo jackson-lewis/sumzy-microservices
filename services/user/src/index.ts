@@ -1,5 +1,5 @@
 import express from 'express'
-import { create, get, login } from './controller'
+import { create, get, login, update } from './controller'
 
 const port = 8001
 const app = express()
@@ -7,6 +7,7 @@ const app = express()
 app.use(express.json())
 app.post('/', create)
 app.get('/', get)
+app.patch('/', update)
 app.post('/login', login)
 
 async function main() {

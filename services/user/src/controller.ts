@@ -2,13 +2,11 @@ import { Request, Response } from 'express'
 // import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { prisma } from './prisma'
-import { User } from '@prisma/client'
 
 
 export async function create(req: Request, res: Response) {
   const {
-    firstName,
-    lastName,
+    name,
     email,
     password
   }: {
@@ -31,8 +29,7 @@ export async function create(req: Request, res: Response) {
 
   const user = await prisma.user.create({
     data: {
-      firstName,
-      lastName,
+      name,
       email,
       password: hashedPassword
     }
@@ -90,4 +87,25 @@ export async function get(req: Request, res: Response) {
   delete userData.password
 
   res.status(200).send(userData)
+}
+
+export async function update(req: Request, res: Response) {
+  const id = req.headers['x-user-id'] as string
+  const {
+    name,
+    email
+  }: {
+    [k: string]: string
+  } = req.body
+  const user = await prisma.user.update({
+    where: {
+      id: Number(id as string)
+    },
+    data: {
+      name,
+      email
+    }
+  })
+
+  res.status(200).send(user)
 }
