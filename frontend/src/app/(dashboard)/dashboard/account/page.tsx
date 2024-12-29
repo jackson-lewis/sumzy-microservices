@@ -1,5 +1,6 @@
 'use client'
 
+import { logout } from '@/lib/form-actions'
 import { useUser } from '@/lib/swr'
 
 export default function Account() {
@@ -28,6 +29,9 @@ export default function Account() {
           value={data?.email}
         />
       </form>
+      <button onClick={async () => {
+        await logout()
+      }}>Logout</button>
     </>
   )
 }

@@ -8,6 +8,7 @@ import {
   LoginCredentials,
   Transaction,
   TransactionDirection,
+  User,
   UserToken 
 } from '@/types'
 import {
@@ -39,6 +40,35 @@ export async function login(prevState: unknown, formData: FormData) {
   }
 
   redirect('/dashboard')
+}
+
+export async function register(
+  prevState: unknown,
+  formData: FormData
+) {
+  const body = Object.fromEntries(
+    formData.entries()
+  ) as Omit<User, 'id'>
+
+
+  try {
+    await apiRequest('v1/users', 'POST', body, false)
+  } catch (error) {
+    if (error instanceof Error) {
+      return error.message
+    }
+
+    return error
+  }
+
+  redirect('/dashboard')
+}
+
+export async function logout() {
+  const cookieStore = await cookies()
+  cookieStore.delete('token')
+
+  redirect('/login')
 }
 
 export async function getUserToken()  {

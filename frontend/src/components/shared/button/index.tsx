@@ -4,6 +4,11 @@ import styles from './style.module.scss'
 type ButtonStyle = 'fill' | 'outline'
 type ButtonColor = 'green' | 'white'
 
+export type ButtonProps = {
+  style?: ButtonStyle
+  color?: ButtonColor
+}
+
 function mergeClassNames(
   className?: string,
   style: ButtonStyle = 'outline',
@@ -29,11 +34,7 @@ export default function LinkButton({
   style = 'outline',
   color = 'white',
   ...rest
-}: Readonly<{
-  children: React.ReactNode
-  style?: ButtonStyle
-  color?: ButtonColor
-}> & React.AnchorHTMLAttributes<HTMLAnchorElement> & LinkProps & React.RefAttributes<HTMLAnchorElement> ) {
+}: ButtonProps & React.AnchorHTMLAttributes<HTMLAnchorElement> & LinkProps & React.RefAttributes<HTMLAnchorElement> ) {
   return (
     <Link
       {...rest}
@@ -49,11 +50,7 @@ export function Button({
   style = 'outline',
   color = 'white',
   ...rest
-}: Readonly<{
-  children: React.ReactNode
-  style?: ButtonStyle
-  color?: ButtonColor
-}> & React.ButtonHTMLAttributes<HTMLButtonElement> & React.RefAttributes<HTMLButtonElement> ) {
+}: ButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement> & React.RefAttributes<HTMLButtonElement> ) {
   return (
     <button
       {...rest}
