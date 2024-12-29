@@ -38,6 +38,22 @@ services:
     volumes:
       - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
 
+  notification:
+    build:
+      context: ./services/notification
+      dockerfile: dockerfile.dev
+    ports:
+      - "8006:8006"
+    environment:
+      - PORT=8006
+    volumes:
+      - ./services/notification:/app
+      - /app/node_modules
+    networks:
+      - finance-net
+    depends_on:
+      - rabbitmq
+
   api-gateway:
     build:
       context: ./services/api-gateway

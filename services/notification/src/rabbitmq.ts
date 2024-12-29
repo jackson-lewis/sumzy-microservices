@@ -1,8 +1,9 @@
 import amqp from 'amqplib'
-import { User } from '@prisma/client'
+import { UnverifiedUser } from './types/user'
+import { sendUserVerifyEmail } from './lib/user'
 
 export const RABBITMQ_URL = 'amqp://rabbitmq'
-export const QUEUE_NAME = 'user-sign-up'
+export const QUEUE_USER_SIGN_UP = 'user-sign-up'
 export let channel: amqp.Channel
 
 export const connectToRabbitMQ = async () => {
@@ -10,7 +11,7 @@ export const connectToRabbitMQ = async () => {
     const connection = await amqp.connect(RABBITMQ_URL)
     channel = await connection.createChannel()
 
-    await channel.assertQueue(QUEUE_NAME, {
+    await channel.assertQueue(QUEUE_USER_SIGN_UP, {
       durable: true
     })
 
@@ -20,19 +21,11 @@ export const connectToRabbitMQ = async () => {
   }
 }
 
-
-export function sendUserSignUpEvent(
-  user: User & { emailVerifyLink: string }
-) {
+export const consumeFromQueue = () => {
   if (channel) {
-    channel.sendToQueue(
-      QUEUE_NAME,
-      Buffer.from(JSON.stringify(user)),
-      {
-        persistent: true
-      }
-    )
-
-    console.log('User sign-up event sent to RabbitMQ')
+    channel.consume(QUEUE_USER_SIGN_UP, (message) => {
+      const user: UnverifiedUser = JSON.parse(message.content.toString())
+      sendUserVerifyEmail(user)
+    })
   }
 }

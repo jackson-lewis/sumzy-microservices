@@ -1,5 +1,11 @@
 import express from 'express'
-import { create, get, login, update } from './controller'
+import {
+  create,
+  get,
+  login,
+  update,
+  handleVerifyEmailToken
+} from './controller'
 import { connectToRabbitMQ } from './rabbitmq'
 
 const port = 8001
@@ -12,6 +18,7 @@ app.post('/', create)
 app.get('/', get)
 app.patch('/', update)
 app.post('/login', login)
+app.post('/verify-email-token', handleVerifyEmailToken)
 
 async function main() {
   try {

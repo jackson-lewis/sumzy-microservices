@@ -149,3 +149,31 @@ export async function updateUserAction(
     return error
   }
 }
+
+export async function verifyEmailToken(token: string): Promise<string | void> {
+  const cookieStore = await cookies()
+
+  try {
+    await apiRequest<{ signInToken: string }>(
+      'v1/users/verify-email-token',
+      'POST',
+      { token },
+      false
+    )
+      .then((data) => {
+        if (data instanceof Error) {
+          throw data
+        }
+
+        cookieStore.set('token', data.signInToken)
+      })
+  } catch (error) {
+    if (error instanceof Error) {
+      return error.message
+    }
+
+    return 'An error occurred while verifying your email'
+  }
+
+  redirect('/dashboard')
+}

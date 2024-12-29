@@ -48,6 +48,23 @@ export async function apiRequest<T>(
 ): Promise<T | Error>
 
 
+/**
+ * Make a POST request to the API gateway.
+ * 
+ * @param endpoint The API endpoint
+ * @param method The HTTP request method
+ * @param body The object or array to pass as the request body
+ * @param auth Should the request be authenticated
+ */
+export async function apiRequest<T>(
+  endpoint: string,
+  optionsOrMethod?: RequestInit | HttpMethods,
+  body?: {
+    token: string
+  },
+  auth?: boolean
+): Promise<T | Error>
+
 export async function apiRequest<T>(
   endpoint: string,
   optionsOrMethod?: RequestInit | HttpMethods,

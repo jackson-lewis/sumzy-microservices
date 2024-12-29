@@ -1,8 +1,64 @@
 import { Request, Response } from 'express'
 // import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
 import { prisma } from './prisma'
 import { sendUserSignUpEvent } from './rabbitmq'
+import {
+  generateEmailVerifyLink,
+  generateSignInToken,
+  verifyEmailToken
+} from './lib/token'
+
+
+
+export async function handleVerifyEmailToken(req: Request, res: Response) {
+  const { token }: { token: string } = req.body
+
+  try {
+    const { userId } = verifyEmailToken(token)
+
+    const user = await prisma.user.update({
+      where: {
+        id: userId
+      },
+      data: {
+        verified: true
+      }
+    })
+
+    const signInToken = generateSignInToken(user.id)
+    res.status(200).send({ signInToken })
+  } catch(error) {
+    res.status(400).send({ message: error.message })
+  }
+}
+
+
+export async function login(req: Request, res: Response) {
+  const { email, password } = req.body
+
+  const user = await prisma.user.findFirst({
+    where: {
+      email
+    }
+  })
+  
+  if (!user) {
+   res.status(400).send({ message: 'Email address or password invalid' })
+   return
+  }
+
+  // const isPasswordValid = bcrypt.compare(password, user.password)
+  const isPasswordValid = password === user.password
+
+  if (!isPasswordValid) {
+    res.status(400).send({ message: 'Email address or password invalid' })
+    return
+  }
+
+  const token = generateSignInToken(user.id)
+
+  res.status(200).send({ token })
+}
 
 
 export async function create(req: Request, res: Response) {
@@ -36,46 +92,11 @@ export async function create(req: Request, res: Response) {
     }
   })
 
-  sendUserSignUpEvent(user)
+  const emailVerifyLink = generateEmailVerifyLink(user)
+  sendUserSignUpEvent({...user, emailVerifyLink})
   res.status(201).send(user)
 }
 
-
-const JWT_SECRET = process.env.JWT_SECRET || 'jwtsecret'
-
-export function generateToken(userId: number) {
-  return jwt.sign({ userId }, JWT_SECRET, {
-    expiresIn: '1d'
-  })
-}
-
-
-export async function login(req: Request, res: Response) {
-  const { email, password } = req.body
-
-  const user = await prisma.user.findFirst({
-    where: {
-      email
-    }
-  })
-  
-  if (!user) {
-   res.status(400).send({ message: 'Email address or password invalid' })
-   return
-  }
-
-  // const isPasswordValid = bcrypt.compare(password, user.password)
-  const isPasswordValid = password === user.password
-
-  if (!isPasswordValid) {
-    res.status(400).send({ message: 'Email address or password invalid' })
-    return
-  }
-
-  const token = generateToken(user.id)
-
-  res.status(200).send({ token })
-}
 
 export async function get(req: Request, res: Response) {
   const userId = req.headers['x-user-id'] as string
@@ -90,6 +111,7 @@ export async function get(req: Request, res: Response) {
 
   res.status(200).send(userData)
 }
+
 
 export async function update(req: Request, res: Response) {
   const id = req.headers['x-user-id'] as string
