@@ -86,22 +86,33 @@ export async function apiRequest<T>(
   }
 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_GATEWAY_URL}/${endpoint}`, options)
+    const baseUrl = typeof document === 'undefined' ? 
+      process.env.API_GATEWAY_URL : 
+      process.env.NEXT_PUBLIC_API_GATEWAY_URL
+    const res = await fetch(
+      `${baseUrl}/${endpoint}`,
+      options
+    )
 
     if (res.status >= 500) {
-      return new Error('Something went wrong')
+      throw new Error('Something went wrong')
     }
   
     const json = res.json()
   
     if (res.status >= 400) {
       return json.then((data) => {
-        return new Error(data.message)
+        throw new Error(data.message)
       })
     }
     
     return json
   } catch (error) {
-    return new Error(JSON.stringify(error))
+    if (error instanceof Error) {
+      console.log(error)
+      return error
+    }
+
+    return new Error('Something went wrong')
   }
 }

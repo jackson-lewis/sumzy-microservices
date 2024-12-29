@@ -37,31 +37,22 @@ export default function SignUpForm() {
     setAllowRegister(password === passwordC)
   }, [password, passwordC])
 
-  console.log({
-    allowRegister,
-    pending
-  })
-
   return (
     <UserForm action={formAction}>
       <h1>Sign Up</h1>
       <ErrorMessage message={message} />
       <FormField
-        label="First name"
-        name="firstName"
+        label="Name"
+        name="name"
         type="text"
-        required
-      />
-      <FormField
-        label="Last name"
-        name="lastName"
-        type="text"
+        autoComplete="name"
         required
       />
       <FormField
         label="Email"
         name="email"
         type="email"
+        autoComplete="email"
         required
       />
       <FormField
@@ -110,7 +101,7 @@ export default function SignUpForm() {
         Sign up
       </SubmitButton>
       <AltActionText>
-        Have an account? <Link href="/login">Sign in now</Link>
+        Have an account? <Link href="/sign-in">Sign in now</Link>
       </AltActionText>
     </UserForm>
   )

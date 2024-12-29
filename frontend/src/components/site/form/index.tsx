@@ -2,7 +2,6 @@ import { useFormStatus } from 'react-dom'
 import Form from 'next/form'
 import { Button, ButtonProps } from '@/components/shared/button'
 import styles from './style.module.scss'
-import Link from 'next/link'
 
 export default function UserForm({
   action,

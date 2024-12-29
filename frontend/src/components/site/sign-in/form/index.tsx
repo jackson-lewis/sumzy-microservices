@@ -21,16 +21,19 @@ export default function SignInForm() {
         label="Email"
         name="email"
         type="email"
+        autoComplete="email"
+        required
       />
       <FormField
         label="Password"
         name="password"
         type="password"
         autoComplete="current-password"
+        required
       />
       <SubmitButton>Login</SubmitButton>
       <AltActionText>
-        Don&apos;t have an account? <Link href="/signup">Sign up now</Link>
+        Don&apos;t have an account? <Link href="/sign-up">Sign up now</Link>
       </AltActionText>
     </UserForm>
   )

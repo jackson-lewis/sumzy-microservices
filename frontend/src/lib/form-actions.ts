@@ -27,9 +27,9 @@ export async function login(prevState: unknown, formData: FormData) {
       .then((data) => {
         if (data instanceof Error) {
           throw new Error(data.message)
-        } else {
-          cookieStore.set('token', data.token)
         }
+
+        cookieStore.set('token', data.token)
       })
   } catch (error) {
     if (error instanceof Error) {
@@ -68,7 +68,7 @@ export async function logout() {
   const cookieStore = await cookies()
   cookieStore.delete('token')
 
-  redirect('/login')
+  redirect('/sign-in')
 }
 
 export async function getUserToken()  {
@@ -122,6 +122,25 @@ export async function createCategoryAction(
     return {
       category
     }
+  } catch (error) {
+    if (error instanceof Error) {
+      return error.message
+    }
+
+    return error
+  }
+}
+
+export async function updateUserAction(
+  prevState: unknown,
+  formData: FormData
+) {
+  const body = Object.fromEntries(
+    formData.entries()
+  ) as Omit<User, 'id'>
+
+  try {
+    await apiRequest('v1/users', 'PATCH', body, true)
   } catch (error) {
     if (error instanceof Error) {
       return error.message
