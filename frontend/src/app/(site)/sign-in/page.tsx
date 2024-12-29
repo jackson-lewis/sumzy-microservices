@@ -7,7 +7,10 @@ export const metadata: Metadata = {
 
 export default function SignIn() {
   return (
-    <main>
+    <main style={{
+      display: 'grid',
+      alignItems: 'center'
+    }}>
       <SignInForm />
     </main>
   )
