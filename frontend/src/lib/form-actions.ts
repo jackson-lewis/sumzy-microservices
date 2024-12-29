@@ -61,7 +61,7 @@ export async function register(
     return error
   }
 
-  redirect('/dashboard')
+  redirect('/sign-up/verify')
 }
 
 export async function logout() {

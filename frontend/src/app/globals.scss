@@ -17,6 +17,10 @@ body {
 }
 
 body {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+
   background: var(--black);
   color: var(--white);
   font-family: var(--font-onest);
@@ -24,10 +28,18 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+main {
+  flex-grow: 2;
+}
+
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+}
+
+p {
+  line-height: 1.7;
 }
 
 a {
