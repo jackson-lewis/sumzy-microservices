@@ -55,6 +55,11 @@ export async function login(req: Request, res: Response) {
     return
   }
 
+  if (!user.verified) {
+    res.status(400).send({ message: 'Email address not verified' })
+    return
+  }
+
   const token = generateSignInToken(user.id)
 
   res.status(200).send({ token })
