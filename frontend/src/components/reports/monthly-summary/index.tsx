@@ -1,9 +1,13 @@
+'use client'
+
 import Money from '@/components/global/money'
-import { ComparePeriod, CompareTotal, Report } from '@/types'
+import { ComparePeriod, CompareTotal } from '@/types'
 import styles from './style.module.scss'
 import ExpenseCategories from './expense-categories'
 import { useState } from 'react'
 import CompareSelector from './compare-selector'
+import { useReports } from '@/lib/swr'
+import { useActiveMonth, useActiveYear } from '@/lib/form-submit'
 
 
 function Total({
@@ -70,22 +74,31 @@ function LastUpdatedDate({ date } : { date: Date }) {
   )
 }
 
-export default function MonthlySummaryReport({
-  report
-} : {
-  report: Report | undefined
-}) {
+export default function MonthlySummaryReport() {
+  const { data: report } = useReports()
+  const year = useActiveYear()
+  const month = useActiveMonth()
+
+  const date = new Date(Number(year), Number(month) - 1)
+  const monthYear = date.toLocaleDateString('en-GB', {
+    month: 'long',
+    year: 'numeric'
+  })
   const [comparePeriod, setComparePeriod] = 
     useState<ComparePeriod>('prevMonth')
 
   if (!report) {
     return (
-      <p>Report could not be found.</p>
+      <>
+        <h1>{monthYear} Report</h1>
+        <p>Report could not be found.</p>
+      </>
     )
   }
 
   return (
     <>
+      <h1>{monthYear} Report</h1>
       <LastUpdatedDate date={new Date(report.lastUpdatedDate)} />
       <ExpenseCategories
         categoryTotals={report.tCategories}

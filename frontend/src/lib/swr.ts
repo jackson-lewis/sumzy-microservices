@@ -1,6 +1,6 @@
 'use client'
 
-import { Category, Report, Transaction } from '@/types'
+import { Category, Report, Transaction, User } from '@/types'
 import { usePathname, useSearchParams } from 'next/navigation'
 import useSWR from 'swr'
 
@@ -25,6 +25,10 @@ export async function fetcherWithToken(key: [string, string]) {
 }
 
 export function getUserToken()  {
+  if (typeof document === 'undefined') {
+    return
+  }
+  
   let token = ''
   const cookies = document.cookie.split(';')
 
@@ -70,6 +74,14 @@ export function useReports() {
 
   return useSWR<Report>(
     [`/v1/reporting/${year}/${month}`, getUserToken()],
+    fetcherWithToken
+  )
+}
+
+
+export function useUser() {
+  return useSWR<User>(
+    ['/v1/users', getUserToken()],
     fetcherWithToken
   )
 }

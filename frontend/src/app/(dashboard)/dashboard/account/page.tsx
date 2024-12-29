@@ -1,14 +1,9 @@
 'use client'
 
-import { fetcherWithToken, getUserToken } from '@/lib/swr'
-import { User } from '@/types'
-import useSWR from 'swr'
+import { useUser } from '@/lib/swr'
 
 export default function Account() {
-  const { data } = useSWR<User>(
-    ['/v1/users', getUserToken()],
-    fetcherWithToken
-  )
+  const { data } = useUser()
 
   return (
     <>  
