@@ -20,4 +20,4 @@ RUN npm run build
 EXPOSE 3000
 
 # Run the API Gateway
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]
