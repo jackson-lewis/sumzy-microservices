@@ -29,7 +29,7 @@ export function generateSignInToken(userId: number) {
 
 export function generateEmailVerifyLink(user: User) {
   const token = generateToken(user.id, 'verify_email', '2d')
-  return `${process.env.FRONTEND_URL}/verify-email?token=${token}`
+  return `${process.env.FRONTEND_URL}/sign-up/verify-email?token=${token}`
 }
 
 
