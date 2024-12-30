@@ -1,10 +1,10 @@
 'use client'
 
-import { verifyEmailToken } from '@/lib/form-actions'
-import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import styles from './style.module.scss'
+import { useSearchParams } from 'next/navigation'
 import LoadingIcon from '@/components/shared/loading-icon'
+import { Container } from '../form'
+import { verifyEmailToken } from '@/lib/form-actions'
 
 export default function VerifyMessage() {
   const searchParams = useSearchParams()
@@ -25,7 +25,7 @@ export default function VerifyMessage() {
   }, [token])
 
   return (
-    <div className={styles.container}>
+    <Container>
       {token ? (
         <>
           {errorMessage ? (
@@ -50,6 +50,6 @@ export default function VerifyMessage() {
           </p>
         </>
       )}
-    </div>
+    </Container>
   )
 }

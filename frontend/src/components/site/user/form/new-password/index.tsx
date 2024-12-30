@@ -1,20 +1,14 @@
-'use client'
-
-import { useActionState, useEffect, useState } from 'react'
-import UserForm, {
-  AltActionText,
-  ErrorMessage, 
-  FormField, 
-  SubmitButton 
-} from '../../form'
-import { register } from '@/lib/form-actions'
+import { useEffect, useState } from 'react'
+import { FormField } from '..'
 import { validatePassword } from '@/lib/user'
 import styles from './style.module.scss'
-import Link from 'next/link'
 
-export default function SignUpForm() {
-  const [message, formAction, pending] = useActionState(register, null)
-  const [allowRegister, setAllowRegister] = useState(false)
+
+export default function NewPasswordField({
+  setDisableSubmit
+}: {
+  setDisableSubmit: React.Dispatch<React.SetStateAction<boolean>>
+}) {
   const [password, setPassword] = useState('')
   const [passwordC, setPasswordC] = useState('')
   const [validations, setValidations] = useState<{
@@ -30,31 +24,15 @@ export default function SignUpForm() {
         return check === true
       })
 
-    setAllowRegister(passAllChecks)
-  }, [password])
+    setDisableSubmit(!passAllChecks)
+  }, [password, setDisableSubmit])
 
   useEffect(() => {
-    setAllowRegister(password === passwordC)
-  }, [password, passwordC])
+    setDisableSubmit(password !== passwordC)
+  }, [password, passwordC, setDisableSubmit])
 
   return (
-    <UserForm action={formAction}>
-      <h1>Sign Up</h1>
-      <ErrorMessage message={message} />
-      <FormField
-        label="Name"
-        name="name"
-        type="text"
-        autoComplete="name"
-        required
-      />
-      <FormField
-        label="Email"
-        name="email"
-        type="email"
-        autoComplete="email"
-        required
-      />
+    <>
       <FormField
         label="Password"
         name="password"
@@ -95,15 +73,7 @@ export default function SignUpForm() {
           setPasswordC(event.target.value)
         }}
       />
-      <SubmitButton
-        disabled={!allowRegister || pending}
-      >
-        Sign up
-      </SubmitButton>
-      <AltActionText>
-        Have an account? <Link href="/sign-in">Sign in now</Link>
-      </AltActionText>
-    </UserForm>
+    </>
   )
 }
 

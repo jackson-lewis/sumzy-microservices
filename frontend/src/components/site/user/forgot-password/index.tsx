@@ -2,21 +2,23 @@
 
 import { useActionState } from 'react'
 import Link from 'next/link'
-import UserForm, {
+import {
+  UserForm,
   AltActionText,
-  ErrorMessage,
+  Message,
   FormField,
   SubmitButton
-} from '../../form'
+} from '../form'
 import { login } from '@/lib/form-actions'
 
 
-export default function SignInForm() {
+export default function ForgotPasswordForm() {
   const [message, formAction] = useActionState(login, undefined)
   return (
     <UserForm action={formAction}>
-      <h1>Sign in</h1>
-      <ErrorMessage message={message} />
+      <h1>Reset your password</h1>
+      <p style={{ marginBottom: 20 }}>Type in your email and we&apos;ll send you a link to reset your password</p>
+      <Message message={message} />
       <FormField
         label="Email"
         name="email"
@@ -24,16 +26,9 @@ export default function SignInForm() {
         autoComplete="email"
         required
       />
-      <FormField
-        label="Password"
-        name="password"
-        type="password"
-        autoComplete="current-password"
-        required
-      />
-      <SubmitButton>Login</SubmitButton>
+      <SubmitButton>Send Reset Email</SubmitButton>
       <AltActionText>
-        Don&apos;t have an account? <Link href="/sign-up">Sign up now</Link>
+        Already have an account? <Link href="/sign-in">Sign in now</Link>
       </AltActionText>
     </UserForm>
   )

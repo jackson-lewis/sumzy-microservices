@@ -4,7 +4,7 @@ import { useUser } from '@/lib/swr'
 import Form from 'next/form'
 import { useActionState } from 'react'
 import styles from './style.module.scss'
-import { ErrorMessage } from '@/components/site/form'
+import { ErrorMessage } from '@/components/site/user/form'
 
 export default function AccountForm() {
   const { data } = useUser()
