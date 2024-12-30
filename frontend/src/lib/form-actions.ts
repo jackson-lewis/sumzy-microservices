@@ -39,7 +39,7 @@ export async function login(prevState: unknown, formData: FormData) {
     return error
   }
 
-  redirect('/dashboard')
+  redirect('/dashboard?action=sign-in')
 }
 
 export async function register(
@@ -175,5 +175,5 @@ export async function verifyEmailToken(token: string): Promise<string | void> {
     return 'An error occurred while verifying your email'
   }
 
-  redirect('/dashboard')
+  redirect('/dashboard?action=welcome')
 }
