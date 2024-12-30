@@ -4,7 +4,7 @@ import {
   pwdContainsUppercase,
   pwdLength,
   validatePassword
-} from './user'
+} from '@/lib/user'
 
 describe('Validate password length', () => {
   it('should return true for password 10 chars in length', async () => {

@@ -3,10 +3,10 @@ import { getUserToken } from '@/lib/swr'
 describe('Get user token from cookies', () => {
   it('should be available', async () => {
     const token = 'jwttoken'
-    document.cookie = `token=jwttoken;max-age=60;secure`
+    jest.spyOn(document, 'cookie', 'get')
+      .mockReturnValueOnce(`token=${token};`);
     
-    const _token = getUserToken()
-
-    expect(_token).toBe(token)
+    const result = getUserToken()
+    expect(result).toBe(token)
   })
 })
