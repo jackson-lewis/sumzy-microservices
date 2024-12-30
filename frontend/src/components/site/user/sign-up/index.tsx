@@ -20,7 +20,7 @@ export default function SignUpForm() {
   return (
     <UserForm action={formAction}>
       <h1>Sign Up</h1>
-      <Message message={message} />
+      <Message message={message} type="error" />
       <FormField
         label="Name"
         name="name"

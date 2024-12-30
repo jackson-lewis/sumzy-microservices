@@ -22,7 +22,7 @@ export default function ForgotPasswordForm() {
     <UserForm action={formAction}>
       <h1>Reset your password</h1>
       <p style={{ marginBottom: 20 }}>Type in your email and we&apos;ll send you a link to reset your password</p>
-      <Message message={message} />
+      <Message message={message} type="error" />
       <FormField
         label="Email"
         name="email"

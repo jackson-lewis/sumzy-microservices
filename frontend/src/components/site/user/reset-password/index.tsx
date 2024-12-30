@@ -27,7 +27,7 @@ export default function ResetPasswordForm() {
     return (
       <Container>
         <h1>Reset your password</h1>
-        <Message message={message} />
+        <Message message={message} type="error" />
         <AltActionText>
           <Link href="/sign-in/forgot-password">Send new reset link</Link>
         </AltActionText>
@@ -38,7 +38,7 @@ export default function ResetPasswordForm() {
   return (
     <UserForm action={formAction}>
       <h1>Reset your password</h1>
-      <Message message={message} />
+      <Message message={message} type="error" />
       <NewPasswordField
         setDisableSubmit={setDisableSubmit}
       />
