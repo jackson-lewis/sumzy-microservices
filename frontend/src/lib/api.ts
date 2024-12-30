@@ -115,18 +115,15 @@ export async function apiRequest<T>(
       throw new Error('Something went wrong')
     }
   
-    const json = res.json()
+    const json = await res.json()
   
     if (res.status >= 400) {
-      return json.then((data) => {
-        throw new Error(data.message)
-      })
+      throw new Error(json.message)
     }
     
     return json
   } catch (error) {
     if (error instanceof Error) {
-      console.log(error)
       return error
     }
 
