@@ -4,7 +4,7 @@ import { useUser } from '@/lib/swr'
 import Form from 'next/form'
 import { useActionState } from 'react'
 import styles from './style.module.scss'
-import { ErrorMessage } from '@/components/site/user/form'
+import { Message } from '@/components/site/user/form'
 
 export default function AccountForm() {
   const { data } = useUser()
@@ -12,7 +12,7 @@ export default function AccountForm() {
 
   return (
     <Form action={formAction} className={styles.form}>
-      <ErrorMessage message={message} />
+      <Message message={message} type="error" />
       <FormField
         label="Name"
         name="name"

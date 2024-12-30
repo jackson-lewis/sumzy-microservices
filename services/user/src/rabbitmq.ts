@@ -36,3 +36,35 @@ export function sendUserSignUpEvent(
     console.log('User sign-up event sent to RabbitMQ')
   }
 }
+
+export function sendUserForgotPasswordEvent(
+  user: User & { resetPasswordLink: string }
+) {
+  if (channel) {
+    channel.sendToQueue(
+      'user-forgot-password',
+      Buffer.from(JSON.stringify(user)),
+      {
+        persistent: true
+      }
+    )
+
+    console.log('User forgot-password event sent to RabbitMQ')
+  }
+}
+
+export function sendUserResetPasswordEvent(
+  user: User
+) {
+  if (channel) {
+    channel.sendToQueue(
+      'user-reset-password',
+      Buffer.from(JSON.stringify(user)),
+      {
+        persistent: true
+      }
+    )
+
+    console.log('User reset-password event sent to RabbitMQ')
+  }
+}

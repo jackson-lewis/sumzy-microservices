@@ -1,69 +1,13 @@
 import { Request, Response } from 'express'
 // import bcrypt from 'bcrypt'
 import { prisma } from './prisma'
-import { sendUserSignUpEvent } from './rabbitmq'
+import { sendUserForgotPasswordEvent, sendUserResetPasswordEvent, sendUserSignUpEvent } from './rabbitmq'
 import {
   generateEmailVerifyLink,
+  generateResetPasswordLink,
   generateSignInToken,
-  verifyEmailToken
+  verifyToken
 } from './lib/token'
-
-
-
-export async function handleVerifyEmailToken(req: Request, res: Response) {
-  const { token }: { token: string } = req.body
-
-  try {
-    const { userId } = verifyEmailToken(token)
-
-    const user = await prisma.user.update({
-      where: {
-        id: userId
-      },
-      data: {
-        verified: true
-      }
-    })
-
-    const signInToken = generateSignInToken(user.id)
-    res.status(200).send({ signInToken })
-  } catch(error) {
-    res.status(400).send({ message: error.message })
-  }
-}
-
-
-export async function login(req: Request, res: Response) {
-  const { email, password } = req.body
-
-  const user = await prisma.user.findFirst({
-    where: {
-      email
-    }
-  })
-  
-  if (!user) {
-   res.status(400).send({ message: 'Email address or password invalid' })
-   return
-  }
-
-  // const isPasswordValid = bcrypt.compare(password, user.password)
-  const isPasswordValid = password === user.password
-
-  if (!isPasswordValid) {
-    res.status(400).send({ message: 'Email address or password invalid' })
-    return
-  }
-
-  if (!user.verified) {
-    res.status(400).send({ message: 'Email address not verified' })
-    return
-  }
-
-  const token = generateSignInToken(user.id)
-
-  res.status(200).send({ token })
-}
 
 
 export async function create(req: Request, res: Response) {
@@ -137,4 +81,131 @@ export async function update(req: Request, res: Response) {
   })
 
   res.status(200).send(user)
+}
+
+
+export async function login(req: Request, res: Response) {
+  const { email, password } = req.body
+
+  const user = await prisma.user.findFirst({
+    where: {
+      email
+    }
+  })
+  
+  if (!user) {
+   res.status(400).send({ message: 'Email address or password invalid' })
+   return
+  }
+
+  // const isPasswordValid = bcrypt.compare(password, user.password)
+  const isPasswordValid = password === user.password
+
+  if (!isPasswordValid) {
+    res.status(400).send({ message: 'Email address or password invalid' })
+    return
+  }
+
+  if (!user.verified) {
+    res.status(400).send({ message: 'Email address not verified' })
+    return
+  }
+
+  const token = generateSignInToken(user.id)
+
+  res.status(200).send({ token })
+}
+
+
+export async function handleVerifyEmailToken(req: Request, res: Response) {
+  const { token }: { token: string } = req.body
+
+  try {
+    const { userId } = verifyToken(token, 'verify_email')
+
+    const user = await prisma.user.update({
+      where: {
+        id: userId
+      },
+      data: {
+        verified: true
+      }
+    })
+
+    const signInToken = generateSignInToken(user.id)
+    res.status(200).send({ signInToken })
+  } catch(error) {
+    res.status(400).send({ message: error.message })
+  }
+}
+
+
+export async function forgotPassword(
+  req: Request, 
+  res: Response
+) {
+  const { email }: { email: string } = req.body
+
+  try {
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        email
+      }
+    })
+    
+    if (!existingUser) {
+      res.status(400).send({
+        message: 'Email address not found'
+      })
+      return
+    }
+
+    const resetPasswordLink = generateResetPasswordLink(existingUser)
+    sendUserForgotPasswordEvent({ ...existingUser, resetPasswordLink })
+
+    res.status(200).send({ success: true })
+  } catch(error) {
+    res.status(400).send({ message: error.message })
+  }
+}
+
+
+export async function resetPassword(
+  req: Request, 
+  res: Response
+) {
+  const {
+    token,
+    password,
+    password_confirm
+  }: {
+    [k: string]: string
+  } = req.body
+
+  try {
+    const { userId } = verifyToken(token, 'reset_password')
+    const passwordMatch = password === password_confirm
+
+    if (!passwordMatch) {
+      res.status(400).send({
+        message: 'Passwords do not match'
+      })
+      return
+    }
+
+    const user = await prisma.user.update({
+      where: {
+        id: userId
+      },
+      data: {
+        password
+      }
+    })
+
+    sendUserResetPasswordEvent(user)
+
+    res.status(200).send({ success: true })
+  } catch(error) {
+    res.status(400).send({ message: error.message })
+  }
 }

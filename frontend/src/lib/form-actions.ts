@@ -68,7 +68,7 @@ export async function logout() {
   const cookieStore = await cookies()
   cookieStore.delete('token')
 
-  redirect('/sign-in')
+  redirect('/sign-in?action=sign-out')
 }
 
 export async function getUserToken()  {

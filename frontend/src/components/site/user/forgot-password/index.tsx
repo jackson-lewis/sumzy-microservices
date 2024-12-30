@@ -9,11 +9,15 @@ import {
   FormField,
   SubmitButton
 } from '../form'
-import { login } from '@/lib/form-actions'
+import { forgotPassword } from '@/lib/site/user/actions'
 
 
 export default function ForgotPasswordForm() {
-  const [message, formAction] = useActionState(login, undefined)
+  const [message, formAction, pending] = useActionState(
+    forgotPassword,
+    undefined
+  )
+  
   return (
     <UserForm action={formAction}>
       <h1>Reset your password</h1>
@@ -26,7 +30,7 @@ export default function ForgotPasswordForm() {
         autoComplete="email"
         required
       />
-      <SubmitButton>Send Reset Email</SubmitButton>
+      <SubmitButton disabled={pending}>Send Reset Email</SubmitButton>
       <AltActionText>
         Already have an account? <Link href="/sign-in">Sign in now</Link>
       </AltActionText>

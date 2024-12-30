@@ -6,3 +6,8 @@ export type User = {
 export type UnverifiedUser = {
   emailVerifyLink: string
 } & User
+
+export type ForgotPasswordUser = {
+  resetPasswordLink: string
+} & User
+

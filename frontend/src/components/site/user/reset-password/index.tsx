@@ -11,11 +11,14 @@ import {
   SubmitButton,
   Container
 } from '../form'
-import { login } from '@/lib/form-actions'
+import { resetPassword } from '@/lib/site/user/actions'
 
 
 export default function ResetPasswordForm() {
-  const [message, formAction, pending] = useActionState(login, undefined)
+  const [message, formAction, pending] = useActionState(
+    resetPassword,
+    undefined
+  )
   const [disableSubmit, setDisableSubmit] = useState(true)
   const searchParams = useSearchParams()
   const token = searchParams.get('token')
@@ -24,7 +27,7 @@ export default function ResetPasswordForm() {
     return (
       <Container>
         <h1>Reset your password</h1>
-        <Message message="Invalid reset token" />
+        <Message message={message} />
         <AltActionText>
           <Link href="/sign-in/forgot-password">Send new reset link</Link>
         </AltActionText>
@@ -38,6 +41,11 @@ export default function ResetPasswordForm() {
       <Message message={message} />
       <NewPasswordField
         setDisableSubmit={setDisableSubmit}
+      />
+      <input
+        type="hidden"
+        name="token"
+        value={token}
       />
       <SubmitButton
         disabled={disableSubmit || pending}

@@ -10,14 +10,25 @@ import {
   SubmitButton
 } from '../form'
 import { login } from '@/lib/form-actions'
+import { useSearchParams } from 'next/navigation'
 
 
 export default function SignInForm() {
   const [message, formAction] = useActionState(login, undefined)
+  const searchParams = useSearchParams()
+  const action = searchParams.get('action') as 'sign-out' | 'reset-password' | undefined
+  const messages = {
+    'sign-out': 'You have been signed out.',
+    'reset-password': 'Your password has been reset. Please sign in with your new password.'
+  }
+
   return (
     <UserForm action={formAction}>
       <h1>Sign in</h1>
-      <Message message={message} />
+      <Message
+        message={action && !message ? messages[action] : message}
+        type={action && !message ? 'info' : 'error'}
+      />
       <FormField
         label="Email"
         name="email"

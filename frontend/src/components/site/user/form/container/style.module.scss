@@ -13,4 +13,8 @@
   h1 {
     margin-bottom: 20px;
   }
+
+  p:not(:last-child) {
+    margin-bottom: 10px;
+  }
 }

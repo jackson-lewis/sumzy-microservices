@@ -4,7 +4,9 @@ import {
   get,
   login,
   update,
-  handleVerifyEmailToken
+  handleVerifyEmailToken,
+  forgotPassword,
+  resetPassword
 } from './controller'
 import { connectToRabbitMQ } from './rabbitmq'
 
@@ -17,8 +19,11 @@ app.use(express.json())
 app.post('/', create)
 app.get('/', get)
 app.patch('/', update)
+
 app.post('/login', login)
 app.post('/verify-email-token', handleVerifyEmailToken)
+app.post('/forgot-password', forgotPassword)
+app.post('/reset-password', resetPassword)
 
 async function main() {
   try {
