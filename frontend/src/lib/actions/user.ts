@@ -115,9 +115,9 @@ export async function forgotPassword(
       Object.fromEntries(formData.entries()),
       false
     )
-      .then((data) => {
-        if (data instanceof Error) {
-          throw new Error(data.message)
+      .then(({ error }) => {
+        if (error) {
+          throw error
         }
 
         return 'A reset password link has been sent to your email'

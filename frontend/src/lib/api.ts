@@ -138,11 +138,8 @@ export async function apiRequest<T>(
     
     fnReturn.data = json
   } catch (error) {
-    if (error instanceof Error) {
-      fnReturn.error = error
-    }
-
-    fnReturn.error = new Error('Something went wrong')
+    fnReturn.error = error instanceof Error ? error :
+      new Error('Something went wrong')
   }
 
   return fnReturn

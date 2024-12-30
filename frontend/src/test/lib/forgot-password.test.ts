@@ -1,4 +1,4 @@
-import { forgotPassword } from '@/lib/site/user/actions'
+import { forgotPassword } from '@/lib/actions/user'
 
 
 describe('Forgot password', () => {
@@ -21,7 +21,8 @@ describe('Forgot password', () => {
   it('should return error message when request failed', async () => {
     global.fetch = jest.fn(() =>
       Promise.resolve({
-        json: () => Promise.resolve(new Error('An error occurred'))
+        status: 400,
+        json: () => Promise.resolve(new Error('Something went wrong'))
       })
     ) as jest.Mock
 
@@ -29,7 +30,7 @@ describe('Forgot password', () => {
     data.append('email', 'jackson@sumzy.money')
 
     const message = await forgotPassword(undefined, data)
-    const errorMessage = 'An error occurred'
+    const errorMessage = 'Something went wrong'
 
     expect(message).toBe(errorMessage)
   })

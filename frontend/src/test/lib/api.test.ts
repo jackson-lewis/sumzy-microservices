@@ -1,7 +1,7 @@
 import { apiRequest } from '@/lib/api'
 import { Transaction } from '@/types'
 
-jest.mock('../../lib/form-actions', () => {
+jest.mock('../../lib/actions/user', () => {
   return {
     getUserToken: jest.fn(() => {
       return Promise.resolve('token')
@@ -29,13 +29,14 @@ describe('API requests for transactions', () => {
       })
     ) as jest.Mock
 
-    const res = await apiRequest<Transaction[]>(
+    const { data, error } = await apiRequest<Transaction[]>(
       'v1/transactions',
       {},
       true
     )
 
-    expect(res).toEqual(transactions)
+    expect(data).toEqual(transactions)
+    expect(error).toBeUndefined()
   })
 
   it('should handle server error', async () => {
@@ -45,14 +46,15 @@ describe('API requests for transactions', () => {
       })
     ) as jest.Mock
 
-    const res = await apiRequest<Transaction[]>(
+    const { data, error } = await apiRequest<Transaction[]>(
       'v1/transactions',
       {},
       true
     )
 
-    expect(res).toBeInstanceOf(Error)
-    expect(res).toStrictEqual(new Error('Something went wrong'))
+    expect(data).toBeUndefined()
+    expect(error).toBeInstanceOf(Error)
+    expect(error).toStrictEqual(new Error('Something went wrong'))
   })
 
   it('should handle 401', async () => {
@@ -65,13 +67,14 @@ describe('API requests for transactions', () => {
       })
     ) as jest.Mock
 
-    const res = await apiRequest<Transaction[]>(
+    const { data, error } = await apiRequest<Transaction[]>(
       'v1/transactions',
       {},
       true
     )
 
-    expect(res).toBeInstanceOf(Error)
-    expect(res).toStrictEqual(new Error('Unauthorized'))
+    expect(data).toBeUndefined()
+    expect(error).toBeInstanceOf(Error)
+    expect(error).toStrictEqual(new Error('Unauthorized'))
   })
 })

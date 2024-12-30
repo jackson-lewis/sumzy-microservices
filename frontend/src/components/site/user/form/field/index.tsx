@@ -25,6 +25,7 @@ export default function FormField({
         type={type}
         name={name}
         id={name}
+        data-testid={name}
         required
         {...rest}
       />
