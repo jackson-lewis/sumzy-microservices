@@ -11,7 +11,7 @@ import {
   SubmitButton,
   Container
 } from '../form'
-import { resetPassword } from '@/lib/site/user/actions'
+import { resetPassword } from '@/lib/actions/user'
 
 
 export default function ResetPasswordForm() {

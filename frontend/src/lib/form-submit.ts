@@ -1,12 +1,7 @@
-import { Transaction } from '@/types'
+'use client'
+
 import { useSearchParams } from 'next/navigation'
 
-export function getFormData(form: HTMLFormElement) {
-  const data = new FormData(form)
-  const formDataEntries: unknown = Object.fromEntries(data.entries())
-
-  return formDataEntries as Transaction
-}
 
 export function useActiveYear() {
   const searchParams = useSearchParams()

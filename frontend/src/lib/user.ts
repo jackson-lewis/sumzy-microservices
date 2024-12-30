@@ -1,34 +1,3 @@
-import { User } from '@/types'
-import { apiRequest } from './api'
-import { getUserToken } from './form-actions'
-
-export async function register(event: React.FormEvent<HTMLFormElement>) {
-  event.preventDefault()
-
-  const data = new FormData(event.target as HTMLFormElement)
-  const body = Object.fromEntries(data.entries())
-
-  await apiRequest('v1/users', 'POST', body, false)
-}
-
-
-export function logout() {
-  document.cookie = 'token=; max-age=0'
-}
-
-
-export function isUserLoggedIn() {
-  return !!getUserToken()
-}
-
-export async function getUser(): Promise<User | Error> {
-  return await apiRequest(
-    'v1/users',
-    {},
-    true
-  )
-}
-
 export function validatePassword(pwd: string) {
   return {
     length: pwdLength(pwd),

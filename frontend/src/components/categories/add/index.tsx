@@ -2,11 +2,11 @@
 
 import { useActionState, useEffect } from 'react'
 import Form from 'next/form'
-import { createCategoryAction } from '@/lib/form-actions'
+import { createCategory } from '@/lib/actions/category'
 
 export default function AddCategory() {
   const [state, formAction, pending] = useActionState(
-    createCategoryAction,
+    createCategory,
     null
   )
 

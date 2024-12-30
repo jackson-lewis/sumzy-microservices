@@ -10,11 +10,11 @@ import {
   NewPasswordField, 
   SubmitButton 
 } from '../form'
-import { register } from '@/lib/form-actions'
+import { signUp } from '@/lib/actions/user'
 
 
 export default function SignUpForm() {
-  const [message, formAction, pending] = useActionState(register, null)
+  const [message, formAction, pending] = useActionState(signUp, null)
   const [disableSubmit, setDisableSubmit] = useState(true)
 
   return (

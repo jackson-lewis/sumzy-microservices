@@ -16,7 +16,7 @@ import {
 } from '@/types'
 import styles from './style.module.scss'
 import Form from 'next/form'
-import { transactionAction } from '@/lib/form-actions'
+import { transactionAction } from '@/lib/actions/transaction'
 import { useCategories } from '@/lib/swr'
 
 
@@ -48,7 +48,7 @@ export default function TransactionDialog() {
   }, [transaction])
 
   useEffect(() => {
-    if (state?.transaction) {
+    if (!(state instanceof Error)) {
       closeAction()
     }
   }, [state])

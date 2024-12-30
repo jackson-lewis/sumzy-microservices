@@ -1,8 +1,13 @@
 import { LoginCredentials } from '@/types'
-import { getUserToken } from './form-actions'
+import { getUserToken } from './actions/user'
 
 type HttpMethods = 'POST' | 'PATCH' | 'DELETE'
 
+export type ApiResponse<T> = {
+  data: T | undefined
+  error: Error | undefined
+  status: Response['status']
+}
 
 /**
  * Make a POST request to the API gateway.
@@ -17,7 +22,7 @@ export async function apiRequest<T>(
   method?: HttpMethods,
   body?: T,
   auth?: boolean
-): Promise<T | Error>
+): Promise<ApiResponse<T>>
 
 /**
  * Make a request to the API gateway.
@@ -30,7 +35,7 @@ export async function apiRequest<T>(
   endpoint: string,
   options?: RequestInit,
   auth?: boolean
-): Promise<T | Error>
+): Promise<ApiResponse<T>>
 
 /**
  * Make a POST request to the API gateway.
@@ -45,7 +50,7 @@ export async function apiRequest<T>(
   optionsOrMethod?: RequestInit | HttpMethods,
   body?: LoginCredentials,
   auth?: boolean
-): Promise<T | Error>
+): Promise<ApiResponse<T>>
 
 
 /**
@@ -63,14 +68,14 @@ export async function apiRequest<T>(
     token: string
   },
   auth?: boolean
-): Promise<T | Error>
+): Promise<ApiResponse<T>>
 
 export async function apiRequest<T>(
   endpoint: string,
   optionsOrMethod?: RequestInit | HttpMethods,
   authOrBody?: boolean | T,
   auth?: boolean
-): Promise<T | Error> {
+): Promise<ApiResponse<T>> {
   let options: RequestInit = {}
 
   if (typeof optionsOrMethod === 'string') {
@@ -102,6 +107,16 @@ export async function apiRequest<T>(
     }
   }
 
+  const fnReturn: {
+    data: T | undefined,
+    error: Error | undefined,
+    status: number
+  } = {
+    data: undefined,
+    error: undefined,
+    status: 0
+  }
+
   try {
     const baseUrl = typeof document === 'undefined' ? 
       process.env.API_GATEWAY_URL : 
@@ -121,12 +136,14 @@ export async function apiRequest<T>(
       throw new Error(json.message)
     }
     
-    return json
+    fnReturn.data = json
   } catch (error) {
     if (error instanceof Error) {
-      return error
+      fnReturn.error = error
     }
 
-    return new Error('Something went wrong')
+    fnReturn.error = new Error('Something went wrong')
   }
+
+  return fnReturn
 }

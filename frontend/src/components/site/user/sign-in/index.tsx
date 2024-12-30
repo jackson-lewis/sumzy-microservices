@@ -9,12 +9,12 @@ import {
   FormField,
   SubmitButton
 } from '../form'
-import { login } from '@/lib/form-actions'
+import { signIn } from '@/lib/actions/user'
 import { useSearchParams } from 'next/navigation'
 
 
 export default function SignInForm() {
-  const [message, formAction] = useActionState(login, undefined)
+  const [message, formAction] = useActionState(signIn, undefined)
   const searchParams = useSearchParams()
   const action = searchParams.get('action') as 'sign-out' | 'reset-password' | undefined
   const messages = {

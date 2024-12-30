@@ -7,9 +7,9 @@ export default function CategoryItem({
   category: Category,
 }) {
   async function handleDeleteClick() {
-    const data = await deleteCategory(category.id)
-    if (data instanceof Error) {
-      console.error(data.message)
+    const { error } = await deleteCategory(category.id)
+    if (error) {
+      console.error(error)
       return
     }
   }

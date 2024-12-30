@@ -9,7 +9,7 @@ import {
   FormField,
   SubmitButton
 } from '../form'
-import { forgotPassword } from '@/lib/site/user/actions'
+import { forgotPassword } from '@/lib/actions/user'
 
 
 export default function ForgotPasswordForm() {

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import LoadingIcon from '@/components/shared/loading-icon'
 import { Container } from '../form'
-import { verifyEmailToken } from '@/lib/form-actions'
+import { verifyEmailToken } from '@/lib/actions/user'
 
 export default function VerifyMessage() {
   const searchParams = useSearchParams()

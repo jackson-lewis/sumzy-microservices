@@ -1,14 +1,17 @@
-import { Button } from '@/components/shared/button'
-import { updateUserAction } from '@/lib/form-actions'
-import { useUser } from '@/lib/swr'
-import Form from 'next/form'
 import { useActionState } from 'react'
-import styles from './style.module.scss'
+import Form from 'next/form'
+import { Button } from '@/components/shared/button'
 import { Message } from '@/components/site/user/form'
+import { useUser } from '@/lib/swr'
+import { updateUser } from '@/lib/actions/user'
+import styles from './style.module.scss'
 
 export default function AccountForm() {
   const { data } = useUser()
-  const [message, formAction, pending] = useActionState(updateUserAction, null)
+  const [message, formAction, pending] = useActionState(
+    updateUser,
+    null
+  )
 
   return (
     <Form action={formAction} className={styles.form}>

@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/shared/button'
 import AccountForm from '@/components/dashboard/account'
-import { logout } from '@/lib/form-actions'
+import { signOut } from '@/lib/actions/user'
 import styles from './page.module.scss'
 
 export default function Account() {
@@ -13,7 +13,7 @@ export default function Account() {
         <h1>Account</h1>
         <Button
           onClick={async () => {
-            await logout()
+            await signOut()
           }}
         >
           Logout
