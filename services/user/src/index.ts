@@ -16,6 +16,11 @@ const app = express()
 connectToRabbitMQ()
 
 app.use(express.json())
+
+app.use('/health', (req, res) => {
+  res.status(200).send('OK')
+})
+
 app.post('/', create)
 app.get('/', get)
 app.patch('/', update)
