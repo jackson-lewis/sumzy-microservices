@@ -27,7 +27,7 @@ export async function signIn(prevState: unknown, formData: FormData) {
   }
 
   if (error) {
-    return error
+    return error.message
   }
 
   redirect('/dashboard?action=sign-in')
