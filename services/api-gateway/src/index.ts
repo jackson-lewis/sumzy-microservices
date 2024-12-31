@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import express from 'express'
 import httpProxy from 'express-http-proxy'
 import cors from 'cors'
@@ -7,11 +8,36 @@ const port = 8000
 const app = express()
 app.use(express.json())
 app.use(cors({
-  origin: 'http://localhost:3000'
+  origin: [
+    'http://localhost:3000',
+    'https://sumzy.vercel.app'
+  ]
 }))
 app.use('/v1/reporting*', auth)
 app.use('/v1/users*', auth)
 app.use('/v1/transactions*', auth)
+
+app.use('/health', (req, res) => {
+  res.status(200).send('OK')
+})
+
+app.use('/test-user-service', async (req, res) => {
+  const url = req.query.url as string
+  console.log(`Making request to http://${url}`)
+  
+  try {
+    const userHostRes = await fetch(`http://${url}`)
+    res.status(200).send({
+      status: userHostRes.status,
+      text: await userHostRes.text()
+    })
+  } catch(error) {
+    console.error(error)
+    res.status(500).send({
+      error: error.message
+    })
+  }
+})
 
 type Service = {
   endpoint: string,
@@ -39,6 +65,7 @@ services.map(({ endpoint, host }) => {
     httpProxy(
       `http://${host}`,
       {
+        timeout: 10,
         proxyErrorHandler: (err, res, next) => {
           switch (err.code) {
             case 'ECONNREFUSED':
