@@ -1,4 +1,3 @@
-import 'dotenv/config'
 import express from 'express'
 import httpProxy from 'express-http-proxy'
 import cors from 'cors'
@@ -65,7 +64,6 @@ services.map(({ endpoint, host }) => {
     httpProxy(
       `http://${host}`,
       {
-        timeout: 10,
         proxyErrorHandler: (err, res, next) => {
           switch (err.code) {
             case 'ECONNREFUSED':
