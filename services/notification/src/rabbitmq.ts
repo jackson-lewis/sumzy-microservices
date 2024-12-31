@@ -1,8 +1,16 @@
 import amqp from 'amqplib'
-import { ForgotPasswordUser, UnverifiedUser, User } from './types/user'
-import { sendPasswordResetEmail, sendPasswordResetSuccessEmail, sendUserVerifyEmail } from './lib/user'
+import {
+  ForgotPasswordUser,
+  UnverifiedUser,
+  User
+} from './types/user'
+import {
+  sendPasswordResetEmail,
+  sendPasswordResetSuccessEmail,
+  sendUserVerifyEmail
+} from './lib/user'
 
-export const RABBITMQ_URL = 'amqp://rabbitmq'
+export const RABBITMQ_URL = process.env.AMQP_URL
 export const QUEUE_USER_SIGN_UP = 'user-sign-up'
 export const QUEUE_USER_FORGOT_PASSWORD = 'user-forgot-password'
 export const QUEUE_USER_RESET_PASSWORD = 'user-reset-password'
@@ -34,7 +42,9 @@ export const connectToRabbitMQ = async () => {
 export const consumeFromQueue = () => {
   if (channel) {
     channel.consume(QUEUE_USER_SIGN_UP, (message) => {
-      const user: UnverifiedUser = JSON.parse(message.content.toString())
+      const user: UnverifiedUser = JSON.parse(
+        message.content.toString()
+      )
       sendUserVerifyEmail(user)
     })
 
