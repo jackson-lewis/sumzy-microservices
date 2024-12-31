@@ -48,7 +48,7 @@ export async function signUp(
     return error
   }
 
-  redirect('/sign-up/verify')
+  redirect('/sign-up/verify-email')
 }
 
 
