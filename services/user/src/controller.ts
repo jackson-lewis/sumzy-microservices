@@ -49,16 +49,21 @@ export async function create(req: Request, res: Response) {
 
 export async function get(req: Request, res: Response) {
   const userId = req.headers['x-user-id'] as string
-  const user = await prisma.user.findFirst({
-    where: {
-      id: Number(userId)
-    }
-  })
 
-  const userData = user
-  delete userData.password
-
-  res.status(200).send(userData)
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        id: Number(userId)
+      }
+    })
+  
+    const userData = user
+    delete userData.password
+  
+    res.status(200).send(userData)
+  } catch(error) {
+    res.status(400).send({ message: error.message })
+  }
 }
 
 
