@@ -1,7 +1,7 @@
 import amqp from 'amqplib'
 import { User } from '@prisma/client'
 
-export const RABBITMQ_URL = 'amqp://rabbitmq'
+export const RABBITMQ_URL = process.env.AMQP_URL
 export const QUEUE_NAME = 'user-sign-up'
 export let channel: amqp.Channel
 
