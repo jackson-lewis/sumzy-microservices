@@ -45,7 +45,7 @@ export async function signUp(
   const { error } = await apiRequest('v1/users', 'POST', body, false)
 
   if (error) {
-    return error
+    return error.message
   }
 
   redirect('/sign-up/verify-email')
