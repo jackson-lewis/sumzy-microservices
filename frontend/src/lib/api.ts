@@ -76,7 +76,11 @@ export async function apiRequest<T>(
   authOrBody?: boolean | T,
   auth?: boolean
 ): Promise<ApiResponse<T>> {
-  const options = await buildFetchOptions<T>(optionsOrMethod, authOrBody, auth)
+  const options = await buildFetchOptions<T>(
+    optionsOrMethod,
+    authOrBody,
+    auth
+  )
 
   const fnReturn: {
     data: T | undefined,
@@ -92,6 +96,8 @@ export async function apiRequest<T>(
     const baseUrl = typeof document === 'undefined' ? 
       process.env.API_GATEWAY_URL : 
       process.env.NEXT_PUBLIC_API_GATEWAY_URL
+
+    console.log('making request to', `${baseUrl}/${endpoint}`)
     const res = await fetch(
       `${baseUrl}/${endpoint}`,
       options
