@@ -1,4 +1,4 @@
-import { apiRequest } from '@/lib/api'
+import { apiRequest, buildFetchOptions } from '@/lib/api'
 import { Transaction } from '@/types'
 
 jest.mock('../../lib/actions/user', () => {
@@ -8,6 +8,51 @@ jest.mock('../../lib/actions/user', () => {
     })
   }
 })
+
+describe('Construct fetch options for API request', () => {
+  it('should set method with POST', async () => {
+    const body = {
+      property: 'value'
+    }
+    const options = await buildFetchOptions(
+      'POST',
+      body,
+      true
+    )
+
+    expect(options).toHaveProperty('method')
+    expect(options.method).toBe('POST')
+  })
+
+  it('should set body with POST', async () => {
+    const body = {
+      property: 'value'
+    }
+    const options = await buildFetchOptions(
+      'POST',
+      body,
+      true
+    )
+
+    expect(options).toHaveProperty('body')
+    expect(options.body).toBe(JSON.stringify(body))
+  })
+
+  it('should set Authorization header with POST', async () => {
+    const body = {
+      property: 'value'
+    }
+    const options = await buildFetchOptions(
+      'POST',
+      body,
+      true
+    )
+
+    expect(options).toHaveProperty('headers')
+    expect(options.headers).toHaveProperty('Authorization')
+  })
+})
+
 
 describe('API requests for transactions', () => {
   it('should return object', async () => {
