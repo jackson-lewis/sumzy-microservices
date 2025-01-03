@@ -282,11 +282,11 @@ export async function generateReport(
 
     const allNull = Object
       .values(returnTotals)
-      .filter((totalValue) => {
+      .every((totalValue) => {
         return !!totalValue
       })
 
-    if (allNull.length > 0) {
+    if (allNull) {
       return returnTotals
     }
 
