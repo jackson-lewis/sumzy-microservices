@@ -4,7 +4,7 @@ import { generateReport } from './controllers/report'
 import { EventType } from '@prisma/client'
 import { Transaction, } from './types'
 
-export const RABBITMQ_URL = 'amqp://rabbitmq';
+export const RABBITMQ_URL = process.env.AMQP_URL
 export const QUEUE_NAME = 'transaction';
 export let channel: amqp.Channel;
 

@@ -3,28 +3,45 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model DefaultCategory {
+  id           Int          @id @default(autoincrement())
+  name         String
+  transactions Transaction[]
 }
 
 model Category {
-  id     Int    @id @default(autoincrement())
-  userId Int
-  name   String
+  id           Int          @id @default(autoincrement())
+  userId       Int
+  name         String
+  transactions Transaction[]
 }
 
 model Transaction {
-  id          Int       @id @default(autoincrement())
-  userId      Int
-  amount      Decimal
-  frequency   Frequency
-  description String?
-  merchant    Int?
-  category    Int
-  date        DateTime  @default(now())
+  id                Int       @id @default(autoincrement())
+  userId            Int
+  amount            Decimal
+  frequency         Frequency
+  description       String?
+  merchant          Int?
+  categoryId        Int
+  defaultCategoryId Int
+  categoryType      CategoryType
+  date              DateTime  @default(now())
+  category          Category? @relation(fields: [categoryId], references: [id])
+  defaultCategory   DefaultCategory? @relation(fields: [defaultCategoryId], references: [id])
 }
 
 enum Frequency {
   one_time
   recurring
+}
+
+enum CategoryType {
+  DEFAULT
+  USER
 }

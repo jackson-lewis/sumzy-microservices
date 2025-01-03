@@ -21,15 +21,15 @@ export type Event<T = AggregateType> = {
   createdAt: Date
 }
 
-export type Totals = {
-  income: number
-  expense: number
-  surplus: number
+export type Totals<T = number> = {
+  income: T
+  expense: T
+  surplus: T
 }
 
-export type ReportTotals = Totals & {
+export type ReportTotals<T = number> = Totals<T> & {
   categories?: {
-    [k: string]: number
+    [k: string]: T
   }
 }
 
